@@ -4,8 +4,9 @@ from core.models import SourcesItems, PostContent,Posts,Owner
 
 
 def save_result(res, s):
-    print(r["name"])
     for r in res:
+        print(r["name"])
+
         group_id = r.get("group_id")
         if group_id:
             owner = Owner.objects.filter(screen_name=group_id).first()

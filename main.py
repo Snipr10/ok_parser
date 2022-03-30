@@ -71,5 +71,6 @@ if __name__ == '__main__':
     ]
     for s in _list_:
         res = get_all_posts(session, s )
+        django.db.close_old_connections()
         save_result(res, s )
         time.sleep(60)

@@ -5,17 +5,21 @@ from core.models import SourcesItems, PostContent,Posts,Owner
 
 def save_result(res, s):
     for r in res:
-        print(r["name"])
+        try:
 
-        group_id = r.get("group_id")
-        if group_id:
-            owner = Owner.objects.filter(screen_name=group_id).first()
-            if not owner:
-                owner = Owner.objects.create(screen_name=group_id, name=r["name"], sphinx_id=get_sphinx_id(group_id))
-            owner_id = owner.id
+            print(r["name"])
+            group_id = r.get("group_id")
+            if group_id:
+                owner = Owner.objects.filter(screen_name=group_id).first()
+                if not owner:
+                    owner = Owner.objects.create(screen_name=group_id, name=r["name"], sphinx_id=get_sphinx_id(group_id))
+                owner_id = owner.id
 
-        else:
+            else:
+                owner_id = None
+        except Exception as e:
             owner_id = None
+            print(e)
         try:
             Posts.objects.create(
                 id=r['themeId'],

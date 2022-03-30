@@ -5,6 +5,7 @@ import os
 import time
 
 import requests
+import django.db
 
 
 if __name__ == '__main__':
@@ -69,7 +70,10 @@ if __name__ == '__main__':
         "телеканал 78",
         "78 ru"
     ]
+    django.db.close_old_connections()
+
     for s in _list_:
+        print(s)
         res = get_all_posts(session, s )
         django.db.close_old_connections()
         save_result(res, s )

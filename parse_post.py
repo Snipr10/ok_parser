@@ -45,7 +45,6 @@ def get_text_html(session, posts, r):
                 text = json.loads(resp_bs4.select_one('a[data-video*=""]').get("data-video")).get("videoName")
             except Exception as e:
                 print(e)
-    print(text)
     try:
         date = dateparser.parse(post_bs4.find("div", {"class": "feed_date"}).text)
     except Exception:

@@ -7,6 +7,20 @@ import time
 import requests
 import django.db
 
+#
+# def start():
+#     from accounts import get_new_session
+#     from accounts import get_session_update
+#     from login import login
+#
+#     session_accounts = get_new_session()
+#     if session_accounts:
+#         get_session_update(session_accounts)
+#         session = requests.session()
+#         login_ = '%2B79062570633'
+#         password_ = 'Elena%401996%25'
+#         session = login(session, login_, password_)
+
 
 if __name__ == '__main__':
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ok_parser.settings')
@@ -26,9 +40,11 @@ if __name__ == '__main__':
 
     from login import login
     from search import get_all_posts
-    session = requests.session()
-    session = login(session)
 
+    session = requests.session()
+    login_ = '%2B79062570633'
+    password_ = 'Elena%401996%25'
+    session = login(session, login_, password_)
 
     _list_ = [
         "телеканал санкт петербург",
@@ -46,7 +62,6 @@ if __name__ == '__main__':
         "сообщал дп",
         'материале дп',
         'ранее дп сообщал',
-
 
         "писал дп",
         "опрошенные дп",
@@ -74,8 +89,7 @@ if __name__ == '__main__':
 
     for s in _list_:
         print(s)
-        res = get_all_posts(session, s )
+        res = get_all_posts(session, s)
         django.db.close_old_connections()
-        save_result(res, s )
+        save_result(res, s)
         time.sleep(60)
-

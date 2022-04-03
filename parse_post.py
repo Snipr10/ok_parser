@@ -29,7 +29,10 @@ def get_text_html(session, posts, r):
     else:
         type_post = types_posts_user.get(r['type'])
         url = f"https://m.ok.ru/dk?st.cmd={type_post.get('cmd')}&st.{type_post.get('st')}={posts['id']}"
-
+        try:
+            group_id = post_bs4.select_one("a", {"class": "dblock"}).attrs.get("href").split("?")[0].split("/")[-1]
+        except Exception as e:
+            print(e)
     resp = session.get(url, )
 
     resp_bs4 = BeautifulSoup(resp.text)
@@ -73,9 +76,12 @@ def get_text_html(session, posts, r):
         except Exception:
             share = 0
     try:
-        name=  resp_bs4.find("a", {"class": "emphased grp"}).text
+        name = resp_bs4.find("a", {"class": "emphased grp"}).text
     except Exception as e:
-        print(e)
+        try:
+            name = post_bs4.select_one("img[alt*='']").attrs.get("alt")
+        except Exception:
+            print(e)
 
     return {
         "group_id": group_id,

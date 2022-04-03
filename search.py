@@ -65,6 +65,8 @@ def get_all_posts(session, query):
             import requests
             session = requests.session()
             from login import login
-            session = login(session)
+            login_ = '%2B79062570633'
+            password_ = 'Elena%401996%25'
+            session = login(session, login_, password_)
             print(e)
     return res

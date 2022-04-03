@@ -1,4 +1,4 @@
-def login(session):
+def login(session, login_, password_):
     login_headers = {
         'authority': 'ok.ru',
         'cache-control': 'max-age=0',
@@ -19,8 +19,7 @@ def login(session):
         'accept-language': 'ru-RU,ru;q=0.9',
     }
     url = 'https://ok.ru/dk?cmd=AnonymLogin&st.cmd=anonymLogin'
-    login_ = '%2B79062570633'
-    password_ = 'Elena%401996%25'
+
     payload = 'st.redirect=' \
               '&st.asr=' \
               '&st.posted=set' \

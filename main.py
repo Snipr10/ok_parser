@@ -77,8 +77,4 @@ if __name__ == '__main__':
         django.db.close_old_connections()
         save_result(res, s )
         time.sleep(60)
-    from core.models import Owner, Posts
 
-    for o in Owner.objects.filter():
-        if o.id < 10_000:
-            o.delete()

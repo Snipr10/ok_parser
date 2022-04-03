@@ -72,9 +72,20 @@ if __name__ == '__main__':
     ]
     django.db.close_old_connections()
 
-    for s in _list_:
-        print(s)
-        res = get_all_posts(session, s )
-        django.db.close_old_connections()
-        save_result(res, s )
-        time.sleep(60)
+    # for s in _list_:
+    #     print(s)
+    #     res = get_all_posts(session, s )
+    #     django.db.close_old_connections()
+    #     save_result(res, s )
+    #     time.sleep(60)
+    from core.models import Owner, Posts
+
+    for o in Owner.objects.filter():
+        print(o.id)
+        posts = Posts.objects.filter(owner_id = o.id)
+        for p in posts:
+            p.owner_id = o.screen_name
+            p.from_id = p.owner_id
+            p.save()
+        o.id = o.screen_name
+        o.save()

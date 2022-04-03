@@ -48,6 +48,11 @@ def save_result(res, s):
             print(f"owner {e}")
 
         try:
+            Posts.objects.bulk_update(posts, batch_size=batch_size)
+        except Exception as e:
+            print(f"owner {e}")
+
+        try:
             PostContent.objects.bulk_create(post_content, batch_size=batch_size)
         except Exception as e:
             print(f"owner {e}")

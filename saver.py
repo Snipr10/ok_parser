@@ -1,43 +1,58 @@
 import hashlib
 
-from core.models import SourcesItems, PostContent,Posts,Owner
+from core.models import PostContent, Posts, Owner
+
+batch_size = 200
 
 
 def save_result(res, s):
+    owners = []
+    posts = []
+    post_content = []
     for r in res:
+        group_id = None
         try:
-
             group_id = r.get("group_id")
             if group_id:
-                owner = Owner.objects.filter(screen_name=group_id).first()
-                if not owner:
-                    owner = Owner.objects.create(screen_name=group_id, name=r["name"], sphinx_id=get_sphinx_id(group_id))
-                owner_id = owner.id
+                owners.append(Owner(screen_name=group_id, name=r["name"], sphinx_id=get_sphinx_id(group_id)))
 
-            else:
-                owner_id = None
         except Exception as e:
-            owner_id = None
             print(e)
         try:
-            Posts.objects.create(
+            posts.append(Posts(
                 id=r['themeId'],
-                owner_id=owner_id,
-                from_id=owner_id,
-
+                owner_id=group_id,
+                from_id=group_id,
                 created_date=r['date'],
                 likes=r['likes'],
                 comments=r['comments'],
                 reposts=r['share'],
                 url=r["url"],
-                content_hash=get_md5_text(r['text']))
+                content_hash=get_md5_text(r['text'])))
         except Exception as e:
             print(e)
 
         try:
-            PostContent.objects.create(id=r['themeId'], content=r['text'], url=r["url"])
+            post_content.append(PostContent(id=r['themeId'], content=r['text'], url=r["url"]))
         except Exception as e:
             print(e)
+
+        try:
+            Owner.objects.bulk_create(owners, batch_size=batch_size)
+        except Exception as e:
+            print(f"owner {e}")
+
+        try:
+            Posts.objects.bulk_create(posts, batch_size=batch_size)
+        except Exception as e:
+            print(f"owner {e}")
+
+        try:
+            PostContent.objects.bulk_create(post_content, batch_size=batch_size)
+        except Exception as e:
+            print(f"owner {e}")
+
+
 
 def get_sphinx_id(url):
     m = hashlib.md5()

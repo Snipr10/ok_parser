@@ -73,6 +73,7 @@ if __name__ == '__main__':
     django.db.close_old_connections()
 
     for s in _list_:
+        print(s)
         res = get_all_posts(session, s )
         django.db.close_old_connections()
         save_result(res, s )

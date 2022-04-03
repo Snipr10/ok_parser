@@ -48,7 +48,7 @@ def save_result(res, s):
             print(f"owner {e}")
 
         try:
-            Posts.objects.bulk_update(posts, batch_size=batch_size)
+            Posts.objects.bulk_update(posts, ['owner_id', 'from_id'], batch_size=batch_size)
         except Exception as e:
             print(f"owner {e}")
 

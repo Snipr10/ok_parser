@@ -102,6 +102,9 @@ if __name__ == '__main__':
     import django
 
     django.setup()
+    import pymysql
+
+    pymysql.install_as_MySQLdb()
 
     for i in range(8):
         time.sleep(4)

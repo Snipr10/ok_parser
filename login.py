@@ -32,6 +32,8 @@ def login(session, login_, password_):
               '&st.iscode=false'
     res = session.post(url, headers=login_headers, data=payload)
     if "topPanelLeftCorner" not in res.text or "TD_Logout" not in res.text:
+        print(res)
+
         raise Exception("Can not login")
 
     return session

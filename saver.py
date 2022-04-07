@@ -5,7 +5,7 @@ from core.models import PostContent, Posts, Owner
 batch_size = 200
 
 
-def save_result(res, s):
+def save_result(res):
     owners = []
     posts = []
     post_content = []

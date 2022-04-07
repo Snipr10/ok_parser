@@ -3,6 +3,7 @@ from django.db.models import Q
 from core.models import Sessions
 from django.utils import timezone
 from datetime import timedelta
+import time
 
 
 def update_time_timezone(my_time):
@@ -14,9 +15,32 @@ def get_new_session():
         timezone.localtime()) - timedelta(minutes=5)), is_parsing=False, is_active__lte=10, proxy_id__isnull=False
                                    ).order_by('last_parsing').first()
 
+
 def get_session_update(session):
     now = update_time_timezone(timezone.localtime())
     session.is_parsing = True
     session.start_parsing = now
     session.last_parsing = now
     session.save(update_fields=['is_parsing', 'start_parsing', 'last_parsing'])
+
+
+def stop_session(session, attempt=0):
+    try:
+        session.taken = 0
+        session.save(update_fields=['taken'], last_parsing=update_time_timezone(timezone.now()))
+    except Exception:
+        attempt += 1
+        if attempt < 6:
+            time.sleep(5)
+            stop_source(session, attempt=attempt)
+
+
+def stop_source(sources_item, attempt=0):
+    try:
+        sources_item.taken = 0
+        sources_item.save(update_fields=['taken'])
+    except Exception:
+        attempt += 1
+        if attempt < 6:
+            time.sleep(5)
+            stop_source(sources_item, attempt=attempt)

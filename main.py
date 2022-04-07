@@ -38,11 +38,11 @@ def start_task():
     from accounts import stop_source
     from utils import update_only_time
     from saver import save_result
+    from core.models import KeywordSource, Keyword
 
     from login import login
     from search import get_all_posts
-
-    sources_item = None
+    key_word = None
     session = None
     try:
         session = get_new_session()
@@ -62,23 +62,22 @@ def start_task():
         select_sources = Sources.objects.filter(
             Q(retro_max__isnull=True) | Q(retro_max__gte=timezone.now()), published=1,
             status=1)
+        key_source = KeywordSource.objects.filter(source_id__in=list(select_sources.values_list('id', flat=True)))
 
-        sources_item = SourcesItems.objects.filter(network_id=10, disabled=0, taken=0, last_modified__isnull=False,
-                                                   source_id__in=list(select_sources.values_list('id', flat=True))
-                                                   ).order_by('last_modified').first()
-        print(f"sources_item {sources_item}")
+        key_word = Keyword.objects.filter(network_id=10, enabled=1, taken=0,
+                                           id__in=list(key_source.values_list('keyword_id', flat=True))
+                                           ).order_by('last_modified').last()
 
-        if sources_item:
-            sources_item.taken = 1
-            sources_item.save(update_fields=['taken'])
+        if key_word:
+            key_word.taken = 1
+            key_word.save(update_fields=['taken'])
         else:
             stop_session(session, attempt=0)
             time.sleep(random.randint(100, 150))
-        print(f"sources_item {sources_item}")
-        retro = select_sources.get(id=sources_item.source_id).retro
-        res = get_all_posts(session, sources_item.data)
+        print(f"key_word {key_word}")
+        res = get_all_posts(session, key_word.keyword)
         django.db.close_old_connections()
-        update_only_time(sources_item)
+        update_only_time(key_word)
         save_result(res)
         time.sleep(60)
     except Exception as e:
@@ -86,8 +85,8 @@ def start_task():
 
         print("start_task" + str(e))
         try:
-            if sources_item:
-                stop_source(sources_item, attempt=0)
+            if key_word:
+                stop_source(key_word, attempt=0)
             if session:
                 stop_session(session, attempt=0)
         except Exception as e:

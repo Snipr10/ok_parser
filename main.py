@@ -55,6 +55,10 @@ def start_task():
             session.save(update_fields=['is_parsing', 'start_parsing', 'last_parsing'])
         else:
             time.sleep(random.randint(100, 150))
+            return
+
+        print(f"select_sources")
+
         select_sources = Sources.objects.filter(
             Q(retro_max__isnull=True) | Q(retro_max__gte=timezone.now()), published=1,
             status=1)
@@ -62,6 +66,8 @@ def start_task():
         sources_item = SourcesItems.objects.filter(network_id=10, disabled=0, taken=0, last_modified__isnull=False,
                                                    source_id__in=list(select_sources.values_list('id', flat=True))
                                                    ).order_by('last_modified').first()
+        print(f"sources_item {sources_item}")
+
         if sources_item:
             sources_item.taken = 1
             sources_item.save(update_fields=['taken'])

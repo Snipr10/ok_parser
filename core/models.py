@@ -153,16 +153,15 @@ class UpdateIndex(models.Model):
 
 
 class Sessions(models.Model):
-    session = models.FileField(upload_to='', null=True, blank=True)
-    name = models.CharField(max_length=256)
+    login = models.CharField(max_length=256)
+    password = models.CharField(max_length=256)
+
     is_active = models.IntegerField(default=1, db_index=True)
     is_parsing = models.BooleanField(default=False)
     start_parsing = models.DateTimeField(null=True, blank=True)
     last_parsing = models.DateTimeField(null=True, blank=True)
-    banned_until = models.DateTimeField(null=True, blank=True)
     proxy_id = models.IntegerField(null=True, blank=True)
     created = models.DateTimeField()
-    bot_api_id = models.IntegerField()
 
     class Meta:
         db_table = 'prsr_parser_ok_sessions'

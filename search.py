@@ -40,7 +40,13 @@ def search_posts(session, query, count, firstIndex, totalCount=None):
     return res['result']['content']['results'], res['result']['content']['totalCount'], True
 
 
-def get_all_posts(session, query):
+def get_all_posts(session_data, query):
+    from login import login
+    import requests
+
+    session = requests.session()
+    session = login(session, session_data.login, session_data.password)
+
     count = 50
     firstIndex = 0
     totalCount = None
@@ -64,9 +70,6 @@ def get_all_posts(session, query):
         except Exception as e:
             import requests
             session = requests.session()
-            from login import login
-            login_ = '%2B79062570633'
-            password_ = 'Elena%401996%25'
-            session = login(session, login_, password_)
-            print(e)
+            session = login(session, session_data.login, session_data.password)
+
     return res

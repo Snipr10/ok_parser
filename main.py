@@ -4,7 +4,6 @@
 import os
 import time
 
-import requests
 import django.db
 import threading
 import random

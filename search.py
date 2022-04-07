@@ -43,7 +43,7 @@ def search_posts(session, query, count, firstIndex, totalCount=None):
 def get_all_posts(session_data, query):
     from login import login
     import requests
-
+    print("get_all_posts")
     session = requests.session()
     session = login(session, session_data.login, session_data.password)
 
@@ -54,6 +54,7 @@ def get_all_posts(session_data, query):
     res = []
 
     while True:
+        print("while")
         posts, totalCount, is_next = search_posts(session, query, count, firstIndex, totalCount=totalCount)
         if not is_next:
             break

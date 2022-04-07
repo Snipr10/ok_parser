@@ -85,9 +85,8 @@ def start_task():
         save_result(res)
         time.sleep(60)
     except Exception as e:
-        time.sleep(20)
-
         print("start_task" + str(e))
+        time.sleep(20)
         try:
             if key_word:
                 stop_source(key_word, attempt=0)

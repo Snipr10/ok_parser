@@ -68,7 +68,7 @@ def start_task():
         else:
             stop_session(session, attempt=0)
             time.sleep(random.randint(100, 150))
-
+        print(f"sources_item {sources_item}")
         retro = select_sources.get(id=sources_item.source_id).retro
         res = get_all_posts(session, sources_item.data)
         django.db.close_old_connections()
@@ -106,7 +106,7 @@ if __name__ == '__main__':
 
     pymysql.install_as_MySQLdb()
 
-    for i in range(8):
+    for i in range(1):
         time.sleep(4)
         print("thread ThreadPoolExecutor thread start " + str(i))
         x = threading.Thread(target=new_process, args=(i,))

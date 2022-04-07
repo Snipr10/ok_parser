@@ -46,7 +46,7 @@ def start_task():
     session = None
     try:
         session = get_new_session()
-
+        print(f"session {session}")
         if session:
             now = update_time_timezone(timezone.localtime())
             session.is_parsing = True
@@ -130,8 +130,7 @@ if __name__ == '__main__':
     # from search import get_all_posts
     #
     # session = requests.session()
-    # login_ = '%2B79062570633'
-    # password_ = 'Elena%401996%25'
+
     # session = login(session, login_, password_)
     #
     # _list_ = [

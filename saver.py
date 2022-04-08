@@ -6,23 +6,26 @@ batch_size = 200
 
 
 def save_result(res):
+    print("save")
     owners = []
     posts = []
     post_content = []
+    owner_id = None
     for r in res:
         group_id = None
         try:
             group_id = r.get("group_id")
             if group_id:
-                owners.append(Owner(screen_name=group_id, name=r["name"], sphinx_id=get_sphinx_id(group_id)))
+                owner_id = get_sphinx_id(group_id)
+                owners.append(Owner(id=owner_id, screen_name=group_id, name=r["name"], sphinx_id=get_sphinx_id(group_id)))
 
         except Exception as e:
             print(e)
         try:
             posts.append(Posts(
                 id=r['themeId'],
-                owner_id=group_id,
-                from_id=group_id,
+                owner_id=owner_id,
+                from_id=owner_id,
                 created_date=r['date'],
                 likes=r['likes'],
                 comments=r['comments'],

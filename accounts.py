@@ -26,9 +26,12 @@ def get_session_update(session):
 
 def stop_session(session, attempt=0):
     try:
-        session.taken = 0
-        session.save(update_fields=['taken'], last_parsing=update_time_timezone(timezone.now()))
-    except Exception:
+        session.is_parsing = 0
+        session.last_parsing = update_time_timezone(timezone.now())
+
+        session.save(update_fields=['is_parsing', 'last_parsing'])
+    except Exception as e:
+        print(e)
         attempt += 1
         if attempt < 6:
             time.sleep(5)
@@ -39,7 +42,8 @@ def stop_source(sources_item, attempt=0):
     try:
         sources_item.taken = 0
         sources_item.save(update_fields=['taken'])
-    except Exception:
+    except Exception as e:
+        print(e)
         attempt += 1
         if attempt < 6:
             time.sleep(5)

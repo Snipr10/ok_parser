@@ -83,11 +83,12 @@ def start_task():
         django.db.close_old_connections()
         update_only_time(key_word)
         save_result(res)
-        time.sleep(60)
         if key_word:
             stop_source(key_word, attempt=0)
         if session:
             stop_session(session, attempt=0)
+        time.sleep(60)
+
     except Exception as e:
         print("start_task" + str(e))
         time.sleep(20)

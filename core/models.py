@@ -12,7 +12,7 @@ import pytz
 class Owner(models.Model):
     id = models.IntegerField(primary_key=True)
     # group_id = models.IntegerField(null=True, blank=True)
-    screen_name = models.IntegerField(null=True, blank=True)
+    screen_name = models.CharField(max_length=255)
     name = models.CharField(max_length=255)
     sphinx_id = models.CharField(max_length=255)
 

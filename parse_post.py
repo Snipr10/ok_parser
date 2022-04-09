@@ -13,6 +13,7 @@ types_posts_user = {
     "Movie": {"cmd":"movieLayer", "st":"mvId"},
 }
 
+
 def get_text_html(session, posts, r):
     post_bs4 = BeautifulSoup(posts['renderedContent'])
     href = post_bs4.find("a", {"class": "dblock"}).get("href")
@@ -53,6 +54,31 @@ def get_text_html(session, posts, r):
     except Exception:
         date = None
     try:
+        name = resp_bs4.find("a", {"class": "emphased grp"}).text
+    except Exception as e:
+        try:
+            name = post_bs4.select_one("img[alt*='']").attrs.get("alt")
+        except Exception:
+            print(e)
+
+    likes, comments, share = get_likes_comments_share(resp_bs4)
+
+    return {
+        "group_id": group_id,
+        "themeId": posts['id'],
+        "text": text,
+        "date": date,
+        "likes": likes,
+        "comments": comments,
+        "share": share,
+        "type": r['type'],
+        "url": url,
+        "name": name
+    }
+
+
+def get_likes_comments_share(resp_bs4):
+    try:
         likes = resp_bs4.find("span", {"class": "ecnt"}).text
     except Exception:
         try:
@@ -75,26 +101,8 @@ def get_text_html(session, posts, r):
             share = get_digit(resp_bs4.find_all("a", {"data-type": "RESHARE"})[-1].text)
         except Exception:
             share = 0
-    try:
-        name = resp_bs4.find("a", {"class": "emphased grp"}).text
-    except Exception as e:
-        try:
-            name = post_bs4.select_one("img[alt*='']").attrs.get("alt")
-        except Exception:
-            print(e)
 
-    return {
-        "group_id": group_id,
-        "themeId": posts['id'],
-        "text": text,
-        "date": date,
-        "likes": likes,
-        "comments": comments,
-        "share": share,
-        "type": r['type'],
-        "url": url,
-        "name": name
-    }
+    return likes, comments, share
 
 
 def get_digit(str):

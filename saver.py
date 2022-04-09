@@ -18,14 +18,20 @@ def save_result(res):
             if group_id:
                 owner_id = get_sphinx_id(group_id)
                 owners.append(Owner(id=owner_id, screen_name=group_id, name=r["name"], sphinx_id=get_sphinx_id(group_id)))
-
+            from_id = r.get("from_id")
+            if from_id:
+                from_id = get_sphinx_id(from_id)
+                owners.append(
+                    Owner(id=from_id, screen_name=from_id, name=r['from_name'], sphinx_id=get_sphinx_id(from_id)))
+            else:
+                from_id = owner_id
         except Exception as e:
             print(e)
         try:
             posts.append(Posts(
                 id=r['themeId'],
                 owner_id=owner_id,
-                from_id=owner_id,
+                from_id=from_id,
                 created_date=r['date'],
                 likes=r['likes'],
                 comments=r['comments'],
@@ -59,7 +65,6 @@ def save_result(res):
         PostContent.objects.bulk_create(post_content, batch_size=batch_size, ignore_conflicts=True)
     except Exception as e:
         print(f"owner {e}")
-
 
 
 def get_sphinx_id(url):

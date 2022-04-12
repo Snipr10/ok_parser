@@ -1,4 +1,3 @@
-import json
 import re
 import time
 import dateparser
@@ -6,16 +5,17 @@ import dateparser
 from bs4 import BeautifulSoup
 
 
-def get_all_group_post(session_data, query):
+def get_all_profile_post(session_data, query):
     from login import login
     import requests
     print("get_all_group_post")
     session = requests.session()
     session = login(session, session_data.login, session_data.password)
+
     res = []
     try:
         int(query)
-        pre_url = f"https://ok.ru/group/{query}"
+        pre_url = f"https://ok.ru/profile/{query}"
     except Exception:
         pre_url = f"https://ok.ru/{query}"
 
@@ -33,13 +33,16 @@ def get_all_group_post(session_data, query):
 
     name = None
     try:
-        for r in res:
-            for i in r.select("img[alt*='']"):
-                if i.attrs.get("alt"):
-                    name = i.attrs.get("alt")
+        try:
+            name = resp_bs4_first.find("a", {"class":"profile-user-info_name"}).text
+        except Exception:
+            for r in res:
+                for i in r.select("feed_top"):
+                    if i.attrs.get("alt"):
+                        name = i.attrs.get("alt")
+                        break
+                if name:
                     break
-            if name:
-                break
     except Exception:
         pass
 
@@ -54,15 +57,14 @@ def get_all_group_post(session_data, query):
     while True:
         if not markerB:
             break
-        url = f"{pre_url}?cmd=AltGroupMainFeedsNewRB&st.groupId={group_id}"
-
+        url = f"{pre_url}?cmd=FriendFeedsMRB&st.cmd=friendMain&st.friendId={query}"
         headers = {
             'authority': 'ok.ru',
             'accept': '*/*',
             'accept-language': 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7',
             'content-type': 'application/x-www-form-urlencoded',
             'dnt': '1',
-            'ok-screen': 'altGroupMain',
+            'ok-screen': 'friendMain',
             'origin': 'https://ok.ru',
             'sec-ch-ua': '" Not A;Brand";v="99", "Chromium";v="100", "Google Chrome";v="100"',
             'sec-ch-ua-mobile': '?0',
@@ -74,7 +76,7 @@ def get_all_group_post(session_data, query):
             'tkn': tkn,
             'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.75 Safari/537.36'
         }
-        payload = f'st.markerB={markerB}'
+        payload = f'st.data-bytes-marker={markerB}'
         resp = session.post(url, headers=headers, data=payload)
         resp_bs4 = BeautifulSoup(resp.text)
         markerB = get_markerB(resp_bs4)
@@ -90,9 +92,9 @@ def get_all_group_post(session_data, query):
 
 def get_markerB(resp_bs4):
     markerB = None
-    for i in resp_bs4.find_all("span", {"class":"invisible"}):
+    for i in resp_bs4.find_all("div", {"class":"invisible"}):
         try:
-            markerB = i.attrs['st.markerb']
+            markerB = i.attrs['st.data-bytes-marker']
             break
         except Exception:
             pass
@@ -113,7 +115,11 @@ def get_result(res):
             from_id = res.find("a", {"class":"dblock"}).get("href").split("/")[-1].split("?")[0]
         except Exception:
             from_id = None
-        theme_id = re.search(r"topicId,\d+,groupId", str(res)).group(0).replace("topicId,","").replace(",groupId","")
+        theme_id = re.search(r'gId":"\d+"', str(res)).group(0).replace('gId":"',"").replace('"',"")
+        try:
+            text = res.find("div", {"class": "media-text_cnt"}).text
+        except Exception:
+            text = None
         try:
             url = res.find("a", {"class": "media-text_a"}).get("href").split("?")[0]
         except Exception:
@@ -121,13 +127,9 @@ def get_result(res):
                 url = res.find("a", {"class": ""}).get("href").split("?")[0]
             except Exception:
                 try:
-                    url = re.search(r'st.layer.curl=\S+', str(res)).group(0).replace('st.layer.curl=', "").split("&")[0]
+                    url = re.search(r'st.layer.curl=\S+', str(res)).group(0).replace('st.layer.curl=',"").split("&")[0]
                 except Exception:
                     url = None
-        try:
-            text = res.find("div", {"class": "media-text_cnt"}).text
-        except Exception:
-            text = None
         return {
             "themeId": theme_id,
             "text": text,

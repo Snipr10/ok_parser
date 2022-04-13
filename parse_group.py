@@ -12,6 +12,7 @@ def get_all_group_post(session_data, query):
     print("get_all_group_post")
     session = requests.session()
     session = login(session, session_data.login, session_data.password)
+
     res = []
     try:
         int(query)
@@ -25,8 +26,11 @@ def get_all_group_post(session_data, query):
     resp_bs4_first = BeautifulSoup(first_resp.text)
     res.extend(resp_bs4_first.find_all("div", {"class": "feed-w"}))
     markerB = get_markerB(resp_bs4_first)
-    tkn = re.search(r"OK.tkn.set\S\S\w+", first_resp.text).group(0)
-    tkn = tkn.replace('OK.tkn.set(\'',"")
+    # tkn = re.search(r"OK.tkn.set\S\S\w+", first_resp.text).group(0)
+    tkn = re.search(r"OK.tkn.set\S+", first_resp.text).group(0)
+
+    tkn = tkn.replace('OK.tkn.set(\'', "")
+    tkn = tkn.split("'")[0]
 
     group_id = re.search(r"st.groupId=\S\S\w+", first_resp.text).group(0)
     group_id = group_id.replace("st.groupId=", "")

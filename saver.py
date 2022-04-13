@@ -29,6 +29,10 @@ def save_result(res):
         except Exception as e:
             print(e)
         try:
+            url = r["url"]
+            if url:
+                if "ok.ru" not in url:
+                    url = "https://ok.ru" + url
             posts.append(Posts(
                 id=r['themeId'],
                 owner_id=owner_id,
@@ -37,7 +41,7 @@ def save_result(res):
                 likes=r['likes'],
                 comments=r['comments'],
                 reposts=r['share'],
-                url=r["url"],
+                url=url,
                 content_hash=get_md5_text(r['text'])))
         except Exception as e:
             print(e)

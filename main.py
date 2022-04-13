@@ -9,6 +9,7 @@ import threading
 import random
 import multiprocessing
 
+
 def new_process(i):
     for i in range(9):
         time.sleep(random.randint(1, 5))
@@ -93,8 +94,10 @@ def start_task_source():
                 sources_item.taken = 1
                 sources_item.save()
                 if sources_item.type == 18 or sources_item.type == 20:
+                    print(f"sources_item.type")
                     result = get_all_group_post(session, sources_item.data)
                 elif sources_item.type == 19 or sources_item.type == 21:
+                    print(f"sources_item.type")
                     result = get_all_profile_post(session, sources_item.data)
                 else:
                     raise Exception("sources_item.type")

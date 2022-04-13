@@ -13,6 +13,7 @@ def save_result(res):
     owner_id = None
     for r in res:
         group_id = None
+        from_id = None
         try:
             group_id = r.get("group_id")
             if group_id:

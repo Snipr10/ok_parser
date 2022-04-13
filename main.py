@@ -13,9 +13,28 @@ def new_process(i):
     for i in range(9):
         time.sleep(random.randint(1, 5))
 
-        print(f"multiprocessing {i}")
+        print(f"multiprocessing key {i}")
         x = multiprocessing.Process(target=start_task_while, args=(i,))
         x.start()
+
+
+def new_process_source(i):
+    for i in range(9):
+        time.sleep(random.randint(1, 5))
+        print(f"multiprocessing source {i}")
+        x = multiprocessing.Process(target=start_task_while_source, args=(i,))
+        x.start()
+
+
+def start_task_while_source(i):
+    while True:
+        try:
+            django.db.close_old_connections()
+            start_task_source()
+        except Exception as e:
+            time.sleep(random.randint(5, 10))
+            print(e)
+
 
 def start_task_while(i):
     while True:
@@ -27,10 +46,84 @@ def start_task_while(i):
             print(e)
 
 
+def start_task_source():
+    from django.db.models import Q
+
+    from core.models import Sources
+    from django.utils import timezone
+    from accounts import get_new_session
+    from accounts import update_time_timezone
+    from accounts import stop_session
+    from accounts import stop_source
+    from saver import save_result
+    from core.models import SourcesItems
+    import datetime
+
+    session = None
+    sources_item = None
+    try:
+        session = get_new_session()
+        print(f"session {session}")
+        if session:
+            now = update_time_timezone(timezone.localtime())
+            session.is_parsing = True
+            session.start_parsing = now
+            session.last_parsing = now
+            session.save(update_fields=['is_parsing', 'start_parsing', 'last_parsing'])
+        else:
+            time.sleep(random.randint(100, 150))
+            return
+        print(f"start")
+        select_sources = Sources.objects.filter(
+            Q(retro_max__isnull=True) | Q(retro_max__gte=timezone.now()), published=1,
+            status=1)
+        sources_item = SourcesItems.objects.filter(network_id=10, disabled=0, taken=0,
+                                                    source_id__in=list(select_sources.values_list('id', flat=True))) \
+            .order_by('last_modified').first()
+
+        # time = select_sources.get(id=sources_item.source_id).sources
+
+        if sources_item is not None:
+            time_s = select_sources.get(id=sources_item.source_id).sources
+            if time_s is None:
+                time_s = 0
+            if sources_item.last_modified is None or (
+                    sources_item.last_modified + datetime.timedelta(minutes=time_s) <
+                    update_time_timezone(timezone.localtime())):
+                sources_item.taken = 1
+                sources_item.save()
+                if sources_item.type == 18 or sources_item.type == 20:
+                    result = get_all_group_post(session, sources_item.data)
+                elif sources_item.type == 19 or sources_item.type == 21:
+                    result = get_all_profile_post(session, sources_item.data)
+                else:
+                    raise Exception("sources_item.type")
+                django.db.close_old_connections()
+                save_result(result)
+        if sources_item:
+            sources_item.last_modified = update_time_timezone(timezone.localtime())
+            sources_item.taken = 0
+            sources_item.save(update_fields=['taken', 'last_modified'])
+        if session:
+            stop_session(session, attempt=0)
+
+    except Exception as e:
+        print("start_task" + str(e))
+        time.sleep(20)
+        try:
+            if sources_item:
+                stop_source(sources_item, attempt=0)
+            if session:
+                stop_session(session, attempt=0)
+            time.sleep(60)
+        except Exception as e:
+            print("stop " + str(e))
+
+
 def start_task():
     from django.db.models import Q
 
-    from core.models import Sources, SourcesItems
+    from core.models import Sources
     from django.utils import timezone
     from accounts import get_new_session
     from accounts import update_time_timezone
@@ -40,7 +133,6 @@ def start_task():
     from saver import save_result
     from core.models import KeywordSource, Keyword
 
-    from login import login
     from search import get_all_posts
     key_word = None
     session = None
@@ -101,6 +193,11 @@ def start_task():
             print("stop " + str(e))
 
 
+# 18 - group_name
+# 19 - user_name
+# 20 - group
+# 21 - profile
+
 if __name__ == '__main__':
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ok_parser.settings')
     try:
@@ -118,78 +215,19 @@ if __name__ == '__main__':
     import pymysql
 
     pymysql.install_as_MySQLdb()
+    from saver import save_result
+
+    from parse_group import get_all_group_post
+    from parse_profile import get_all_profile_post
+
+    # for i in range(1):
+    #     time.sleep(4)
+    #     print("thread ThreadPoolExecutor thread start " + str(i))
+    #     x = threading.Thread(target=new_process, args=(i,))
+    #     x.start()
 
     for i in range(1):
         time.sleep(4)
         print("thread ThreadPoolExecutor thread start " + str(i))
-        x = threading.Thread(target=new_process, args=(i,))
+        x = threading.Thread(target=new_process_source, args=(i,))
         x.start()
-
-
-
-
-
-
-
-
-
-
-    #
-    #
-    #
-    # from saver import save_result
-    #
-    # from login import login
-    # from search import get_all_posts
-    #
-    # session = requests.session()
-
-    # session = login(session, login_, password_)
-    #
-    # _list_ = [
-    #     "телеканал санкт петербург",
-    #
-    #     "topspb",
-    #     "комсомольская правда санкт петербург",
-    #     "кп санкт петербург",
-    #     "комсомолка санкт петербург",
-    #     "комсомолка спб",
-    #     "spb kp ru",
-    #     "кп петербург",
-    #     "комсомолка публикует",
-    #     "деловой петербург",
-    #     "dp ru",
-    #     "сообщал дп",
-    #     'материале дп',
-    #     'ранее дп сообщал',
-    #
-    #     "писал дп",
-    #     "опрошенные дп",
-    #     "петербургский дневник",
-    #     "spbdnevnik ru",
-    #     "невские новости",
-    #     "nevnov ru",
-    #     "невским новостям",
-    #     "фонтанка ру",
-    #     "fontanka ru",
-    #     "по данным фонтанки",
-    #
-    #     "собеседник фонтанки",
-    #     "фонтанка уже рассказывала",
-    #     "материале фонтанки",
-    #     "сообщает фонтанка",
-    #     "фонтанке стало известно",
-    #     "фонтанка писала",
-    #     "издание фонтанка",
-    #     "фонтанка публикует",
-    #     "телеканал 78",
-    #     "78 ru"
-    # ]
-    # django.db.close_old_connections()
-    #
-    # for s in _list_:
-    #     print(s)
-    #     res = get_all_posts(session, s)
-    #     django.db.close_old_connections()
-    #     save_result(res, s)
-    #     time.sleep(60)

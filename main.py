@@ -164,7 +164,7 @@ def start_task():
 
         key_word = Keyword.objects.filter(network_id=10, enabled=1, taken=0,
                                            id__in=list(key_source.values_list('keyword_id', flat=True))
-                                           ).order_by('last_modified').last()
+                                           ).order_by('last_modified').first()
         print(f"key_word {key_word}")
 
         if key_word:
@@ -229,8 +229,8 @@ if __name__ == '__main__':
         x = threading.Thread(target=new_process, args=(i,))
         x.start()
 
-    for i in range(1):
-        time.sleep(4)
-        print("thread ThreadPoolExecutor thread start " + str(i))
-        x = threading.Thread(target=new_process_source, args=(i,))
-        x.start()
+    # for i in range(1):
+    #     time.sleep(4)
+    #     print("thread ThreadPoolExecutor thread start " + str(i))
+    #     x = threading.Thread(target=new_process_source, args=(i,))
+    #     x.start()

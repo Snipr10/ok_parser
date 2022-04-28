@@ -222,15 +222,15 @@ if __name__ == '__main__':
 
     from parse_group import get_all_group_post
     from parse_profile import get_all_profile_post
-    #
-    # for i in range(1):
-    #     time.sleep(4)
-    #     print("thread ThreadPoolExecutor thread start " + str(i))
-    #     x = threading.Thread(target=new_process, args=(i,))
-    #     x.start()
 
     for i in range(1):
         time.sleep(4)
         print("thread ThreadPoolExecutor thread start " + str(i))
-        x = threading.Thread(target=new_process_source, args=(i,))
+        x = threading.Thread(target=new_process, args=(i,))
         x.start()
+
+    # for i in range(1):
+    #     time.sleep(4)
+    #     print("thread ThreadPoolExecutor thread start " + str(i))
+    #     x = threading.Thread(target=new_process_source, args=(i,))
+    #     x.start()

@@ -78,29 +78,42 @@ def get_text_html(session, posts, r):
 
 
 def get_likes_comments_share(resp_bs4):
+
     try:
-        likes = resp_bs4.find("span", {"class": "ecnt"}).text
+        wigest_list = resp_bs4.find("ul", {"class": "widget-list"}).find_all("li", {"class":"widget-list_i"})
+    except Exception:
+        wigest_list = None
+    try:
+        likes = int(wigest_list[-1].find("span", {"class":"widget_count js-count"}).text)
     except Exception:
         try:
-            likes = get_digit(resp_bs4.find_all("a", {"data-type": "LIKE"})[-1].text)
+            likes = resp_bs4.find("span", {"class": "ecnt"}).text
+        except Exception:
+            try:
+                likes = get_digit(resp_bs4.find_all("a", {"data-type": "LIKE"})[-1].text)
+            except Exception:
+                likes = 0
+    try:
+        comments = int(wigest_list[0].find("span", {"class": "widget_count js-count"}).text)
+    except Exception:
+        try:
+            comments = resp_bs4.find("a", {"class": "widget-list_infos_i __COMMENT"}).find("span", {"class": "ic_tx"}).text
+        except Exception:
+            try:
+                comments = get_digit(resp_bs4.find_all("a", {"href": "#cmntfrm"})[-1].text)
+            except Exception:
+                comments = 0
+    try:
+        share = int(wigest_list[1].find("span", {"class": "widget_count js-count"}).text)
+    except Exception:
+        try:
+            share = resp_bs4.find("a", {"class": "widget-list_infos_i __RESHARE"}).find("span", {"class": "ic_tx"}).text
 
         except Exception:
-            likes = 0
-    try:
-        comments = resp_bs4.find("a", {"class": "widget-list_infos_i __COMMENT"}).find("span", {"class": "ic_tx"}).text
-    except Exception:
-        try:
-            comments = get_digit(resp_bs4.find_all("a", {"href": "#cmntfrm"})[-1].text)
-        except Exception:
-            comments = 0
-    try:
-        share = resp_bs4.find("a", {"class": "widget-list_infos_i __RESHARE"}).find("span", {"class": "ic_tx"}).text
-
-    except Exception:
-        try:
-            share = get_digit(resp_bs4.find_all("a", {"data-type": "RESHARE"})[-1].text)
-        except Exception:
-            share = 0
+            try:
+                share = get_digit(resp_bs4.find_all("a", {"data-type": "RESHARE"})[-1].text)
+            except Exception:
+                share = 0
 
     return likes, comments, share
 

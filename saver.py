@@ -1,4 +1,7 @@
 import hashlib
+import json
+
+import pika
 
 from core.models import PostContent, Posts, Owner
 
@@ -6,11 +9,14 @@ batch_size = 200
 
 
 def save_result(res):
+    from ok_parser.settings import rmq_settings
+
     print("save")
     owners = []
     posts = []
     post_content = []
     owner_id = None
+    sphinx_ids = []
     for r in res:
         group_id = None
         from_id = None
@@ -33,6 +39,8 @@ def save_result(res):
             if url:
                 if "ok.ru" not in url:
                     url = "https://ok.ru" + url
+            sphinx_id = get_sphinx_id(url)
+            sphinx_ids.append(sphinx_id)
             posts.append(Posts(
                 id=r['themeId'],
                 owner_id=owner_id,
@@ -42,6 +50,7 @@ def save_result(res):
                 comments=r['comments'],
                 reposts=r['share'],
                 url=url,
+                sphinx_id=sphinx_id,
                 content_hash=get_md5_text(r['text'])))
         except Exception as e:
             print(e)
@@ -70,6 +79,23 @@ def save_result(res):
         PostContent.objects.bulk_create(post_content, batch_size=batch_size, ignore_conflicts=True)
     except Exception as e:
         print(f"owner {e}")
+    try:
+        parameters = pika.URLParameters(rmq_settings)
+        connection = pika.BlockingConnection(parameters=parameters)
+        channel = connection.channel()
+        for sphinx_id in sphinx_ids:
+            print(f"RMQ try basic_publish")
+            rmq_json_data = {
+                "id": sphinx_id,
+                "network_id": 10
+            }
+            channel.basic_publish(exchange='',
+                                  routing_key='post_index',
+                                  body=json.dumps(rmq_json_data))
+            print(f"RMQ ok basic_publish")
+        channel.close()
+    except Exception as e:
+        print(f"RMQ basic_publish {e}")
 
 
 def get_sphinx_id(url):

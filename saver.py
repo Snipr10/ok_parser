@@ -84,7 +84,6 @@ def save_result(res):
         connection = pika.BlockingConnection(parameters=parameters)
         channel = connection.channel()
         for sphinx_id in sphinx_ids:
-            print(f"RMQ try basic_publish")
             rmq_json_data = {
                 "id": sphinx_id,
                 "network_id": 10
@@ -92,7 +91,6 @@ def save_result(res):
             channel.basic_publish(exchange='',
                                   routing_key='post_index',
                                   body=json.dumps(rmq_json_data))
-            print(f"RMQ ok basic_publish")
         channel.close()
     except Exception as e:
         print(f"RMQ basic_publish {e}")

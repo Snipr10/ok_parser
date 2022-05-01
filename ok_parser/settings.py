@@ -133,3 +133,5 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+rmq_settings = "amqp://post_index:R2ghtt9hebLv@192.168.5.46:5672/post_index"

@@ -218,11 +218,19 @@ if __name__ == '__main__':
     import pymysql
 
     pymysql.install_as_MySQLdb()
-    from saver import save_result
 
     from parse_group import get_all_group_post
     from parse_profile import get_all_profile_post
 
+    from core.models import Posts
+    from saver import save_result, get_sphinx_id
+
+    for p in Posts.objects.all():
+        if str(p.sphinx_id) == "0":
+            p.sphinx_id = get_sphinx_id(p.url)
+            p.save()
+    print("AOK")
+    time.sleep(1000)
     for i in range(1):
         time.sleep(4)
         print("thread ThreadPoolExecutor thread start " + str(i))

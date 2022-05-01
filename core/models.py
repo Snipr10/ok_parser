@@ -32,6 +32,7 @@ class Posts(models.Model):
     last_modified = models.DateTimeField(default=datetime(1, 1, 1, 0, 0, tzinfo=pytz.UTC))
     content_hash = models.CharField(max_length=32, null=True, blank=True)
     url = models.CharField(max_length=4096)
+    sphinx_id = models.CharField(max_length=4096)
 
     class Meta:
         db_table = 'prsr_parser_ok_posts'

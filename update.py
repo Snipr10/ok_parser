@@ -53,7 +53,7 @@ if __name__ == '__main__':
                 p.from_id= o.sphinx_id
                 p.save()
         try:
-            Owner(
+            Owner.objects.create(
                 id=o.sphinx_id,
                 screen_name=o.screen_name,
                 username=o.username,

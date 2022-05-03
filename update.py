@@ -39,7 +39,7 @@ if __name__ == '__main__':
     from parse_profile import get_all_profile_post
     from search import get_all_posts
 
-    owners = Owner.objects.all()
+    owners = list(Owner.objects.all())
     i=0
     while len(owners) > 0:
         i+= 1

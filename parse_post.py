@@ -6,11 +6,11 @@ import dateparser
 from bs4 import BeautifulSoup
 
 types_posts_group = {
-    "Movie": {"cmd":"altGroupMovieComments", "st":"sbj"},
-    "MediaTopic": {"cmd":"altGroupMediaThemeComments", "st":"themeId" }
+    "Movie": {"cmd": "altGroupMovieComments", "st": "sbj"},
+    "MediaTopic": {"cmd": "altGroupMediaThemeComments", "st": "themeId"}
 }
 types_posts_user = {
-    "Movie": {"cmd":"movieLayer", "st":"mvId"},
+    "Movie": {"cmd": "movieLayer", "st": "mvId"},
 }
 
 
@@ -62,7 +62,7 @@ def get_text_html(session, posts, r):
             print(e)
 
     likes, comments, share = get_likes_comments_share(resp_bs4)
-
+    owner_img = get_img(resp_bs4)
     return {
         "group_id": group_id,
         "themeId": posts['id'],
@@ -73,18 +73,18 @@ def get_text_html(session, posts, r):
         "share": share,
         "type": r['type'],
         "url": url,
-        "name": name
+        "name": name,
+        "owner_img": owner_img
     }
 
 
 def get_likes_comments_share(resp_bs4):
-
     try:
-        wigest_list = resp_bs4.find("ul", {"class": "widget-list"}).find_all("li", {"class":"widget-list_i"})
+        wigest_list = resp_bs4.find("ul", {"class": "widget-list"}).find_all("li", {"class": "widget-list_i"})
     except Exception:
         wigest_list = None
     try:
-        likes = int(wigest_list[-1].find("span", {"class":"widget_count js-count"}).text)
+        likes = int(wigest_list[-1].find("span", {"class": "widget_count js-count"}).text)
     except Exception:
         try:
             likes = resp_bs4.find("span", {"class": "ecnt"}).text
@@ -97,7 +97,8 @@ def get_likes_comments_share(resp_bs4):
         comments = int(wigest_list[0].find("span", {"class": "widget_count js-count"}).text)
     except Exception:
         try:
-            comments = resp_bs4.find("a", {"class": "widget-list_infos_i __COMMENT"}).find("span", {"class": "ic_tx"}).text
+            comments = resp_bs4.find("a", {"class": "widget-list_infos_i __COMMENT"}).find("span",
+                                                                                           {"class": "ic_tx"}).text
         except Exception:
             try:
                 comments = get_digit(resp_bs4.find_all("a", {"href": "#cmntfrm"})[-1].text)
@@ -116,6 +117,16 @@ def get_likes_comments_share(resp_bs4):
                 share = 0
 
     return likes, comments, share
+
+
+def get_img(res):
+    try:
+        return "https:" + res.find("img", {"class": "feed_ava_img"}).get("src")
+    except Exception as e:
+        try:
+            return "https:" + res.find("a", {"class":"group-avatar-link"}).find("img").get("src")
+        except Exception as e:
+            return None
 
 
 def get_digit(str):

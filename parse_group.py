@@ -104,7 +104,7 @@ def get_markerB(resp_bs4):
 
 
 def get_result(res):
-    from parse_post import get_likes_comments_share
+    from parse_post import get_likes_comments_share, get_img
 
     try:
         date = dateparser.parse(res.find("div", {"class": "feed_date"}).text)
@@ -132,6 +132,7 @@ def get_result(res):
             text = res.find("div", {"class": "media-text_cnt"}).text
         except Exception:
             text = None
+        owner_img = get_img(res)
         return {
             "themeId": theme_id,
             "text": text,
@@ -141,7 +142,8 @@ def get_result(res):
             "share": share,
             "url": url,
             "from_name": from_name,
-            "from_id": from_id
+            "from_id": from_id,
+            "owner_img": owner_img
         }
     except Exception as e:
         print(e)

@@ -33,7 +33,7 @@ def login(session, login_, password_, session_data=None):
     res = session.post(url, headers=login_headers, data=payload)
     if "topPanelLeftCorner" not in res.text or "TD_Logout" not in res.text:
         print(res)
-        session_data.is_active += 1
-        session_data.save()
+        session_data.is_active = 11
+        session_data.save(update_fields=['is_active'])
         raise Exception("Can not login")
     return session

@@ -40,9 +40,9 @@ if __name__ == '__main__':
     from search import get_all_posts
 
     owners = list(Owner.objects.all())
-    i=0
+    i = 0
     while len(owners) > 0:
-        i+= 1
+        i += 1
         print(i)
         owner_id = []
         owner_new = []
@@ -50,10 +50,13 @@ if __name__ == '__main__':
         owner = owners.pop()
         owner_id.append(owner)
         for o in owners:
-            if o.screen_name == owner.id:
+            if o.screen_name == owner.screen_name:
                 owner_id.append(o)
             else:
-                owner_new.append(o)
+                for z in owners:
+                    if z.screen_name == owner.screen_name and z.id !=owner.id :
+                        owner_new.append(o)
+                        break
         owners = owner_new
 
         id_ = owner.sphinx_id

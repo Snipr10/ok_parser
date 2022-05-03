@@ -66,6 +66,7 @@ if __name__ == '__main__':
         try:
             if o.sphinx_id != o.id:
                 o.delete()
+                print("DELETE")
         except Exception as e:
             print(e)
     # while len(owners) > 0:

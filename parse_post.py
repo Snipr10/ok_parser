@@ -63,9 +63,23 @@ def get_text_html(session, posts, r):
 
     likes, comments, share = get_likes_comments_share(resp_bs4)
     group_img = get_img(resp_bs4)
+    if group_img is None:
+        group_img = get_img(post_bs4)
+    try:
+        group_screen = None
+        int(group_id)
+    except Exception as e:
+        group_screen = group_id
+        group_id = None
+        for data in post_bs4.select("div[data-url*='id=']"):
+            try:
+                group_id = data.get("data-url")[data.get("data-url").find("id=")+3:].split("&")[0]
+                break
+            except Exception:
+                pass
     return {
         "group_id": group_id,
-        "group_screen":  None,
+        "group_screen":  group_screen,
         "themeId": posts['id'],
         "text": text,
         "date": date,

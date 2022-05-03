@@ -1,4 +1,4 @@
-def login(session, login_, password_):
+def login(session, login_, password_, session_data=None):
     login_headers = {
         'authority': 'ok.ru',
         'cache-control': 'max-age=0',
@@ -33,7 +33,7 @@ def login(session, login_, password_):
     res = session.post(url, headers=login_headers, data=payload)
     if "topPanelLeftCorner" not in res.text or "TD_Logout" not in res.text:
         print(res)
-
+        session_data.is_active += 1
+        session_data.save()
         raise Exception("Can not login")
-
     return session

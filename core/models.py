@@ -24,7 +24,7 @@ class Posts(models.Model):
     id = models.IntegerField(primary_key=True)
     owner_id = models.IntegerField(null=True, blank=True)
     from_id = models.IntegerField(null=True, blank=True)
-    created_date = models.DateField(default=datetime(1, 1, 1, 0, 0, tzinfo=pytz.UTC))
+    created_date = models.DateTimeField(default=datetime(1, 1, 1, 0, 0, tzinfo=pytz.UTC))
     likes = models.IntegerField(default=0)
     reposts = models.IntegerField(default=0)
     comments = models.IntegerField(default=0)

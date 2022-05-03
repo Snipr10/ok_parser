@@ -45,7 +45,7 @@ def get_all_posts(session_data, query):
     import requests
     print("get_all_posts")
     session = requests.session()
-    session = login(session, session_data.login, session_data.password)
+    session = login(session, session_data.login, session_data.password, session_data)
 
     count = 50
     firstIndex = 0
@@ -71,6 +71,6 @@ def get_all_posts(session_data, query):
         except Exception as e:
             import requests
             session = requests.session()
-            session = login(session, session_data.login, session_data.password)
+            session = login(session, session_data.login, session_data.password, session_data)
 
     return res

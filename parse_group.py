@@ -11,7 +11,7 @@ def get_all_group_post(session_data, query):
     import requests
     print("get_all_group_post")
     session = requests.session()
-    session = login(session, session_data.login, session_data.password)
+    session = login(session, session_data.login, session_data.password, session_data)
 
     res = []
     try:

@@ -17,19 +17,50 @@ def save_result(res):
     post_content = []
     owner_id = None
     sphinx_ids = []
+    owner_update_username = []
+    owner_update_avatar = []
+
     for r in res:
         group_id = None
         from_id = None
         try:
             group_id = r.get("group_id")
+            group_screen = r.get("group_screen")
+            group_img = r.get("group_img")
             if group_id:
                 owner_id = get_sphinx_id(group_id)
-                owners.append(Owner(id=owner_id, screen_name=group_id, name=r["name"], sphinx_id=get_sphinx_id(group_id)))
+                owner = Owner(
+                        id=owner_id,
+                        screen_name=group_id,
+                        username=group_screen,
+                        name=r["name"],
+                        avatar=group_img,
+                        sphinx_id=get_sphinx_id(group_id)
+                )
+                owners.append(owner)
+                if group_screen:
+                    owner_update_username.append(owner)
+                if group_img:
+                    owner_update_avatar.append(owner)
             from_id = r.get("from_id")
+            from_img = r.get("from_img")
+            from_screen = r.get("from_screen")
             if from_id:
                 from_id = get_sphinx_id(from_id)
-                owners.append(
-                    Owner(id=from_id, screen_name=from_id, name=r['from_name'], sphinx_id=get_sphinx_id(from_id)))
+                owner = Owner(
+                        id=from_id,
+                        screen_name=from_id,
+                        username=from_screen,
+                        name=r['from_name'],
+                        avatar=from_img,
+                        sphinx_id=get_sphinx_id(from_id)
+                )
+                owners.append(owner)
+
+                if from_screen:
+                    owner_update_username.append(owner)
+                if from_img:
+                    owner_update_avatar.append(owner)
             else:
                 from_id = owner_id
         except Exception as e:
@@ -60,6 +91,14 @@ def save_result(res):
         except Exception as e:
             print(e)
 
+    try:
+        Owner.objects.bulk_update(owner_update_username, ['username'], batch_size=batch_size)
+    except Exception as e:
+        print(f"owner {e}")
+    try:
+        Owner.objects.bulk_update(owner_update_avatar, ['avatar'], batch_size=batch_size)
+    except Exception as e:
+        print(f"owner {e}")
     try:
         Owner.objects.bulk_create(owners, batch_size=batch_size, ignore_conflicts=True)
     except Exception as e:

@@ -8,16 +8,20 @@ from bs4 import BeautifulSoup
 def get_all_profile_post(session_data, query):
     from login import login
     import requests
+    from parse_post import get_img
+
     print("get_all_group_post")
     session = requests.session()
     session = login(session, session_data.login, session_data.password, session_data)
 
     res = []
+    group_screen = None
     try:
         int(query)
         pre_url = f"https://ok.ru/profile/{query}"
     except Exception:
         pre_url = f"https://ok.ru/{query}"
+        group_screen = query
 
     result = []
 
@@ -36,6 +40,7 @@ def get_all_profile_post(session_data, query):
 
     group_id = re.search(r"st.groupId=\S\S\w+", first_resp.text).group(0)
     group_id = group_id.replace("st.groupId=", "")
+    group_img = get_img(resp_bs4_first)
 
     name = None
     try:
@@ -55,8 +60,11 @@ def get_all_profile_post(session_data, query):
     for r in res:
         res_dict = get_result(r)
         if res_dict:
-            res_dict["group_id"] = query
+            res_dict["group_id"] = group_id
             res_dict["name"] = name
+            res_dict["group_screen"] = group_screen
+            res_dict["group_img"] = group_img
+
             result.append(res_dict)
 
     time.sleep(10)
@@ -90,8 +98,11 @@ def get_all_profile_post(session_data, query):
         for r in resp_bs4.find_all("div", {"class": "feed-w"}):
             res_dict = get_result(r)
             if res_dict:
-                res_dict["group_id"] = query
+
+                res_dict["group_id"] = group_id
                 res_dict["name"] = name
+                res_dict["group_screen"] = group_screen
+                res_dict["group_img"] = group_img
                 result.append(res_dict)
     return result
 

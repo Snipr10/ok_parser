@@ -62,9 +62,10 @@ def get_text_html(session, posts, r):
             print(e)
 
     likes, comments, share = get_likes_comments_share(resp_bs4)
-    owner_img = get_img(resp_bs4)
+    group_img = get_img(resp_bs4)
     return {
         "group_id": group_id,
+        "group_screen":  None,
         "themeId": posts['id'],
         "text": text,
         "date": date,
@@ -74,7 +75,7 @@ def get_text_html(session, posts, r):
         "type": r['type'],
         "url": url,
         "name": name,
-        "owner_img": owner_img
+        "group_img": group_img
     }
 
 

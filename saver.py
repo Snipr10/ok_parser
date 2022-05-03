@@ -38,6 +38,7 @@ def save_result(res):
                         sphinx_id=get_sphinx_id(group_id)
                 )
                 owners.append(owner)
+                print("group_screen: " + str(group_screen) + " " + "group_id: " + str(group_id))
                 if group_screen:
                     owner_update_username.append(owner)
                 if group_img:

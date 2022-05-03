@@ -121,13 +121,18 @@ def get_likes_comments_share(resp_bs4):
 
 
 def get_img(res):
+    img = None
     try:
-        return "https:" + res.find("img", {"class": "feed_ava_img"}).get("src")
+        img = "https:" + res.find("img", {"class": "feed_ava_img"}).get("src")
     except Exception as e:
         try:
-            return "https:" + res.find("a", {"class":"group-avatar-link"}).find("img").get("src")
+            img = "https:" + res.find("a", {"class":"group-avatar-link"}).find("img").get("src")
         except Exception as e:
-            return None
+            img = None
+    if img:
+        if "i.mycdn.me" in img:
+            return img
+    return None
 
 
 def get_digit(str):

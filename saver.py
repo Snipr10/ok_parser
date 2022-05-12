@@ -120,6 +120,10 @@ def save_result(res):
     except Exception as e:
         print(f"owner {e}")
     try:
+        PostContent.objects.bulk_update(post_content, ["content"], batch_size=batch_size)
+    except Exception as e:
+        print(f"owner {e}")
+    try:
         parameters = pika.URLParameters(rmq_settings)
         connection = pika.BlockingConnection(parameters=parameters)
         channel = connection.channel()

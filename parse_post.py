@@ -38,17 +38,24 @@ def get_text_html(session, posts, r):
 
     resp_bs4 = BeautifulSoup(resp.text)
     try:
-        text_before = resp_bs4.find("span", {"class": "topic-text_before"})
-        text_content = resp_bs4.find("span", {"class": "topic-text_content"})
-        text = text_before.text + text_content.text
+        text = ''
+        for t in resp_bs4.find_all("div", {"class": "topic-block"}):
+            text += "\n" + t.text
     except Exception as e:
+
         try:
-            text = resp_bs4.find("div", {"class": "outlink_inner_title vdoname"}).text
+
+            text_before = resp_bs4.find("span", {"class": "topic-text_before"})
+            text_content = resp_bs4.find("span", {"class": "topic-text_content"})
+            text = text_before.text + text_content.text
         except Exception as e:
             try:
-                text = json.loads(resp_bs4.select_one('a[data-video*=""]').get("data-video")).get("videoName")
+                text = resp_bs4.find("div", {"class": "outlink_inner_title vdoname"}).text
             except Exception as e:
-                print(e)
+                try:
+                    text = json.loads(resp_bs4.select_one('a[data-video*=""]').get("data-video")).get("videoName")
+                except Exception as e:
+                    print(e)
     try:
         date = dateparser.parse(post_bs4.find("div", {"class": "feed_date"}).text)
     except Exception:

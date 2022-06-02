@@ -241,7 +241,7 @@ if __name__ == '__main__':
 
     # z = get_all_group_post(None, "fontanka")
     # z = get_all_profile_post(None, "zotov.artem")
-    z = get_all_posts(None, "Рубрика «Оружие Победы» Пулемёт ДП-27")
+    # z = get_all_posts(None, "Рубрика «Оружие Победы» Пулемёт ДП-27")
     for i in range(1):
         time.sleep(4)
         print("thread ThreadPoolExecutor thread start " + str(i))

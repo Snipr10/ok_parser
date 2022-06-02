@@ -262,7 +262,7 @@ if __name__ == '__main__':
             django.db.close_old_connections()
             try:
                 Sessions.objects.filter(is_parsing=1,
-                                        last_parsing=update_time_timezone(
+                                        last_parsing__lte=update_time_timezone(
                                             timezone.now() - datetime.timedelta(minutes=60)),
                                         ).update(is_parsing=0)
             except Exception as e:

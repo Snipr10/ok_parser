@@ -79,7 +79,7 @@ def start_task_source():
             Q(retro_max__isnull=True) | Q(retro_max__gte=timezone.now()), published=1,
             status=1)
         sources_item = SourcesItems.objects.filter(network_id=10, disabled=0, taken=0,
-                                                    source_id__in=list(select_sources.values_list('id', flat=True))) \
+                                                   source_id__in=list(select_sources.values_list('id', flat=True))) \
             .order_by('last_modified').first()
 
         # time = select_sources.get(id=sources_item.source_id).sources
@@ -163,8 +163,8 @@ def start_task():
         print(f"key_source {key_source}")
 
         key_word = Keyword.objects.filter(network_id=10, enabled=1, taken=0,
-                                           id__in=list(key_source.values_list('keyword_id', flat=True))
-                                           ).order_by('last_modified').first()
+                                          id__in=list(key_source.values_list('keyword_id', flat=True))
+                                          ).order_by('last_modified').first()
         print(f"key_word {key_word}")
 
         if key_word:
@@ -221,8 +221,15 @@ if __name__ == '__main__':
 
     from parse_group import get_all_group_post
     from parse_profile import get_all_profile_post
+    from search import get_all_posts
+    from accounts import update_time_timezone
+    from django.utils import timezone
+    import datetime
+    from core.models import Posts, Sessions, Keyword, Sources
 
-    from core.models import Posts
+    network_id = 10
+    # res = get_all_posts(None, "Борис Пиотровский")
+
     from saver import save_result, get_sphinx_id
 
     # for p in Posts.objects.all():
@@ -231,6 +238,10 @@ if __name__ == '__main__':
     #         p.save()
     # print("AOK")
     # time.sleep(1000)
+
+    # z = get_all_group_post(None, "fontanka")
+    # z = get_all_profile_post(None, "zotov.artem")
+    z = get_all_posts(None, "Рубрика «Оружие Победы» Пулемёт ДП-27")
     for i in range(1):
         time.sleep(4)
         print("thread ThreadPoolExecutor thread start " + str(i))
@@ -242,3 +253,32 @@ if __name__ == '__main__':
         print("thread ThreadPoolExecutor thread start " + str(i))
         x = threading.Thread(target=new_process_source, args=(i,))
         x.start()
+
+    i = 1
+    while True:
+        i += 1
+        time.sleep(180)
+        try:
+            django.db.close_old_connections()
+            try:
+                Sessions.objects.filter(is_parsing=1,
+                                        last_parsing=update_time_timezone(
+                                            timezone.now() - datetime.timedelta(minutes=60)),
+                                        ).update(is_parsing=0)
+            except Exception as e:
+                print(e)
+            try:
+                if i == 100:
+                    try:
+                        Keyword.objects.filter(network_id=network_id, enabled=1, taken=1).update(taken=0)
+                    except Exception as e:
+                        print(e)
+                    try:
+                        Sources.objects.filter(network_id=network_id, taken=1).update(taken=0)
+                    except Exception as e:
+                        print(e)
+                    i = 0
+            except Exception as e:
+                print(e)
+        except Exception as e:
+            print(e)

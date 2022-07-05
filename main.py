@@ -101,7 +101,7 @@ def start_task_source():
                     elif "profile/" in sources_item.data:
                         sources_item.type = 21
                     else:
-                        type_ = check_user_group(sources_item, sources_item.data)
+                        type_ = check_user_group(sources_item, session)
                         if type_:
                             sources_item.type = type_
                             sources_item.save(update_fields=["type"])
@@ -135,13 +135,13 @@ def start_task_source():
             print("stop " + str(e))
 
 
-def check_user_group(sources_item, data):
+def check_user_group(sources_item, session_data):
     session = requests.session()
     from login import login as login_
-    session = login_(session, sources_item.data.login, sources_item.data.password, sources_item.data)
-    if session.get(f"https://ok.ru/{data}/members").ok:
+    session = login_(session, session_data.login, session_data.password, session_data)
+    if session.get(f"https://ok.ru/{sources_item.data}/members").ok:
         return 18
-    if session.get(f"https://ok.ru/{data}/friends").ok:
+    if session.get(f"https://ok.ru/{sources_item.data}/friends").ok:
         return 19
     return None
 
@@ -265,11 +265,11 @@ if __name__ == '__main__':
     # z = get_all_group_post(None, "fontanka")
     # z = get_all_profile_post(None, "zotov.artem")
     # z = get_all_posts(None, "Рубрика «Оружие Победы» Пулемёт ДП-27")
-    # for i in range(1):
-    #     time.sleep(4)
-    #     print("thread ThreadPoolExecutor thread start " + str(i))
-    #     x = threading.Thread(target=new_process, args=(i,))
-    #     x.start()
+    for i in range(1):
+        time.sleep(4)
+        print("thread ThreadPoolExecutor thread start " + str(i))
+        x = threading.Thread(target=new_process, args=(i,))
+        x.start()
 
     for i in range(1):
         time.sleep(4)

@@ -9,6 +9,8 @@ import threading
 import random
 import multiprocessing
 
+import requests
+
 
 def new_process(i):
     for i in range(9):
@@ -93,12 +95,22 @@ def start_task_source():
                     update_time_timezone(timezone.localtime())):
                 sources_item.taken = 1
                 sources_item.save()
+                if sources_item.type == 22:
+                    if "group/" in sources_item.data:
+                        sources_item.type = 20
+                    elif "profile/" in sources_item.data:
+                        sources_item.type = 21
+                    else:
+                        type_ = check_user_group(sources_item, sources_item.data)
+                        if type_:
+                            sources_item.type = type_
+                            sources_item.save(update_fields=["type"])
+                        else:
+                            raise Exception("bad type")
                 if sources_item.type == 18 or sources_item.type == 20:
-                    print(f"sources_item.type")
-                    result = get_all_group_post(session, sources_item.data)
+                    result = get_all_group_post(session, sources_item.data.split("/")[-1])
                 elif sources_item.type == 19 or sources_item.type == 21:
-                    print(f"sources_item.type")
-                    result = get_all_profile_post(session, sources_item.data)
+                    result = get_all_profile_post(session, sources_item.data.split("/")[-1])
                 else:
                     raise Exception("sources_item.type")
                 django.db.close_old_connections()
@@ -121,6 +133,17 @@ def start_task_source():
             time.sleep(60)
         except Exception as e:
             print("stop " + str(e))
+
+
+def check_user_group(sources_item, data):
+    session = requests.session()
+    from login import login as login_
+    session = login_(session, sources_item.data.login, sources_item.data.password, sources_item.data)
+    if session.get(f"https://ok.ru/{data}/members").ok:
+        return 18
+    if session.get(f"https://ok.ru/{data}/friends").ok:
+        return 19
+    return None
 
 
 def start_task():

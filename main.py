@@ -291,6 +291,17 @@ if __name__ == '__main__':
             except Exception as e:
                 print(e)
             try:
+                # этот костыль, чтобы обновить новые таски  не ловить ошибку с датами
+                key_words = Keyword.objects.filter(network_id=10, enabled=1, taken=0,
+
+                                                   last_modified__lt=update_time_timezone(
+                                                       datetime.datetime(2000, 1, 1, 0, 0))
+                                                   ).update(
+                    last_modified=update_time_timezone(datetime.datetime(2000, 1, 1, 0, 0)))
+
+            except Exception as e:
+                pass
+            try:
                 if i == 100:
                     try:
                         Keyword.objects.filter(network_id=network_id, enabled=1, taken=1).update(taken=0)

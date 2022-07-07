@@ -95,9 +95,10 @@ if __name__ == '__main__':
     #         print(f"cant get")
     for u in Owner.objects.filter(screen_name__isnull=True):
         u_id = u.id
-
+        print(u_id)
         if len(Posts.objects.filter(from_id=u_id)) == 0 and len(Posts.objects.filter(owner_id=u_id)) :
             u.delete()
+            print(u_id)
 
     for u in Owner.objects.filter(screen_name__isnull=True):
         try:

@@ -53,7 +53,30 @@ if __name__ == '__main__':
     #         except Exception as e:
     #             print(f"cant get {e}")
     for u in Owner.objects.filter(screen_name__isnull=True):
+        try:
             print(u.id)
+            u_id = u.id
+            group_id = None
+            for p in Posts.objects.filter(from_id=u_id):
+                try:
+                    url = p.url
+                    group_id = url[url.find("&st.groupId=") + 12:url.find("&st.themeId=")]
+                    if group_id:
+                        try:
+                            int(group_id)
+                        except Exception:
+                            group_id = None
+                        break
+                except Exception as e:
+                    print(e)
+            if not group_id:
+                break
+            u.screen_name = group_id
+            u.save(update_fields=['screen_name'])
+            print("save")
+        except Exception as e:
+            print(f"cant get")
+
     for u in Owner.objects.filter(screen_name__isnull=True):
         try:
             print(u.id)

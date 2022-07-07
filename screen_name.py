@@ -51,6 +51,7 @@ if __name__ == '__main__':
                 print(f"cant get {e}")
     for u in Owner.objects.filter(screen_name__isnull=True, username__isnull=True):
         try:
+            print(u.id)
             u_id = u.id
             group_id = None
             for p in Posts.objects.filter(from_id=u_id):

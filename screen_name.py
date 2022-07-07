@@ -62,7 +62,8 @@ if __name__ == '__main__':
                 try:
                     url = p.url
                     group_id = url[url.find("&st.groupId=")+12:url.find("&st.themeId=")]
-                    break
+                    if group_id:
+                        break
                 except Exception as e:
                     print(e)
             if not group_id:

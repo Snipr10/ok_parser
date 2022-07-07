@@ -3,6 +3,7 @@ import os
 import requests
 from bs4 import BeautifulSoup
 
+
 if __name__ == '__main__':
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ok_parser.settings')
     try:
@@ -27,6 +28,8 @@ if __name__ == '__main__':
     from accounts import update_time_timezone
     from django.utils import timezone
     import datetime
+    from login import login
+
     from core.models import Posts, Sessions, Keyword, Sources, Owner
     for u in Owner.objects.filter(screen_name__isnull=True, username__isnull=False):
         try:
@@ -49,6 +52,9 @@ if __name__ == '__main__':
                 print("save")
             except Exception as e:
                 print(f"cant get {e}")
+    session = requests.session()
+    session = login(session, "%2B9062570633", "Elena%401996%25", "session_data")
+
     for u in Owner.objects.filter(screen_name__isnull=True, username__isnull=True):
         try:
             print(u.id)
@@ -63,7 +69,7 @@ if __name__ == '__main__':
                     print(e)
             if not group_id:
                 break
-            s = requests.get(f"https://ok.ru/group/{group_id}")
+            s = session.get(f"https://ok.ru/group/{group_id}")
             username = BeautifulSoup(s.text).find("link", {"rel":"alternate"}).get("href").split("/")[-1]
             if username and username == group_id:
                 username = None

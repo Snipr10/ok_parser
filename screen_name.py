@@ -29,6 +29,7 @@ if __name__ == '__main__':
     from django.utils import timezone
     import datetime
     from login import login
+    from saver import get_sphinx_id
 
     from core.models import Posts, Sessions, Keyword, Sources, Owner
     # for u in Owner.objects.filter(screen_name__isnull=True, username__isnull=False):
@@ -53,10 +54,26 @@ if __name__ == '__main__':
     #         except Exception as e:
     #             print(f"cant get {e}")
     from django.db.models import Q
-
+    list_user = set()
     for u in Owner.objects.filter():
         if Owner.objects.filter(~Q(id=u.id), screen_name=u.screen_name).exists():
             print(u.id)
+            list_user.add(u.screen_name)
+    for s in list_user:
+        users = Owner.objects.filter(screen_name=s)
+        user = None
+        for u in users:
+            if get_sphinx_id(u.screen_name) == u.id:
+                user = u
+                break
+        if user:
+            for u in users:
+                if u.id != user.id:
+                    Posts.objects.filter(owner_id=u.id).update(owner_id=user.id)
+                    Posts.objects.filter(from_id=u.id).update(from_id=user.id)
+                    u.delete()
+
+    #
     #
     #
     # session = requests.session()

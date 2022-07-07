@@ -53,6 +53,9 @@ if __name__ == '__main__':
     #         except Exception as e:
     #             print(f"cant get {e}")
 
+    session = requests.session()
+    session = login(session, "%2B9062570633", "Elena%401996%25", "session_data")
+
 
     for u in Owner.objects.filter(screen_name__isnull=True):
         try:
@@ -70,7 +73,7 @@ if __name__ == '__main__':
             if not group_id:
                 continue
             try:
-                s = requests.get(f"https://ok.ru/group/{group_id}")
+                s = session.get(f"https://ok.ru/group/{group_id}")
                 print(BeautifulSoup(s.text).find("link", {"rel":"alternate"}))
                 username = BeautifulSoup(s.text).find("link", {"rel":"alternate"}).get("href").split("/")[-1]
             except Exception as e:

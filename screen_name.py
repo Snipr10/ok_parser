@@ -28,7 +28,6 @@ if __name__ == '__main__':
     from django.utils import timezone
     import datetime
     from core.models import Posts, Sessions, Keyword, Sources, Owner
-
     for u in Owner.objects.filter(screen_name__isnull=True, username__isnull=False):
         try:
             print(u.username)
@@ -50,3 +49,26 @@ if __name__ == '__main__':
                 print("save")
             except Exception as e:
                 print(f"cant get {e}")
+    for u in Owner.objects.filter(screen_name__isnull=True, username__isnull=True):
+        try:
+            u_id = u.id
+            group_id = None
+            for p in Posts.objects.filter(from_id=u_id):
+                try:
+                    url = p.url
+                    group_id = url[url.find("&st.groupId=")+12:url.find("&st.themeId=")]
+                    break
+                except Exception as e:
+                    print(e)
+            if not group_id:
+                break
+            s = requests.get(f"https://ok.ru/group/{group_id}")
+            username = BeautifulSoup(s.text).find("link", {"rel":"alternate"}).get("href").split("/")[-1]
+            if username and username == group_id:
+                username = None
+            u.screen_name = group_id
+            u.username = username
+            u.save(update_fields=['screen_name', "username"])
+            print("save")
+        except Exception as e:
+            print(f"cant get {e}")

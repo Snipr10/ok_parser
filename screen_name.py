@@ -78,9 +78,11 @@ if __name__ == '__main__':
             if not group_id:
                 continue
             try:
-                s = session.get(f"https://ok.ru/group/{group_id}")
-                print(BeautifulSoup(s.text).find("link", {"rel":"alternate"}))
-                username = BeautifulSoup(s.text).find("link", {"rel":"alternate"}).get("href").split("/")[-1]
+                username = None
+
+                # s = session.get(f"https://ok.ru/group/{group_id}")
+                # print(BeautifulSoup(s.text).find("link", {"rel":"alternate"}))
+                # username = BeautifulSoup(s.text).find("link", {"rel":"alternate"}).get("href").split("/")[-1]
             except Exception as e:
                 username = None
             if username and username == group_id:

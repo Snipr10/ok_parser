@@ -53,7 +53,7 @@ if __name__ == '__main__':
     #         except Exception as e:
     #             print(f"cant get {e}")
 
-    for u in Owner.objects.filter(screen_name__isnull=True, username__isnull=True):
+    for u in Owner.objects.filter(screen_name__isnull=True):
         try:
             print(u.id)
             u_id = u.id

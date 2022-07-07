@@ -28,6 +28,7 @@ if __name__ == '__main__':
     from django.utils import timezone
     import datetime
     from core.models import Posts, Sessions, Keyword, Sources, Owner
+
     for u in Owner.objects.filter(screen_name__isnull=True, username__isnull=False):
         try:
             print(u.username)
@@ -37,4 +38,15 @@ if __name__ == '__main__':
             u.save(update_fields=['screen_name'])
             print("save")
         except Exception as e:
-            print(f"cant get {e}")
+            try:
+                screen_name = BeautifulSoup(s.text).find("div", {"id": "hook_Block_Avatar"}).find("div",
+                                                                                    {"class": "entity-avatar"}).find(
+                    "span",
+                    {
+                        "class": "__l"}).get(
+                    "data-id")
+                u.screen_name = screen_name
+                u.save(update_fields=['screen_name'])
+                print("save")
+            except Exception as e:
+                print(f"cant get {e}")

@@ -55,7 +55,7 @@ if __name__ == '__main__':
     from django.db.models import Q
 
     for u in Owner.objects.filter():
-        if Owner.objects.filter(~Q(id=u.id), screen_name=u.screen_name):
+        if Owner.objects.filter(~Q(id=u.id), screen_name=u.screen_name).exists():
             print(u.id)
     #
     #

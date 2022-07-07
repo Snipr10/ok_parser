@@ -52,79 +52,85 @@ if __name__ == '__main__':
     #             print("save")
     #         except Exception as e:
     #             print(f"cant get {e}")
+    from django.db.models import Q
 
-    session = requests.session()
-    session = login(session, "%2B9062570633", "Elena%401996%25", "session_data")
-
-    # s = session.get("https://m.ok.ru/dk?st.cmd=movieLayer&st.mvId=4178677926605")
+    for u in Owner.objects.filter():
+        if Owner.objects.filter(~Q(id=u.id), screen_name=u.screen_name):
+            print(u.id)
+    #
+    #
+    # session = requests.session()
+    # session = login(session, "%2B9062570633", "Elena%401996%25", "session_data")
+    #
+    # # s = session.get("https://m.ok.ru/dk?st.cmd=movieLayer&st.mvId=4178677926605")
+    # # for u in Owner.objects.filter(screen_name__isnull=True):
+    # #     try:
+    # #         print(u.id)
+    # #         u_id = u.id
+    # #         group_id = None
+    # #         for p in Posts.objects.filter(from_id=u_id):
+    # #             try:
+    # #                 url = p.url
+    # #                 group_id = url[url.find("&st.groupId=")+12:url.find("&st.themeId=")]
+    # #                 if group_id:
+    # #                     try:
+    # #                         int(group_id)
+    # #                         break
+    # #                     except Exception as e:
+    # #                         group_id = None
+    # #
+    # #             except Exception as e:
+    # #                 print(e)
+    # #         if not group_id:
+    # #             continue
+    # #         try:
+    # #             username = None
+    # #
+    # #             # s = session.get(f"https://ok.ru/group/{group_id}")
+    # #             # print(BeautifulSoup(s.text).find("link", {"rel":"alternate"}))
+    # #             # username = BeautifulSoup(s.text).find("link", {"rel":"alternate"}).get("href").split("/")[-1]
+    # #         except Exception as e:
+    # #             username = None
+    # #         if username and username == group_id:
+    # #             username = None
+    # #         u.screen_name = group_id
+    # #         u.username = username
+    # #         u.save(update_fields=['screen_name', "username"])
+    # #         print("save")
+    # #     except Exception as e:
+    # #         print(f"cant get")
+    # for u in Owner.objects.filter(screen_name__isnull=True):
+    #     u_id = u.id
+    #     print(u_id)
+    #     if not Posts.objects.filter(from_id=u_id).exists() and not Posts.objects.filter(owner_id=u_id).exists():
+    #         u.delete()
+    #         print(u_id)
+    #
     # for u in Owner.objects.filter(screen_name__isnull=True):
     #     try:
     #         print(u.id)
     #         u_id = u.id
-    #         group_id = None
+    #         url = None
     #         for p in Posts.objects.filter(from_id=u_id):
-    #             try:
+    #             if "movieLayer" in p.url:
     #                 url = p.url
-    #                 group_id = url[url.find("&st.groupId=")+12:url.find("&st.themeId=")]
-    #                 if group_id:
-    #                     try:
-    #                         int(group_id)
-    #                         break
-    #                     except Exception as e:
-    #                         group_id = None
-    #
-    #             except Exception as e:
-    #                 print(e)
-    #         if not group_id:
+    #                 break
+    #         if not url:
     #             continue
-    #         try:
-    #             username = None
+    #         s = session.get(url)
     #
-    #             # s = session.get(f"https://ok.ru/group/{group_id}")
-    #             # print(BeautifulSoup(s.text).find("link", {"rel":"alternate"}))
-    #             # username = BeautifulSoup(s.text).find("link", {"rel":"alternate"}).get("href").split("/")[-1]
+    #         url_user = BeautifulSoup(s.text).find("div", {"class": "owner_card"}).find_all("a")[-1].get("href")
+    #         group_id = url_user[url_user.find("&st.friendId") + 13:url_user.find("&_prevCmd")]
+    #
+    #         try:
+    #             s = requests.get(f"https://ok.ru/profile/{group_id}")
+    #             username = BeautifulSoup(s.text).find("link", {"rel": "canonical"}).get("href").split("/")[-1]
     #         except Exception as e:
     #             username = None
-    #         if username and username == group_id:
-    #             username = None
+    #
     #         u.screen_name = group_id
     #         u.username = username
     #         u.save(update_fields=['screen_name', "username"])
     #         print("save")
     #     except Exception as e:
     #         print(f"cant get")
-    for u in Owner.objects.filter(screen_name__isnull=True):
-        u_id = u.id
-        print(u_id)
-        if not Posts.objects.filter(from_id=u_id).exists() and not Posts.objects.filter(owner_id=u_id).exists():
-            u.delete()
-            print(u_id)
-
-    for u in Owner.objects.filter(screen_name__isnull=True):
-        try:
-            print(u.id)
-            u_id = u.id
-            url = None
-            for p in Posts.objects.filter(from_id=u_id):
-                if "movieLayer" in p.url:
-                    url = p.url
-                    break
-            if not url:
-                continue
-            s = session.get(url)
-
-            url_user = BeautifulSoup(s.text).find("div", {"class": "owner_card"}).find_all("a")[-1].get("href")
-            group_id = url_user[url_user.find("&st.friendId") + 13:url_user.find("&_prevCmd")]
-
-            try:
-                s = requests.get(f"https://ok.ru/profile/{group_id}")
-                username = BeautifulSoup(s.text).find("link", {"rel": "canonical"}).get("href").split("/")[-1]
-            except Exception as e:
-                username = None
-
-            u.screen_name = group_id
-            u.username = username
-            u.save(update_fields=['screen_name', "username"])
-            print("save")
-        except Exception as e:
-            print(f"cant get")

@@ -52,7 +52,8 @@ if __name__ == '__main__':
     #             print("save")
     #         except Exception as e:
     #             print(f"cant get {e}")
-    print(len(Owner.objects.filter(screen_name__isnull=True)))
+    for u in Owner.objects.filter(screen_name__isnull=True):
+            print(u.id)
     for u in Owner.objects.filter(screen_name__isnull=True):
         try:
             print(u.id)

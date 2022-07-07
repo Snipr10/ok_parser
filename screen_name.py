@@ -67,7 +67,7 @@ if __name__ == '__main__':
                     print(e)
             if not group_id:
                 break
-            s = session.get(f"https://ok.ru/group/{group_id}")
+            s = requests.get(f"https://ok.ru/group/{group_id}")
             print(s.text)
             username = BeautifulSoup(s.text).find("link", {"rel":"alternate"}).get("href").split("/")[-1]
             if username and username == group_id:

@@ -31,27 +31,27 @@ if __name__ == '__main__':
     from login import login
 
     from core.models import Posts, Sessions, Keyword, Sources, Owner
-    for u in Owner.objects.filter(screen_name__isnull=True, username__isnull=False):
-        try:
-            print(u.username)
-            s = requests.get(f"https://ok.ru/{u.username}")
-            screen_name=BeautifulSoup(s.text).find("link", {"rel":"alternate"}).get("href").split("/")[-1]
-            u.screen_name=screen_name
-            u.save(update_fields=['screen_name'])
-            print("save")
-        except Exception as e:
-            try:
-                screen_name = BeautifulSoup(s.text).find("div", {"id": "hook_Block_Avatar"}).find("div",
-                                                                                    {"class": "entity-avatar"}).find(
-                    "span",
-                    {
-                        "class": "__l"}).get(
-                    "data-id")
-                u.screen_name = screen_name
-                u.save(update_fields=['screen_name'])
-                print("save")
-            except Exception as e:
-                print(f"cant get {e}")
+    # for u in Owner.objects.filter(screen_name__isnull=True, username__isnull=False):
+    #     try:
+    #         print(u.username)
+    #         s = requests.get(f"https://ok.ru/{u.username}")
+    #         screen_name=BeautifulSoup(s.text).find("link", {"rel":"alternate"}).get("href").split("/")[-1]
+    #         u.screen_name=screen_name
+    #         u.save(update_fields=['screen_name'])
+    #         print("save")
+    #     except Exception as e:
+    #         try:
+    #             screen_name = BeautifulSoup(s.text).find("div", {"id": "hook_Block_Avatar"}).find("div",
+    #                                                                                 {"class": "entity-avatar"}).find(
+    #                 "span",
+    #                 {
+    #                     "class": "__l"}).get(
+    #                 "data-id")
+    #             u.screen_name = screen_name
+    #             u.save(update_fields=['screen_name'])
+    #             print("save")
+    #         except Exception as e:
+    #             print(f"cant get {e}")
     session = requests.session()
     session = login(session, "%2B9062570633", "Elena%401996%25", "session_data")
 

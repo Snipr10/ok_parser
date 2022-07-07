@@ -70,7 +70,6 @@ if __name__ == '__main__':
             if not group_id:
                 break
             try:
-
                 s = requests.get(f"https://ok.ru/group/{group_id}")
                 print(BeautifulSoup(s.text).find("link", {"rel":"alternate"}))
                 username = BeautifulSoup(s.text).find("link", {"rel":"alternate"}).get("href").split("/")[-1]
@@ -83,4 +82,4 @@ if __name__ == '__main__':
             u.save(update_fields=['screen_name', "username"])
             print("save")
         except Exception as e:
-            print(f"cant get {e}")
+            print(f"cant get")

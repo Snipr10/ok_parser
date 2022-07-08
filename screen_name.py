@@ -55,8 +55,9 @@ if __name__ == '__main__':
     #             print(f"cant get {e}")
     from django.db.models import Q
 
-    for s in Owner.objects.filter():
-        if s.screen_name == s.id:
+    for s in Owner.objects.all():
+        if str(s.screen_name) == str(s.id):
+            print(s.id)
             s.screen_name = None
             s.save(update_fields=['screen_name'])
 

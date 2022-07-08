@@ -129,31 +129,39 @@ if __name__ == '__main__':
     #         u.delete()
     #         print(u_id)
     #
+    # for u in Owner.objects.filter(screen_name__isnull=True):
+    #     try:
+    #         print(u.id)
+    #         u_id = u.id
+    #         url = None
+    #         for p in Posts.objects.filter(from_id=u_id):
+    #             if "movieLayer" in p.url:
+    #                 url = p.url
+    #                 break
+    #         if not url:
+    #             continue
+    #         s = session.get(url)
+    #
+    #         url_user = BeautifulSoup(s.text).find("div", {"class": "owner_card"}).find_all("a")[-1].get("href")
+    #         group_id = url_user[url_user.find("&st.friendId") + 13:url_user.find("&_prevCmd")]
+    #
+    #         try:
+    #             s = requests.get(f"https://ok.ru/profile/{group_id}")
+    #             username = BeautifulSoup(s.text).find("link", {"rel": "canonical"}).get("href").split("/")[-1]
+    #         except Exception as e:
+    #             username = None
+    #
+    #         u.screen_name = group_id
+    #         u.username = username
+    #         u.save(update_fields=['screen_name', "username"])
+    #         print("save")
+    #     except Exception as e:
+    #         print(f"cant get")
     for u in Owner.objects.filter(screen_name__isnull=True):
         try:
-            print(u.id)
-            u_id = u.id
-            url = None
-            for p in Posts.objects.filter(from_id=u_id):
-                if "movieLayer" in p.url:
-                    url = p.url
-                    break
-            if not url:
-                continue
-            s = session.get(url)
-
-            url_user = BeautifulSoup(s.text).find("div", {"class": "owner_card"}).find_all("a")[-1].get("href")
-            group_id = url_user[url_user.find("&st.friendId") + 13:url_user.find("&_prevCmd")]
-
-            try:
-                s = requests.get(f"https://ok.ru/profile/{group_id}")
-                username = BeautifulSoup(s.text).find("link", {"rel": "canonical"}).get("href").split("/")[-1]
-            except Exception as e:
-                username = None
-
-            u.screen_name = group_id
-            u.username = username
-            u.save(update_fields=['screen_name', "username"])
-            print("save")
+            ex = Owner.objects.filter(name=u.name, screen_name__isnull=False).first()
+            if ex:
+                u.screen_name= ex.screen_name
+                u.save(update_fields=['screen_name'])
         except Exception as e:
-            print(f"cant get")
+            print(e)

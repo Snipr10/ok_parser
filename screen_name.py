@@ -32,27 +32,27 @@ if __name__ == '__main__':
     from saver import get_sphinx_id
 
     from core.models import Posts, Sessions, Keyword, Sources, Owner
-    for u in Owner.objects.filter(screen_name__isnull=True, username__isnull=False):
-        try:
-            print(u.username)
-            s = requests.get(f"https://ok.ru/{u.username}")
-            screen_name=BeautifulSoup(s.text).find("link", {"rel":"alternate"}).get("href").split("/")[-1]
-            u.screen_name=screen_name
-            u.save(update_fields=['screen_name'])
-            print("save")
-        except Exception as e:
-            try:
-                screen_name = BeautifulSoup(s.text).find("div", {"id": "hook_Block_Avatar"}).find("div",
-                                                                                    {"class": "entity-avatar"}).find(
-                    "span",
-                    {
-                        "class": "__l"}).get(
-                    "data-id")
-                u.screen_name = screen_name
-                u.save(update_fields=['screen_name'])
-                print("save")
-            except Exception as e:
-                print(f"cant get {e}")
+    # for u in Owner.objects.filter(screen_name__isnull=True, username__isnull=False):
+    #     try:
+    #         print(u.username)
+    #         s = requests.get(f"https://ok.ru/{u.username}")
+    #         screen_name=BeautifulSoup(s.text).find("link", {"rel":"alternate"}).get("href").split("/")[-1]
+    #         u.screen_name=screen_name
+    #         u.save(update_fields=['screen_name'])
+    #         print("save")
+    #     except Exception as e:
+    #         try:
+    #             screen_name = BeautifulSoup(s.text).find("div", {"id": "hook_Block_Avatar"}).find("div",
+    #                                                                                 {"class": "entity-avatar"}).find(
+    #                 "span",
+    #                 {
+    #                     "class": "__l"}).get(
+    #                 "data-id")
+    #             u.screen_name = screen_name
+    #             u.save(update_fields=['screen_name'])
+    #             print("save")
+    #         except Exception as e:
+    #             print(f"cant get {e}")
     from django.db.models import Q
     #
     # for s in Owner.objects.all():
@@ -61,24 +61,24 @@ if __name__ == '__main__':
     #         s.screen_name = None
     #         s.save(update_fields=['screen_name'])
 
-    # list_user = set()
-    # for u in Owner.objects.filter():
-    #     if Owner.objects.filter(~Q(id=u.id), screen_name=u.screen_name).exists():
-    #         print(u.id)
-    #         list_user.add(u.screen_name)
-    # for s in list_user:
-    #     users = Owner.objects.filter(screen_name=s)
-    #     user = None
-    #     for u in users:
-    #         if get_sphinx_id(u.screen_name) == u.id:
-    #             user = u
-    #             break
-    #     if user:
-    #         for u in users:
-    #             if u.id != user.id:
-    #                 Posts.objects.filter(owner_id=u.id).update(owner_id=user.id)
-    #                 Posts.objects.filter(from_id=u.id).update(from_id=user.id)
-    #                 u.delete()
+    list_user = set()
+    for u in Owner.objects.filter():
+        if Owner.objects.filter(~Q(id=u.id), screen_name=u.screen_name).exists():
+            print(u.id)
+            list_user.add(u.screen_name)
+    for s in list_user:
+        users = Owner.objects.filter(screen_name=s)
+        user = None
+        for u in users:
+            if get_sphinx_id(u.screen_name) == u.id:
+                user = u
+                break
+        if user:
+            for u in users:
+                if u.id != user.id:
+                    Posts.objects.filter(owner_id=u.id).update(owner_id=user.id)
+                    Posts.objects.filter(from_id=u.id).update(from_id=user.id)
+                    u.delete()
 
     #
     #

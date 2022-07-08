@@ -144,6 +144,8 @@ if __name__ == '__main__':
                         u.save(update_fields=['screen_name'])
                         break
                     except Exception as e:
+                        group_id = url[url.find("ok.ru/") + 6:url.find("/statuses")]
+
                         if "/" not in group_id:
                             u.username = group_id
                             u.save(update_fields=['username'])

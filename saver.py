@@ -35,7 +35,7 @@ def save_result(res):
                         username=group_screen,
                         name=r["name"],
                         avatar=group_img,
-                        sphinx_id=get_sphinx_id(group_id)
+                        sphinx_id=owner_id
                 )
                 owners.append(owner)
                 print("group_screen: " + str(group_screen) + " " + "group_id: " + str(group_id))
@@ -43,18 +43,18 @@ def save_result(res):
                     owner_update_username.append(owner)
                 if group_img:
                     owner_update_avatar.append(owner)
-            from_id = r.get("from_id")
+            screen_name = r.get("from_id")
             from_img = r.get("from_img")
             from_screen = r.get("from_screen")
-            if from_id:
-                from_id = get_sphinx_id(from_id)
+            if screen_name:
+                from_id = get_sphinx_id(screen_name)
                 owner = Owner(
                         id=from_id,
-                        screen_name=from_id,
+                        screen_name=screen_name,
                         username=from_screen,
                         name=r['from_name'],
                         avatar=from_img,
-                        sphinx_id=get_sphinx_id(from_id)
+                        sphinx_id=from_id
                 )
                 owners.append(owner)
 

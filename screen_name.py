@@ -32,27 +32,27 @@ if __name__ == '__main__':
     from saver import get_sphinx_id
 
     from core.models import Posts, Sessions, Keyword, Sources, Owner
-    # for u in Owner.objects.filter(screen_name__isnull=True, username__isnull=False):
-    #     try:
-    #         print(u.username)
-    #         s = requests.get(f"https://ok.ru/{u.username}")
-    #         screen_name=BeautifulSoup(s.text).find("link", {"rel":"alternate"}).get("href").split("/")[-1]
-    #         u.screen_name=screen_name
-    #         u.save(update_fields=['screen_name'])
-    #         print("save")
-    #     except Exception as e:
-    #         try:
-    #             screen_name = BeautifulSoup(s.text).find("div", {"id": "hook_Block_Avatar"}).find("div",
-    #                                                                                 {"class": "entity-avatar"}).find(
-    #                 "span",
-    #                 {
-    #                     "class": "__l"}).get(
-    #                 "data-id")
-    #             u.screen_name = screen_name
-    #             u.save(update_fields=['screen_name'])
-    #             print("save")
-    #         except Exception as e:
-    #             print(f"cant get {e}")
+    for u in Owner.objects.filter(screen_name__isnull=True, username__isnull=False):
+        try:
+            print(u.username)
+            s = requests.get(f"https://ok.ru/{u.username}")
+            screen_name=BeautifulSoup(s.text).find("link", {"rel":"alternate"}).get("href").split("/")[-1]
+            u.screen_name=screen_name
+            u.save(update_fields=['screen_name'])
+            print("save")
+        except Exception as e:
+            try:
+                screen_name = BeautifulSoup(s.text).find("div", {"id": "hook_Block_Avatar"}).find("div",
+                                                                                    {"class": "entity-avatar"}).find(
+                    "span",
+                    {
+                        "class": "__l"}).get(
+                    "data-id")
+                u.screen_name = screen_name
+                u.save(update_fields=['screen_name'])
+                print("save")
+            except Exception as e:
+                print(f"cant get {e}")
     from django.db.models import Q
     #
     # for s in Owner.objects.all():
@@ -130,29 +130,29 @@ if __name__ == '__main__':
     #         print(u_id)
     #
     # https://ok.ru/profile/338318952336/statuses/154563616675984
-    for u in Owner.objects.filter(screen_name__isnull=True):
-        u_id = u.id
-
-        for p in Posts.objects.filter(from_id=u_id):
-            try:
-                url = p.url
-                group_id =url[url.find("profile/")+8:url.find("/statuses")]
-                if group_id:
-                    try:
-                        int(group_id)
-                        u.screen_name=group_id
-                        u.save(update_fields=['screen_name'])
-                        break
-                    except Exception as e:
-                        group_id = url[url.find("ok.ru/") + 6:url.find("/statuses")]
-
-                        if "/" not in group_id:
-                            u.username = group_id
-                            u.save(update_fields=['username'])
-                            break
-                        group_id = None
-            except Exception as e:
-                print(e)
+    # for u in Owner.objects.filter(screen_name__isnull=True):
+    #     u_id = u.id
+    #
+    #     for p in Posts.objects.filter(from_id=u_id):
+    #         try:
+    #             url = p.url
+    #             group_id =url[url.find("profile/")+8:url.find("/statuses")]
+    #             if group_id:
+    #                 try:
+    #                     int(group_id)
+    #                     u.screen_name=group_id
+    #                     u.save(update_fields=['screen_name'])
+    #                     break
+    #                 except Exception as e:
+    #                     group_id = url[url.find("ok.ru/") + 6:url.find("/statuses")]
+    #
+    #                     if "/" not in group_id:
+    #                         u.username = group_id
+    #                         u.save(update_fields=['username'])
+    #                         break
+    #                     group_id = None
+    #         except Exception as e:
+    #             print(e)
 
     # for u in Owner.objects.filter(screen_name__isnull=True):
     #     try:

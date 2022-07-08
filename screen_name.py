@@ -61,35 +61,35 @@ if __name__ == '__main__':
     #         s.screen_name = None
     #         s.save(update_fields=['screen_name'])
 
-    # list_user = set()
-    # for u in Owner.objects.filter():
-    #     if Owner.objects.filter(~Q(id=u.id), screen_name=u.screen_name).exists():
-    #         print(u.id)
-    #         list_user.add(u.screen_name)
-    # for s in list_user:
-    #     users = Owner.objects.filter(screen_name=s)
-    #     user = None
-    #     for u in users:
-    #         if get_sphinx_id(u.screen_name) == u.id:
-    #             user = u
-    #             break
-    #     if user:
-    #         for u in users:
-    #             if u.id != user.id:
-    #                 Posts.objects.filter(owner_id=u.id).update(owner_id=user.id)
-    #                 Posts.objects.filter(from_id=u.id).update(from_id=user.id)
-    #                 u.delete()
+    list_user = set()
     for u in Owner.objects.filter():
-        if str(u.id) != str(get_sphinx_id(u.screen_name)):
-            f_id = u.id
-            Posts.objects.filter(owner_id=u.id).update(owner_id=get_sphinx_id(u.screen_name))
-            Posts.objects.filter(from_id=u.id).update(from_id=get_sphinx_id(u.screen_name))
-            u.id = get_sphinx_id(u.screen_name)
-            u.sphinx_id = get_sphinx_id(u.screen_name)
-            u.save()
-        elif str(u.sphinx_id) != str(get_sphinx_id(u.screen_name)):
-            u.sphinx_id = get_sphinx_id(u.screen_name)
-            u.save(update_fields=['sphinx_id'])
+        if Owner.objects.filter(~Q(id=u.id), screen_name=u.screen_name).exists():
+            print(u.id)
+            list_user.add(u.screen_name)
+    for s in list_user:
+        users = Owner.objects.filter(screen_name=s)
+        user = None
+        for u in users:
+            if get_sphinx_id(u.screen_name) == u.id:
+                user = u
+                break
+        if user:
+            for u in users:
+                if u.id != user.id:
+                    Posts.objects.filter(owner_id=u.id).update(owner_id=user.id)
+                    Posts.objects.filter(from_id=u.id).update(from_id=user.id)
+                    u.delete()
+    # for u in Owner.objects.filter():
+    #     if str(u.id) != str(get_sphinx_id(u.screen_name)):
+    #         f_id = u.id
+    #         Posts.objects.filter(owner_id=u.id).update(owner_id=get_sphinx_id(u.screen_name))
+    #         Posts.objects.filter(from_id=u.id).update(from_id=get_sphinx_id(u.screen_name))
+    #         u.id = get_sphinx_id(u.screen_name)
+    #         u.sphinx_id = get_sphinx_id(u.screen_name)
+    #         u.save()
+    #     elif str(u.sphinx_id) != str(get_sphinx_id(u.screen_name)):
+    #         u.sphinx_id = get_sphinx_id(u.screen_name)
+    #         u.save(update_fields=['sphinx_id'])
     #
     #
     #

@@ -54,12 +54,12 @@ if __name__ == '__main__':
     #         except Exception as e:
     #             print(f"cant get {e}")
     from django.db.models import Q
-
-    for s in Owner.objects.all():
-        if str(s.screen_name) == str(s.id):
-            print(s.id)
-            s.screen_name = None
-            s.save(update_fields=['screen_name'])
+    #
+    # for s in Owner.objects.all():
+    #     if str(s.screen_name) == str(s.id):
+    #         print(s.id)
+    #         s.screen_name = None
+    #         s.save(update_fields=['screen_name'])
 
     # list_user = set()
     # for u in Owner.objects.filter():
@@ -83,46 +83,45 @@ if __name__ == '__main__':
     #
     #
     #
-    # session = requests.session()
-    # session = login(session, "%2B9062570633", "Elena%401996%25", "session_data")
-    #
-    # # s = session.get("https://m.ok.ru/dk?st.cmd=movieLayer&st.mvId=4178677926605")
-    # # for u in Owner.objects.filter(screen_name__isnull=True):
-    # #     try:
-    # #         print(u.id)
-    # #         u_id = u.id
-    # #         group_id = None
-    # #         for p in Posts.objects.filter(from_id=u_id):
-    # #             try:
-    # #                 url = p.url
-    # #                 group_id = url[url.find("&st.groupId=")+12:url.find("&st.themeId=")]
-    # #                 if group_id:
-    # #                     try:
-    # #                         int(group_id)
-    # #                         break
-    # #                     except Exception as e:
-    # #                         group_id = None
-    # #
-    # #             except Exception as e:
-    # #                 print(e)
-    # #         if not group_id:
-    # #             continue
-    # #         try:
-    # #             username = None
-    # #
-    # #             # s = session.get(f"https://ok.ru/group/{group_id}")
-    # #             # print(BeautifulSoup(s.text).find("link", {"rel":"alternate"}))
-    # #             # username = BeautifulSoup(s.text).find("link", {"rel":"alternate"}).get("href").split("/")[-1]
-    # #         except Exception as e:
-    # #             username = None
-    # #         if username and username == group_id:
-    # #             username = None
-    # #         u.screen_name = group_id
-    # #         u.username = username
-    # #         u.save(update_fields=['screen_name', "username"])
-    # #         print("save")
-    # #     except Exception as e:
-    # #         print(f"cant get")
+    session = requests.session()
+    session = login(session, "%2B9062570633", "Elena%401996%25", "session_data")
+
+    for u in Owner.objects.filter(screen_name__isnull=True):
+        try:
+            print(u.id)
+            u_id = u.id
+            group_id = None
+            for p in Posts.objects.filter(from_id=u_id):
+                try:
+                    url = p.url
+                    group_id = url[url.find("&st.groupId=")+12:url.find("&st.themeId=")]
+                    if group_id:
+                        try:
+                            int(group_id)
+                            break
+                        except Exception as e:
+                            group_id = None
+
+                except Exception as e:
+                    print(e)
+            if not group_id:
+                continue
+            try:
+                username = None
+
+                s = session.get(f"https://ok.ru/group/{group_id}")
+                print(BeautifulSoup(s.text).find("link", {"rel":"alternate"}))
+                username = BeautifulSoup(s.text).find("link", {"rel":"alternate"}).get("href").split("/")[-1]
+            except Exception as e:
+                username = None
+            if username and username == group_id:
+                username = None
+            u.screen_name = group_id
+            u.username = username
+            u.save(update_fields=['screen_name', "username"])
+            print("save")
+        except Exception as e:
+            print(f"cant get")
     # for u in Owner.objects.filter(screen_name__isnull=True):
     #     u_id = u.id
     #     print(u_id)

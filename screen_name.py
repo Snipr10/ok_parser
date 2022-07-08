@@ -122,12 +122,12 @@ if __name__ == '__main__':
     #         print("save")
     #     except Exception as e:
     #         print(f"cant get")
-    # for u in Owner.objects.filter(screen_name__isnull=True):
-    #     u_id = u.id
-    #     print(u_id)
-    #     if not Posts.objects.filter(from_id=u_id).exists() and not Posts.objects.filter(owner_id=u_id).exists():
-    #         u.delete()
-    #         print(u_id)
+    for u in Owner.objects.filter(screen_name__isnull=True):
+        u_id = u.id
+        print(u_id)
+        if not Posts.objects.filter(from_id=u_id).exists() and not Posts.objects.filter(owner_id=u_id).exists():
+            u.delete()
+            print(u_id)
     #
     # for u in Owner.objects.filter(screen_name__isnull=True):
     #     try:
@@ -157,11 +157,11 @@ if __name__ == '__main__':
     #         print("save")
     #     except Exception as e:
     #         print(f"cant get")
-    for u in Owner.objects.filter(screen_name__isnull=True):
-        try:
-            ex = Owner.objects.filter(name=u.name, screen_name__isnull=False).first()
-            if ex:
-                u.screen_name= ex.screen_name
-                u.save(update_fields=['screen_name'])
-        except Exception as e:
-            print(e)
+    # for u in Owner.objects.filter(screen_name__isnull=True):
+    #     try:
+    #         ex = Owner.objects.filter(name=u.name, screen_name__isnull=False).first()
+    #         if ex:
+    #             u.screen_name= ex.screen_name
+    #             u.save(update_fields=['screen_name'])
+    #     except Exception as e:
+    #         print(e)

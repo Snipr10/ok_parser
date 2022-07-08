@@ -86,7 +86,7 @@ if __name__ == '__main__':
             Posts.objects.filter(from_id=u.id).update(from_id=get_sphinx_id(u.screen_name))
             u.id = get_sphinx_id(u.screen_name)
             u.sphinx_id = get_sphinx_id(u.screen_name)
-            u.save(update_fields=['sphinx_id', "id"])
+            u.save()
         elif str(u.sphinx_id) != str(get_sphinx_id(u.screen_name)):
             u.sphinx_id = get_sphinx_id(u.screen_name)
             u.save(update_fields=['sphinx_id'])

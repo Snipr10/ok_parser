@@ -122,13 +122,32 @@ if __name__ == '__main__':
     #         print("save")
     #     except Exception as e:
     #         print(f"cant get")
+    # for u in Owner.objects.filter(screen_name__isnull=True):
+    #     u_id = u.id
+    #     print(u_id)
+    #     if not Posts.objects.filter(from_id=u_id).exists() and not Posts.objects.filter(owner_id=u_id).exists():
+    #         u.delete()
+    #         print(u_id)
+    #
+    # https://ok.ru/profile/338318952336/statuses/154563616675984
     for u in Owner.objects.filter(screen_name__isnull=True):
         u_id = u.id
-        print(u_id)
-        if not Posts.objects.filter(from_id=u_id).exists() and not Posts.objects.filter(owner_id=u_id).exists():
-            u.delete()
-            print(u_id)
-    #
+
+        for p in Posts.objects.filter(from_id=u_id):
+            try:
+                url = p.url
+                group_id =url[url.find("profile/")+8:url.find("/statuses")]
+                if group_id:
+                    try:
+                        int(group_id)
+                        u.screen_name=group_id
+                        u.save(update_fields=['screen_name'])
+                        break
+                    except Exception as e:
+                        group_id = None
+            except Exception as e:
+                print(e)
+
     # for u in Owner.objects.filter(screen_name__isnull=True):
     #     try:
     #         print(u.id)

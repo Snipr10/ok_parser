@@ -65,6 +65,7 @@ if __name__ == '__main__':
     for p in Posts.objects.all():
         try:
             if p.from_id != p.owner_id:
+                print(p.id)
                 from_user = Owner.objects.filter(id=p.from_id)
                 if from_user is  None:
                     continue

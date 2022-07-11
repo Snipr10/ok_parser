@@ -38,8 +38,8 @@ def get_all_profile_post(session_data, query):
     tkn = tkn.split("'")[0]
 
 
-    group_id = re.search(r"st.groupId=\S\S\w+", first_resp.text).group(0)
-    group_id = group_id.replace("st.groupId=", "")
+    group_id = re.search(r"st.friendId=\S\S\w+", first_resp.text).group(0)
+    group_id = group_id.replace("st.friendId=", "")
     group_img = get_img(resp_bs4_first)
 
     name = None

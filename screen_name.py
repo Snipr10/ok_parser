@@ -61,8 +61,10 @@ if __name__ == '__main__':
     #         s.screen_name = None
     #         s.save(update_fields=['screen_name'])
     #
-
+    i = 0
     for p in Posts.objects.all():
+        i += 1
+        print(i)
         try:
             if p.from_id != p.owner_id:
                 print(p.id)

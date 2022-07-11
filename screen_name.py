@@ -62,16 +62,17 @@ if __name__ == '__main__':
     #         s.save(update_fields=['screen_name'])
     #
     i = 0
+
     for p in Posts.objects.all():
         i += 1
         print(i)
         try:
             if p.from_id != p.owner_id:
                 print(p.id)
-                from_user = Owner.objects.filter(id=p.from_id)
+                from_user = Owner.objects.filter(id=p.from_id).first()
                 if from_user is  None:
                     continue
-                owner_user = Owner.objects.filter(id=p.owner_id)
+                owner_user = Owner.objects.filter(id=p.owner_id).first()
                 if owner_user is  None:
                     p.owner_id = p.from_id
                     p.save()

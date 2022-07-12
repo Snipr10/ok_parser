@@ -256,9 +256,13 @@ if __name__ == '__main__':
     result = get_all_profile_post("", "581992726859")
     django.db.close_old_connections()
     save_result(result)
+
+    raise Exception("stop")
+
     network_id = 10
     # res = get_all_posts(None, "Борис Пиотровский")
-
+    # session = login(session, "%2B9062570633", "Elena%401996%25", session_data)
+    s = get_all_group_post("session_data", "promo78")
     from saver import save_result, get_sphinx_id
 
     # for p in Posts.objects.all():

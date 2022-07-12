@@ -12,7 +12,8 @@ def get_all_profile_post(session_data, query):
 
     print("get_all_group_post")
     session = requests.session()
-    session = login(session, session_data.login, session_data.password, session_data)
+    # session = login(session, session_data.login, session_data.password, session_data)
+    session = login(session, "%2B9062570633", "Elena%401996%25", session_data)
 
     res = []
     group_screen = None

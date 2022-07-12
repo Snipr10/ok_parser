@@ -250,6 +250,12 @@ if __name__ == '__main__':
     import datetime
     from core.models import Posts, Sessions, Keyword, Sources
 
+
+    from saver import save_result
+
+    result = get_all_profile_post("", "581992726859")
+    django.db.close_old_connections()
+    save_result(result)
     network_id = 10
     # res = get_all_posts(None, "Борис Пиотровский")
 

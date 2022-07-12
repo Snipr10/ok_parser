@@ -12,6 +12,7 @@ import multiprocessing
 import requests
 
 
+
 def new_process(i):
     for i in range(9):
         time.sleep(random.randint(1, 5))
@@ -250,14 +251,17 @@ if __name__ == '__main__':
     import datetime
     from core.models import Posts, Sessions, Keyword, Sources
 
+    # from login import login
+    #
+    # from saver import save_result
+    # session = requests.session()
+    #
+    # session = login(session, "79309871646", "u97zz1p2c1", "session_data")
+    #
+    # result = get_all_profile_post("", "581992726859")
+    # django.db.close_old_connections()
+    # save_result(result)
 
-    from saver import save_result
-
-    result = get_all_profile_post("", "581992726859")
-    django.db.close_old_connections()
-    save_result(result)
-
-    raise Exception("stop")
 
     network_id = 10
     # res = get_all_posts(None, "Борис Пиотровский")

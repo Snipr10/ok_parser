@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 """Django's command-line utility for administrative tasks."""
+import datetime
 
 import os
 import time
@@ -59,7 +60,8 @@ if __name__ == '__main__':
                 username=o.username,
                 name=o.name,
                 avatar=o.avatar,
-                sphinx_id=o.sphinx_id
+                sphinx_id=o.sphinx_id,
+                last_modified=datetime.datetime.now(),
             )
         except Exception as e:
             print(e)

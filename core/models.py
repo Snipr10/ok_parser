@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from datetime import datetime
 import pytz
+from django.utils.timezone import now
 
 
 # class User(AbstractUser):
@@ -16,6 +17,7 @@ class Owner(models.Model):
     sphinx_id = models.CharField(max_length=255)
     username = models.CharField(max_length=255)
     avatar = models.CharField(max_length=255)
+    last_modified = models.DateTimeField(default=now)
 
     class Meta:
         db_table = 'prsr_parser_ok_users'
@@ -30,7 +32,7 @@ class Posts(models.Model):
     reposts = models.IntegerField(default=0)
     comments = models.IntegerField(default=0)
     found_date = models.DateField(auto_now_add=True)
-    last_modified = models.DateTimeField(default=datetime(1, 1, 1, 0, 0, tzinfo=pytz.UTC))
+    last_modified = models.DateTimeField(default=now)
     content_hash = models.CharField(max_length=32, null=True, blank=True)
     url = models.CharField(max_length=4096)
     sphinx_id = models.CharField(max_length=4096)
@@ -43,6 +45,7 @@ class PostContent(models.Model):
     id = models.IntegerField(primary_key=True)
     content = models.CharField(max_length=10000)
     url = models.CharField(max_length=4096)
+    last_modified = models.DateTimeField(default=now)
 
     class Meta:
         db_table = 'prsr_parser_ok_post_content'

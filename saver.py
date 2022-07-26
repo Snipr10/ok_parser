@@ -1,5 +1,6 @@
 import hashlib
 import json
+import datetime
 
 import pika
 
@@ -35,7 +36,8 @@ def save_result(res):
                         username=group_screen,
                         name=r["name"],
                         avatar=group_img,
-                        sphinx_id=owner_id
+                        sphinx_id=owner_id,
+                        last_modified=datetime.datetime.now(),
                 )
                 owners.append(owner)
                 print("group_screen: " + str(group_screen) + " " + "group_id: " + str(group_id))
@@ -54,7 +56,8 @@ def save_result(res):
                         username=from_screen,
                         name=r['from_name'],
                         avatar=from_img,
-                        sphinx_id=from_id
+                        sphinx_id=from_id,
+                        last_modified=datetime.datetime.now(),
                 )
                 owners.append(owner)
 
@@ -88,16 +91,18 @@ def save_result(res):
             print(e)
 
         try:
-            post_content.append(PostContent(id=r['themeId'], content=r['text'], url=r["url"]))
+            post_content.append(PostContent(id=r['themeId'], content=r['text'], url=r["url"],
+                                            last_modified=datetime.datetime.now(),
+                                            ))
         except Exception as e:
             print(e)
 
     try:
-        Owner.objects.bulk_update(owner_update_username, ['username'], batch_size=batch_size)
+        Owner.objects.bulk_update(owner_update_username, ['username', 'last_modified'], batch_size=batch_size)
     except Exception as e:
         print(f"owner {e}")
     try:
-        Owner.objects.bulk_update(owner_update_avatar, ['avatar'], batch_size=batch_size)
+        Owner.objects.bulk_update(owner_update_avatar, ['avatar', 'last_modified'], batch_size=batch_size)
     except Exception as e:
         print(f"owner {e}")
     try:
@@ -120,7 +125,7 @@ def save_result(res):
     except Exception as e:
         print(f"owner {e}")
     try:
-        PostContent.objects.bulk_update(post_content, ["content"], batch_size=batch_size)
+        PostContent.objects.bulk_update(post_content, ["content", "last_modified"], batch_size=batch_size)
     except Exception as e:
         print(f"owner {e}")
     try:

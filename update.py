@@ -44,6 +44,8 @@ if __name__ == '__main__':
     owners = list(owners_q)
     i =0
     for o in owners:
+        i +=1
+        print(i)
         Posts.objects.filter(owner_id=o.id).update(owner_id=o.username)
         Posts.objects.filter(from_id=o.id).update(from_id=o.username)
 

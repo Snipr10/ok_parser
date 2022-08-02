@@ -47,7 +47,7 @@ if __name__ == '__main__':
         i +=1
         print(i)
         if o.username is None:
-            s = owners_q.filter(name=o.name).first()
+            s = owners_q.filter(name=o.name, screen_name__isnull=False).first()
             if s:
                 if s.username:
                     o.username = s.username

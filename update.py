@@ -41,36 +41,58 @@ if __name__ == '__main__':
     from search import get_all_posts
 
     owners = list(Owner.objects.all())
-    i = 0
-    owners_delete = []
+    i =0
     for o in owners:
-        i += 1
         print(i)
-        if o.sphinx_id != o.id:
-            for p in Posts.objects.filter(owner_id=o.id):
-                p.owner_id=o.sphinx_id
-                p.save()
-            for p in Posts.objects.filter(from_id=o.id):
-                p.from_id= o.sphinx_id
-                p.save()
+        i+= 1
+        username = None
+        if o.screen_name is None:
+            o.screen_name = o.username
+        if o.username is not None:
+            username = o.username
+            try:
+                int(o.screen_name)
+                o.username = o.screen_name
+                o.screen_name = username
+            except Exception:
+                print(1)
         try:
-            Owner.objects.create(
-                id=o.sphinx_id,
-                screen_name=o.screen_name,
-                username=o.username,
-                name=o.name,
-                avatar=o.avatar,
-                sphinx_id=o.sphinx_id,
-                last_modified=datetime.datetime.now(),
-            )
-        except Exception as e:
-            print(e)
-        try:
-            if o.sphinx_id != o.id:
-                o.delete()
-                print("DELETE")
-        except Exception as e:
-            print(e)
+            int(o.screen_name)
+            if o.username is None:
+                o.username = o.screen_name
+        except Exception:
+            print(1)
+        o.save()
+    # i = 0
+    # owners_delete = []
+    # for o in owners:
+    #     i += 1
+    #     print(i)
+    #     if o.sphinx_id != o.id:
+    #         for p in Posts.objects.filter(owner_id=o.id):
+    #             p.owner_id=o.sphinx_id
+    #             p.save()
+    #         for p in Posts.objects.filter(from_id=o.id):
+    #             p.from_id= o.sphinx_id
+    #             p.save()
+    #     try:
+    #         Owner.objects.create(
+    #             id=o.sphinx_id,
+    #             screen_name=o.screen_name,
+    #             username=o.username,
+    #             name=o.name,
+    #             avatar=o.avatar,
+    #             sphinx_id=o.sphinx_id,
+    #             last_modified=datetime.datetime.now(),
+    #         )
+    #     except Exception as e:
+    #         print(e)
+    #     try:
+    #         if o.sphinx_id != o.id:
+    #             o.delete()
+    #             print("DELETE")
+    #     except Exception as e:
+    #         print(e)
     # while len(owners) > 0:
     #     i += 1
     #     print(i)

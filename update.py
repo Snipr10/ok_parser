@@ -44,16 +44,23 @@ if __name__ == '__main__':
     owners = list(owners_q)
     i =0
     for o in owners:
-        i +=1
-        print(i)
-        if o.username is None:
-            s = owners_q.filter(name=o.name, screen_name__isnull=False).first()
-            if s:
-                if s.username:
-                    o.username = s.username
-                if s.screen_name:
-                    o.screen_name = s.screen_name
-                o.save()
+        Posts.objects.filter(owner_id=o.id).update(owner_id=o.username)
+        Posts.objects.filter(from_id=o.id).update(from_id=o.username)
+
+
+        # sphinx_id = get_sphinx_id(screen_name)
+
+
+        # i +=1
+        # print(i)
+        # if o.username is None:
+        #     s = owners_q.filter(name=o.name, screen_name__isnull=False).first()
+        #     if s:
+        #         if s.username:
+        #             o.username = s.username
+        #         if s.screen_name:
+        #             o.screen_name = s.screen_name
+        #         o.save()
         # try:
         #     int(o.username)
         # except Exception:

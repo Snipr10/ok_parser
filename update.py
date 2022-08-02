@@ -43,26 +43,38 @@ if __name__ == '__main__':
     owners = list(Owner.objects.all())
     i =0
     for o in owners:
-        print(i)
-        i+= 1
-        username = None
-        if o.screen_name is None:
-            o.screen_name = o.username
-        if o.username is not None:
+        try:
+            int(o.username)
+        except Exception:
             username = o.username
             try:
                 int(o.screen_name)
                 o.username = o.screen_name
                 o.screen_name = username
             except Exception:
-                print(1)
-        try:
-            int(o.screen_name)
-            if o.username is None:
-                o.username = o.screen_name
-        except Exception:
-            print(1)
+                o.screen_name = o.username
+                o.username = None
         o.save()
+            # print(i)
+        # i+= 1
+        # username = None
+        # if o.screen_name is None:
+        #     o.screen_name = o.username
+        # if o.username is not None:
+        #     username = o.username
+        #     try:
+        #         int(o.screen_name)
+        #         o.username = o.screen_name
+        #         o.screen_name = username
+        #     except Exception:
+        #         print(1)
+        # try:
+        #     int(o.screen_name)
+        #     if o.username is None:
+        #         o.username = o.screen_name
+        # except Exception:
+        #     print(1)
+        # o.save()
     # i = 0
     # owners_delete = []
     # for o in owners:

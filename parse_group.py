@@ -123,24 +123,43 @@ def get_result(res):
             from_name = res.select_one("img[alt*='']").attrs.get("alt")
         except Exception:
             from_name = None
+        from_username = None
         try:
             from_id = res.find("a", {"class":"dblock"}).get("href").split("/")[-1].split("?")[0]
-        except Exception:
+            try:
+                int(from_id)
+            except Exception as e:
+                from_username = from_id
+                for s in res.find("a", {"class": "dblock"}).get("href").split("&"):
+                    if "groupId" in s:
+                        from_id = s.split("=")[-1]
+                        break
+        except Exception as e:
             from_id = None
-        theme_id = re.search(r"topicId,\d+,groupId", str(res)).group(0).replace("topicId,","").replace(",groupId","")
+        url = None
         try:
-            url = res.find("a", {"class": "media-text_a"}).get("href").split("?")[0]
+            theme_id = re.search(r"topicId,\d+,groupId", str(res)).group(0).replace("topicId,","").replace(",groupId","")
         except Exception:
             try:
-                url = res.find("a", {"class": ""}).get("href").split("?")[0]
+                theme_id = re.search(r"video/\d+", str(res)).group(0).replace("video/", "")
+                url = re.search(r"video/\d+", str(res)).group(0)
+            except Exception:
+                theme_id = re.search(r"live/\d+", str(res)).group(0).replace("live/", "")
+                url = re.search(r"live/\d+", str(res)).group(0)
+        if not url:
+            try:
+                url = res.find("a", {"class": "media-text_a"}).get("href").split("?")[0]
             except Exception:
                 try:
-                    url = re.search(r'st.layer.curl=\S+', str(res)).group(0).replace('st.layer.curl=', "").split("&")[0]
+                    url = res.find("a", {"class": ""}).get("href").split("?")[0]
                 except Exception:
-                    url = None
+                    try:
+                        url = re.search(r'st.layer.curl=\S+', str(res)).group(0).replace('st.layer.curl=', "").split("&")[0]
+                    except Exception:
+                        url = None
         try:
             text = res.find("div", {"class": "media-text_cnt"}).text
-        except Exception:
+        except Exception as e:
             text = None
         owner_img = get_img(res)
         return {
@@ -153,6 +172,7 @@ def get_result(res):
             "url": url,
             "from_name": from_name,
             "from_id": from_id,
+            "from_username": from_username,
             "from_img": owner_img
         }
     except Exception as e:

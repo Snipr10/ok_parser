@@ -45,7 +45,6 @@ class PostContent(models.Model):
     id = models.IntegerField(primary_key=True)
     content = models.CharField(max_length=10000)
     url = models.CharField(max_length=4096)
-    last_modified = models.DateTimeField(default=now)
 
     class Meta:
         db_table = 'prsr_parser_ok_post_content'

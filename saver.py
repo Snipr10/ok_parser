@@ -52,8 +52,8 @@ def save_result(res):
                 from_id = get_sphinx_id(screen_name)
                 owner = Owner(
                         id=from_id,
-                        screen_name=screen_name,
-                        username=from_screen,
+                        screen_name=from_screen,
+                        username=screen_name,
                         name=r['from_name'],
                         avatar=from_img,
                         sphinx_id=from_id,
@@ -91,8 +91,7 @@ def save_result(res):
             print(e)
 
         try:
-            post_content.append(PostContent(id=r['themeId'], content=r['text'], url=r["url"],
-                                            last_modified=datetime.datetime.now(),
+            post_content.append(PostContent(id=r['themeId'], content=r['text'], url=r["url"]
                                             ))
         except Exception as e:
             print(e)
@@ -116,7 +115,7 @@ def save_result(res):
         print(f"owner {e}")
 
     try:
-        Posts.objects.bulk_update(posts, ['owner_id', 'from_id', 'likes', 'reposts', "comments"], batch_size=batch_size)
+        Posts.objects.bulk_update(posts, ['owner_id', 'from_id', 'likes', 'reposts', "comments", "last_modified"], batch_size=batch_size)
     except Exception as e:
         print(f"owner {e}")
 
@@ -125,7 +124,7 @@ def save_result(res):
     except Exception as e:
         print(f"owner {e}")
     try:
-        PostContent.objects.bulk_update(post_content, ["content", "last_modified"], batch_size=batch_size)
+        PostContent.objects.bulk_update(post_content, ["content"], batch_size=batch_size)
     except Exception as e:
         print(f"owner {e}")
     try:

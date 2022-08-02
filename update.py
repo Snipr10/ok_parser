@@ -39,14 +39,15 @@ if __name__ == '__main__':
     from parse_group import get_all_group_post
     from parse_profile import get_all_profile_post
     from search import get_all_posts
+    owners_q = Owner.objects.all()
 
-    owners = list(Owner.objects.all())
+    owners = list(owners_q)
     i =0
     for o in owners:
         i +=1
         print(i)
         if o.username is None:
-            s = owners.filter(name=o.name).first()
+            s = owners_q.filter(name=o.name).first()
             if s:
                 if s.username:
                     o.username = s.username

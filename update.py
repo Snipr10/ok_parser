@@ -35,6 +35,7 @@ if __name__ == '__main__':
 
     pymysql.install_as_MySQLdb()
     from core.models import Owner, Posts
+    from saver import get_sphinx_id
 
     from parse_group import get_all_group_post
     from parse_profile import get_all_profile_post
@@ -45,15 +46,21 @@ if __name__ == '__main__':
     i = 0
     d = 0
     for o in owners:
+        o.id = o.username
+        o.sphinx_id = get_sphinx_id(o.username)
+        o.save()
         print(i)
-        i+=1
-        if len(owners_q.filter(username=o.username)) > 1:
-            while len(Owner.objects.filter(username=o.username)) > 1:
-                Owner.objects.filter(username=o.username).last().delete()
-                owners_q = Owner.objects.all()
+        i += 1
 
-            d += 1
-        print(d)
+        # print(i)
+        # i+=1
+        # if len(owners_q.filter(username=o.username)) > 1:
+        #     while len(Owner.objects.filter(username=o.username)) > 1:
+        #         Owner.objects.filter(username=o.username).last().delete()
+        #         owners_q = Owner.objects.all()
+        #
+        #     d += 1
+        # print(d)
 
     # for o in owners:
     #     i += 1

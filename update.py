@@ -9,6 +9,7 @@ import django.db
 import threading
 import random
 import multiprocessing
+import hashlib
 
 
 
@@ -16,7 +17,10 @@ import multiprocessing
 # 19 - user_name
 # 20 - group
 # 21 - profile
-
+def get_sphinx_id(url):
+    m = hashlib.md5()
+    m.update(('https://m.ok.ru/dk/{}'.format(url)).encode())
+    return int(str(int(m.hexdigest()[:16], 16))[:16])
 if __name__ == '__main__':
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ok_parser.settings')
     try:
@@ -35,7 +39,6 @@ if __name__ == '__main__':
 
     pymysql.install_as_MySQLdb()
     from core.models import Owner, Posts
-    from saver import get_sphinx_id
 
     from parse_group import get_all_group_post
     from parse_profile import get_all_profile_post

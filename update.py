@@ -50,9 +50,9 @@ if __name__ == '__main__':
     d = 0
     for o in owners:
         try:
-            o.id = o.username
+            o.username = o.id
             # o.sphinx_id = get_sphinx_id(o.username)
-            o.save(update_fields=['id'])
+            o.save(update_fields=['username'])
             print(i)
             i += 1
         except Exception as e:

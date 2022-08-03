@@ -17,7 +17,7 @@ class Owner(models.Model):
     sphinx_id = models.CharField(max_length=255)
     username = models.CharField(max_length=255)
     avatar = models.CharField(max_length=255)
-    # last_modified = models.DateTimeField(default=now)
+    last_modified = models.DateTimeField(default=now)
 
     class Meta:
         db_table = 'prsr_parser_ok_users'

@@ -27,41 +27,47 @@ def save_result(res):
         try:
             group_id = r.get("group_id")
             group_screen = r.get("group_screen")
+            if group_screen is None:
+                group_screen = group_id
             group_img = r.get("group_img")
             if group_id:
-                owner_id = get_sphinx_id(group_id)
+                sphinx_id = get_sphinx_id(group_id)
+                owner_id = group_id
                 owner = Owner(
-                        id=owner_id,
-                        screen_name=group_id,
-                        username=group_screen,
+                        id=group_id,
+                        screen_name=group_screen,
+                        username=group_id,
                         name=r["name"],
                         avatar=group_img,
-                        sphinx_id=owner_id,
+                        sphinx_id=sphinx_id,
                         last_modified=datetime.datetime.now(),
                 )
                 owners.append(owner)
                 print("group_screen: " + str(group_screen) + " " + "group_id: " + str(group_id))
-                if group_screen:
+                if r.get("group_screen"):
                     owner_update_username.append(owner)
                 if group_img:
                     owner_update_avatar.append(owner)
             screen_name = r.get("from_id")
             from_img = r.get("from_img")
             from_screen = r.get("from_screen")
+            if from_screen is None:
+                from_screen = screen_name
             if screen_name:
-                from_id = get_sphinx_id(screen_name)
+                sphinx_id = get_sphinx_id(screen_name)
+                from_id = screen_name
                 owner = Owner(
-                        id=from_id,
+                        id=screen_name,
                         screen_name=from_screen,
                         username=screen_name,
                         name=r['from_name'],
                         avatar=from_img,
-                        sphinx_id=from_id,
+                        sphinx_id=sphinx_id,
                         last_modified=datetime.datetime.now(),
                 )
                 owners.append(owner)
 
-                if from_screen:
+                if r.get("from_screen"):
                     owner_update_username.append(owner)
                 if from_img:
                     owner_update_avatar.append(owner)
@@ -97,7 +103,7 @@ def save_result(res):
             print(e)
 
     try:
-        Owner.objects.bulk_update(owner_update_username, ['username', 'last_modified'], batch_size=batch_size)
+        Owner.objects.bulk_update(owner_update_username, ['screen_name', 'last_modified'], batch_size=batch_size)
     except Exception as e:
         print(f"owner {e}")
     try:

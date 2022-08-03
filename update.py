@@ -42,12 +42,18 @@ if __name__ == '__main__':
     owners_q = Owner.objects.all()
 
     owners = list(owners_q)
-    i =0
+    i = 0
+    d = 0
     for o in owners:
-        i +=1
-        print(i)
-        Posts.objects.filter(owner_id=o.id).update(owner_id=o.username)
-        Posts.objects.filter(from_id=o.id).update(from_id=o.username)
+        if len(owners_q.filter(username=o.username)) > 1:
+            d +=1
+        print(d)
+
+    # for o in owners:
+    #     i += 1
+    #     print(i)
+    #     Posts.objects.filter(owner_id=o.id).update(owner_id=o.username)
+    #     Posts.objects.filter(from_id=o.id).update(from_id=o.username)
 
 
         # sphinx_id = get_sphinx_id(screen_name)

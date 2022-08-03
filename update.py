@@ -45,8 +45,14 @@ if __name__ == '__main__':
     i = 0
     d = 0
     for o in owners:
+        print(i)
+        i+=1
         if len(owners_q.filter(username=o.username)) > 1:
-            d +=1
+            while len(Owner.objects.filter(username=o.username)) > 1:
+                Owner.objects.filter(username=o.username).last().delete()
+                owners_q = Owner.objects.all()
+
+            d += 1
         print(d)
 
     # for o in owners:

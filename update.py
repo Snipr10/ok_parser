@@ -51,7 +51,7 @@ if __name__ == '__main__':
     for o in owners:
         try:
             o.id = o.username
-            o.sphinx_id = get_sphinx_id(o.username)
+            # o.sphinx_id = get_sphinx_id(o.username)
             o.save()
             print(i)
             i += 1

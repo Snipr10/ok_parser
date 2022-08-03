@@ -49,12 +49,16 @@ if __name__ == '__main__':
     i = 0
     d = 0
     for o in owners:
-        o.id = o.username
-        o.sphinx_id = get_sphinx_id(o.username)
-        o.save()
-        print(i)
-        i += 1
-
+        try:
+            o.id = o.username
+            o.sphinx_id = get_sphinx_id(o.username)
+            o.save()
+            print(i)
+            i += 1
+        except Exception as e:
+            o.id = o.id*10
+            o.sphinx_id = o.id
+            o.save()
         # print(i)
         # i+=1
         # if len(owners_q.filter(username=o.username)) > 1:

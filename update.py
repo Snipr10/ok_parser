@@ -52,7 +52,7 @@ if __name__ == '__main__':
         try:
             o.id = o.username
             # o.sphinx_id = get_sphinx_id(o.username)
-            o.save(update_fields=['username'])
+            o.save(update_fields=['id'])
             print(i)
             i += 1
         except Exception as e:

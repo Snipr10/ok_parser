@@ -1,4 +1,11 @@
-def login(session, login_, password_, session_data=None):
+from twocaptcha import TwoCaptcha
+
+from ok_parser.settings import two_captcha
+
+solver = TwoCaptcha(two_captcha)
+
+
+def login(session, login_, password_, session_data=None, attempt=0):
     login_headers = {
         'authority': 'ok.ru',
         'cache-control': 'max-age=0',
@@ -32,8 +39,32 @@ def login(session, login_, password_, session_data=None):
               '&st.iscode=false'
     res = session.post(url, headers=login_headers, data=payload)
     if "topPanelLeftCorner" not in res.text or "TD_Logout" not in res.text:
-        print(res)
-        session_data.is_active = 11
-        session_data.save(update_fields=['is_active'])
-        raise Exception("Can not login")
+        if "st.cmd=anonymUnblockConfirmPhone" in res.text:
+            session_data.is_active = 11
+            session_data.save(update_fields=['is_active'])
+            raise Exception("Blocked")
+
+        attempt += 1
+        if attempt > 5:
+            session_data.is_active = 11
+            session_data.save(update_fields=['is_active'])
+            raise Exception("Can not login")
+        attempt += 1
+        res_cap = session.get("https://ok.ru/captcha?st.cmd=captcha")
+        text = res_cap.content
+        file_name = f"{login_}.jpg"
+        fp = open(file_name, 'wb')
+        fp.write(text)
+        fp.close()
+        code = ""
+        try:
+            code = solver.normal(file_name, lang="ru")['code']
+        except Exception:
+            pass
+        url = "https://ok.ru/dk?cmd=AnonymVerifyCaptchaEnter&st.cmd=anonymVerifyCaptchaEnter"
+
+        payload = {'st.ccode': code,
+                   'st.r.validateCaptcha': 'Готово!'}
+        session.post(url, data=payload)
+        return login(session, login_, password_, session_data, attempt)
     return session

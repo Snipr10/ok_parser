@@ -5,7 +5,6 @@ import time
 import dateparser
 from bs4 import BeautifulSoup
 
-from search import get_followers
 
 types_posts_group = {
     "Movie": {"cmd": "altGroupMovieComments", "st": "sbj"},
@@ -89,6 +88,7 @@ def get_text_html(session, posts, r):
     followers = 0
     if group_id:
         try:
+            from search import get_followers
             resp = session.get(f"https://m.ok.ru/group/{group_id}")
             if resp.status_code == 404:
                 resp = session.get(f"https://ok.ru/profile/{group_id}")

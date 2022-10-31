@@ -5,8 +5,6 @@ import dateparser
 
 from bs4 import BeautifulSoup
 
-from search import get_followers
-
 
 def get_all_group_post(session_data, query):
     from parse_post import get_img
@@ -31,6 +29,7 @@ def get_all_group_post(session_data, query):
     first_resp = session.get(pre_url)
 
     resp_bs4_first = BeautifulSoup(first_resp.text)
+    from search import get_followers
     followers = get_followers(resp_bs4_first)
 
     res.extend(resp_bs4_first.find_all("div", {"class": "feed-w"}))

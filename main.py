@@ -10,7 +10,7 @@ import random
 import multiprocessing
 
 import requests
-
+from bs4 import BeautifulSoup
 
 
 def new_process(i):
@@ -249,15 +249,41 @@ if __name__ == '__main__':
     from accounts import update_time_timezone
     from django.utils import timezone
     import datetime
-    from core.models import Posts, Sessions, Keyword, Sources
+    from core.models import Posts, Sessions, Keyword, Sources, Owner
 
-    # from login import login
+    from login import login
     #
     # from saver import save_result
-    # session = requests.session()
+    session = requests.session()
     #
-    # session = login(session, "79309871646", "u97zz1p2c1", "session_data")
-    #
+    session = login(session, "79309871646", "u97zz1p2c1", "session_data")
+    for u in Owner.objects.all():
+        print(u.id)
+        followers = 0
+        try:
+            from search import get_followers
+
+            print(f"https://m.ok.ru/group/{u.group_id}")
+            resp = session.get(f"https://m.ok.ru/group/{u.group_id}")
+            if resp.status_code == 404:
+                print(f"https://ok.ru/profile/{u.group_id}")
+                resp = session.get(f"https://ok.ru/profile/{u.group_id}")
+            resp_bs4 = BeautifulSoup(resp.text)
+            followers = get_followers(resp_bs4)
+        except Exception as e:
+            print(f"followers error: {e}")
+        u.followers=followers
+        u.save()
+    res = []
+    group_screen = None
+
+
+    first_resp = session.get("https://m.ok.ru/group/62235242397949")
+
+    resp_bs4_first = BeautifulSoup(first_resp.text)
+    from search import get_followers
+
+    followers = get_followers(resp_bs4_first)
     # result = get_all_profile_post("", "581992726859")
     # django.db.close_old_connections()
     # save_result(result)

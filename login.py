@@ -61,7 +61,7 @@ def login(session, login_, password_, session_data=None, attempt=0):
         try:
             code = solver.normal(file_name, lang="ru")['code']
         except Exception as e:
-            print("captcha")
+            print(f"captcha {e}")
             pass
         url = "https://ok.ru/dk?cmd=AnonymVerifyCaptchaEnter&st.cmd=anonymVerifyCaptchaEnter"
 

@@ -30,7 +30,10 @@ def save_result(res):
             if group_screen is None:
                 group_screen = group_id
             group_img = r.get("group_img")
+            print(r)
             followers = r.get("followers", 0) or 0
+            if followers == 0:
+                print(r)
 
             if group_id:
                 sphinx_id = get_sphinx_id(group_id)
@@ -46,7 +49,7 @@ def save_result(res):
                         followers=followers
                 )
                 owners.append(owner)
-                print("group_screen: " + str(group_screen) + " " + "group_id: " + str(group_id))
+                print("group_screen: " + str(group_screen) + " " + "group_id: " + str(group_id) + " " +  "followers: " + {followers})
                 if r.get("group_screen"):
                     owner_update_username.append(owner)
                 if group_img:

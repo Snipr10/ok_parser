@@ -55,7 +55,7 @@ def login(session, login_, password_, session_data=None, attempt=0):
         attempt += 1
         res_cap = session.get("https://ok.ru/captcha?st.cmd=captcha")
         text = res_cap.content
-        file_name = f"{login_}{random.randint(0,100)}.jpg"
+        file_name = f"{login_}{random.randint(0,100)}{random.randint(0,100)}{random.randint(0,100)}{random.randint(0,100)}.jpg"
         print(file_name)
         fp = open(file_name, 'wb')
         fp.write(text)

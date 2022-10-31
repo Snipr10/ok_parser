@@ -267,7 +267,7 @@ if __name__ == '__main__':
 
             print(f"https://m.ok.ru/group/{u.username}")
             resp = session.get(f"https://m.ok.ru/group/{u.username}")
-            if resp.status_code == 404:
+            if resp.status_code == 404 or "Объект не найден, недоступен или удалён." in resp.text:
                 print(f"https://ok.ru/profile/{u.username}")
                 resp = session.get(f"https://ok.ru/profile/{u.username}")
             resp_bs4 = BeautifulSoup(resp.text)

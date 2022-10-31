@@ -54,6 +54,7 @@ def login(session, login_, password_, session_data=None, attempt=0):
             raise Exception("Can not login")
         attempt += 1
         res_cap = session.get("https://ok.ru/captcha?st.cmd=captcha")
+        print(res_cap.status_code)
         text = res_cap.content
         print(text)
         file_name = f"{login_}{random.randint(0,100)}{random.randint(0,100)}{random.randint(0,100)}{random.randint(0,100)}.jpg"

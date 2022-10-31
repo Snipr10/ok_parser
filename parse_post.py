@@ -89,13 +89,15 @@ def get_text_html(session, posts, r):
     if group_id:
         try:
             from search import get_followers
+            print(f"https://m.ok.ru/group/{group_id}")
             resp = session.get(f"https://m.ok.ru/group/{group_id}")
             if resp.status_code == 404:
+                print(f"https://ok.ru/profile/{group_id}")
                 resp = session.get(f"https://ok.ru/profile/{group_id}")
             resp_bs4 = BeautifulSoup(resp.text)
             followers = get_followers(resp_bs4)
-        except Exception:
-            pass
+        except Exception as e:
+            print(f"followers error: {e}")
 
     return {
         "followers": followers,

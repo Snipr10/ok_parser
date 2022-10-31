@@ -263,11 +263,11 @@ if __name__ == '__main__':
         try:
             from search import get_followers
 
-            print(f"https://m.ok.ru/group/{u.group_id}")
-            resp = session.get(f"https://m.ok.ru/group/{u.group_id}")
+            print(f"https://m.ok.ru/group/{u.username}")
+            resp = session.get(f"https://m.ok.ru/group/{u.username}")
             if resp.status_code == 404:
-                print(f"https://ok.ru/profile/{u.group_id}")
-                resp = session.get(f"https://ok.ru/profile/{u.group_id}")
+                print(f"https://ok.ru/profile/{u.username}")
+                resp = session.get(f"https://ok.ru/profile/{u.username}")
             resp_bs4 = BeautifulSoup(resp.text)
             followers = get_followers(resp_bs4)
         except Exception as e:

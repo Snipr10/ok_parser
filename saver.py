@@ -30,6 +30,8 @@ def save_result(res):
             if group_screen is None:
                 group_screen = group_id
             group_img = r.get("group_img")
+            followers = r.get("followers", 0) or 0
+
             if group_id:
                 sphinx_id = get_sphinx_id(group_id)
                 owner_id = group_id
@@ -41,6 +43,7 @@ def save_result(res):
                         avatar=group_img,
                         sphinx_id=sphinx_id,
                         last_modified=datetime.datetime.now(),
+                        followers=followers
                 )
                 owners.append(owner)
                 print("group_screen: " + str(group_screen) + " " + "group_id: " + str(group_id))
@@ -64,6 +67,8 @@ def save_result(res):
                         avatar=from_img,
                         sphinx_id=sphinx_id,
                         last_modified=datetime.datetime.now(),
+                        followers=followers
+
                 )
                 owners.append(owner)
 
@@ -103,11 +108,11 @@ def save_result(res):
             print(e)
 
     try:
-        Owner.objects.bulk_update(owner_update_username, ['screen_name', 'last_modified'], batch_size=batch_size)
+        Owner.objects.bulk_update(owner_update_username, ['screen_name', 'last_modified', 'followers'], batch_size=batch_size)
     except Exception as e:
         print(f"owner {e}")
     try:
-        Owner.objects.bulk_update(owner_update_avatar, ['avatar', 'last_modified'], batch_size=batch_size)
+        Owner.objects.bulk_update(owner_update_avatar, ['avatar', 'last_modified', 'followers'], batch_size=batch_size)
     except Exception as e:
         print(f"owner {e}")
     try:

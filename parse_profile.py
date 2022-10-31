@@ -4,6 +4,8 @@ import dateparser
 
 from bs4 import BeautifulSoup
 
+from search import get_followers
+
 
 def get_all_profile_post(session_data, query):
     from login import login
@@ -27,6 +29,8 @@ def get_all_profile_post(session_data, query):
 
     first_resp = session.get(pre_url)
     resp_bs4_first = BeautifulSoup(first_resp.text)
+    followers = get_followers(resp_bs4_first)
+
     res.extend(resp_bs4_first.find_all("div", {"class": "feed-w"}))
     markerB = get_markerB(resp_bs4_first)
     # tkn = re.search(r"OK.tkn.set\S\S\w+", first_resp.text).group(0)
@@ -103,6 +107,8 @@ def get_all_profile_post(session_data, query):
                 res_dict["name"] = name
                 res_dict["group_screen"] = group_screen
                 res_dict["group_img"] = group_img
+                res_dict["followers"] = followers
+
                 result.append(res_dict)
     return result
 

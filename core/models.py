@@ -18,6 +18,7 @@ class Owner(models.Model):
     username = models.CharField(max_length=255)
     avatar = models.CharField(max_length=255)
     last_modified = models.DateTimeField(default=now)
+    followers = models.IntegerField(default=0)
 
     class Meta:
         db_table = 'prsr_parser_ok_users'

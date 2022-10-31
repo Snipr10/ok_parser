@@ -1,4 +1,5 @@
 import json
+import re
 import time
 
 from parse_post import get_text_html
@@ -74,3 +75,19 @@ def get_all_posts(session_data, query):
             session = login(session, session_data.login, session_data.password, session_data)
 
     return res
+
+
+def get_followers(resp_bs4):
+    followers = 0
+    try:
+        for s in resp_bs4.find("div", {"class": "menu"}).find_all("div", {"class": "bb"}):
+            if "Участники" in s.text:
+                break
+    except Exception:
+        pass
+    try:
+        if followers == 0:
+            followers = int(re.sub(r'[^0-9.]+', r'', resp_bs4.find("a", {"data-l": "outlandermenu,friendFriend"}).text))
+    except Exception:
+        pass
+    return followers

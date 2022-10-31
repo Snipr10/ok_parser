@@ -40,6 +40,7 @@ def login(session, login_, password_, session_data=None, attempt=0):
     res = session.post(url, headers=login_headers, data=payload)
     if "topPanelLeftCorner" not in res.text or "TD_Logout" not in res.text:
         if "st.cmd=anonymUnblockConfirmPhone" in res.text:
+            print("anonymUnblockConfirmPhone")
             session_data.is_active = 11
             session_data.save(update_fields=['is_active'])
             raise Exception("Blocked")
@@ -59,7 +60,8 @@ def login(session, login_, password_, session_data=None, attempt=0):
         code = ""
         try:
             code = solver.normal(file_name, lang="ru")['code']
-        except Exception:
+        except Exception as e:
+            print("captcha")
             pass
         url = "https://ok.ru/dk?cmd=AnonymVerifyCaptchaEnter&st.cmd=anonymVerifyCaptchaEnter"
 

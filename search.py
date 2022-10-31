@@ -90,4 +90,5 @@ def get_followers(resp_bs4):
             followers = int(re.sub(r'[^0-9.]+', r'', resp_bs4.find("a", {"data-l": "outlandermenu,friendFriend"}).text))
     except Exception:
         pass
+    print(f"followers: {followers}")
     return followers

@@ -124,7 +124,7 @@ def start_task_source():
             stop_session(session, attempt=0)
 
     except Exception as e:
-        print("start_task" + str(e))
+        print("start_task 1" + str(e))
         time.sleep(20)
         try:
             if sources_item:
@@ -209,7 +209,7 @@ def start_task():
         time.sleep(60)
 
     except Exception as e:
-        print("start_task" + str(e))
+        print("start_task2 " + str(e))
         time.sleep(20)
         try:
             if key_word:

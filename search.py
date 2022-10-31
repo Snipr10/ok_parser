@@ -82,6 +82,8 @@ def get_followers(resp_bs4):
     try:
         for s in resp_bs4.find("div", {"class": "menu"}).find_all("div", {"class": "bb"}):
             if "Участники" in s.text:
+                followers = int(re.sub(r'[^0-9.]+', r'', s.text))
+
                 break
     except Exception:
         pass

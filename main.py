@@ -257,7 +257,7 @@ if __name__ == '__main__':
     session = requests.session()
     #
     session = login(session, "79309871646", "u97zz1p2c1", "session_data")
-    for u in Owner.objects.all():
+    for u in Owner.objects.filter(followers=0):
         print(u.id)
         followers = 0
         try:

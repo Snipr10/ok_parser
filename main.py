@@ -263,6 +263,8 @@ if __name__ == '__main__':
         try:
             from search import get_followers
 
+            session = login(session, "79309871646", "u97zz1p2c1", "session_data")
+
             print(f"https://m.ok.ru/group/{u.username}")
             resp = session.get(f"https://m.ok.ru/group/{u.username}")
             if resp.status_code == 404:

@@ -8,6 +8,12 @@ solver = TwoCaptcha(two_captcha)
 
 
 def login(session, login_, password_, session_data=None, attempt=0):
+    proxies = {
+        'http': 'http://franz_allan_mati_io:1926ad016e@45.140.75.180:30001',
+        'https': 'http://franz_allan_mati_io:1926ad016e@45.140.75.180:30001'
+    }
+    session.proxies.update(proxies)
+    ""
     login_headers = {
         'authority': 'ok.ru',
         'cache-control': 'max-age=0',

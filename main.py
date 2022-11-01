@@ -251,42 +251,16 @@ if __name__ == '__main__':
     import datetime
     from core.models import Posts, Sessions, Keyword, Sources, Owner
 
-    from login import login
+
+
+
+    # first_resp = session.get("https://m.ok.ru/group/62235242397949")
     #
-    # from saver import save_result
-    session = requests.session()
+    # resp_bs4_first = BeautifulSoup(first_resp.text)
+    # from search import get_followers
     #
-    session = login(session, "79309871646", "u97zz1p2c1", "session_data")
-    for u in Owner.objects.filter(followers=0):
-        print(u.id)
-        followers = 0
-        try:
-            from search import get_followers
-
-            session = login(session, "79309871646", "u97zz1p2c1", "session_data")
-
-            print(f"https://m.ok.ru/group/{u.username}")
-            resp = session.get(f"https://m.ok.ru/group/{u.username}")
-            if resp.status_code == 404 or "Объект не найден, недоступен или удалён." in resp.text:
-                print(f"https://ok.ru/profile/{u.username}")
-                resp = session.get(f"https://ok.ru/profile/{u.username}")
-            resp_bs4 = BeautifulSoup(resp.text)
-            followers = get_followers(resp_bs4)
-        except Exception as e:
-            print(f"followers error: {e}")
-        u.followers=followers
-        u.save()
-    res = []
-    group_screen = None
-
-
-    first_resp = session.get("https://m.ok.ru/group/62235242397949")
-
-    resp_bs4_first = BeautifulSoup(first_resp.text)
-    from search import get_followers
-
-    followers = get_followers(resp_bs4_first)
-    # result = get_all_profile_post("", "581992726859")
+    # followers = get_followers(resp_bs4_first)
+    # # result = get_all_profile_post("", "581992726859")
     # django.db.close_old_connections()
     # save_result(result)
 
@@ -319,6 +293,37 @@ if __name__ == '__main__':
         print("thread ThreadPoolExecutor thread start " + str(i))
         x = threading.Thread(target=new_process_source, args=(i,))
         x.start()
+
+    from login import login
+
+    #
+    # from saver import save_result
+    session = requests.session()
+    #
+    session = login(session, "79309871646", "u97zz1p2c1", "session_data")
+    for u in Owner.objects.filter(followers=0).order_by('-last_modified'):
+        print(u.id)
+        followers = 0
+        try:
+            from search import get_followers
+
+            session = login(session, "79309871646", "u97zz1p2c1", "session_data")
+
+            print(f"https://m.ok.ru/group/{u.username}")
+            resp = session.get(f"https://m.ok.ru/group/{u.username}")
+            if resp.status_code == 404 or "Объект не найден, недоступен или удалён." in resp.text:
+                print(f"https://ok.ru/profile/{u.username}")
+                resp = session.get(f"https://ok.ru/profile/{u.username}")
+            resp_bs4 = BeautifulSoup(resp.text)
+            followers = get_followers(resp_bs4)
+        except Exception as e:
+            print(f"followers error: {e}")
+        u.followers = followers
+        u.save()
+    res = []
+    group_screen = None
+
+
 
     i = 1
     while True:

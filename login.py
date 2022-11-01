@@ -8,9 +8,18 @@ solver = TwoCaptcha(two_captcha)
 
 
 def login(session, login_, password_, session_data=None, attempt=0):
+    hosts = [
+        "45.140.75.180",
+        "45.140.73.86",
+        "212.162.133.127",
+        "212.162.134.48",
+        "212.162.135.52",
+
+    ]
+    host = random.choice(hosts)
     proxies = {
-        'http': 'http://franz_allan_mati_io:1926ad016e@212.162.133.127:30001',
-        'https': 'http://franz_allan_mati_io:1926ad016e@212.162.133.127:30001'
+        'http': f'http://franz_allan_mati_io:1926ad016e@{host}:30001',
+        'https': f'http://franz_allan_mati_io:1926ad016e@{host}:30001'
     }
     session.proxies.update(proxies)
     ""

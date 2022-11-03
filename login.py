@@ -2,27 +2,33 @@ import random
 
 from twocaptcha import TwoCaptcha
 
+from core.models import AllProxy
 from ok_parser.settings import two_captcha
 
 solver = TwoCaptcha(two_captcha)
 
 
 def login(session, login_, password_, session_data=None, attempt=0):
-    hosts = [
-        "45.140.75.180",
-        "45.140.73.86",
-        "212.162.133.127",
-        "212.162.134.48",
-        "212.162.135.52",
-
-    ]
-    host = random.choice(hosts)
-    proxies = {
-        'http': f'http://franz_allan_mati_io:1926ad016e@{host}:30001',
-        'https': f'http://franz_allan_mati_io:1926ad016e@{host}:30001'
-    }
-    session.proxies.update(proxies)
-    proxy_2_cap = {'type': 'HTTP', 'uri': f'franz_allan_mati_io:1926ad016e@{host}:30001'}
+    try:
+        session_proxy = AllProxy.objects.get(id=session_data.proxy_id)
+        # hosts = [
+        #     "45.140.75.180",
+        #     "45.140.73.86",
+        #     "212.162.133.127",
+        #     "212.162.134.48",
+        #     "212.162.135.52",
+        #
+        # ]
+        # host = random.choice(hosts)
+        proxies = {
+            'http': f'http://{session_proxy.login}:{session_proxy.proxy_password}@{session_proxy.ip}:{session_proxy.port}',
+            'https': f'http://{session_proxy.login}:{session_proxy.proxy_password}@{session_proxy.ip}:{session_proxy.port}'
+        }
+        session.proxies.update(proxies)
+        proxy_2_cap = {'type': 'HTTP', 'uri': f'{session_proxy.login}:{session_proxy.proxy_password}@{session_proxy.ip}:{session_proxy.port}'}
+    except Exception as e:
+        proxy_2_cap = None
+        print(f"Proxy error : {e}")
     ""
     login_headers = {
         'authority': 'ok.ru',
@@ -77,7 +83,11 @@ def login(session, login_, password_, session_data=None, attempt=0):
         fp.close()
         code = ""
         try:
-            code = solver.normal(file_name, lang="ru", proxy=proxy_2_cap)['code']
+            if proxy_2_cap:
+                code = solver.normal(file_name, lang="ru", proxy=proxy_2_cap)['code']
+            else:
+                code = solver.normal(file_name, lang="ru")['code']
+
         except Exception as e:
             print(f"captcha {e}")
             pass

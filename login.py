@@ -25,6 +25,7 @@ def login(session, login_, password_, session_data=None, attempt=0):
             'https': f'http://{session_proxy.login}:{session_proxy.proxy_password}@{session_proxy.ip}:{session_proxy.port}'
         }
         session.proxies.update(proxies)
+        print(proxies)
         proxy_2_cap = {'type': 'HTTP', 'uri': f'{session_proxy.login}:{session_proxy.proxy_password}@{session_proxy.ip}:{session_proxy.port}'}
     except Exception as e:
         proxy_2_cap = None

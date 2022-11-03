@@ -22,6 +22,7 @@ def login(session, login_, password_, session_data=None, attempt=0):
         'https': f'http://franz_allan_mati_io:1926ad016e@{host}:30001'
     }
     session.proxies.update(proxies)
+    proxy_2_cap = {'type': 'HTTP', 'uri': f'franz_allan_mati_io:1926ad016e@{host}:30001'}
     ""
     login_headers = {
         'authority': 'ok.ru',
@@ -76,7 +77,7 @@ def login(session, login_, password_, session_data=None, attempt=0):
         fp.close()
         code = ""
         try:
-            code = solver.normal(file_name, lang="ru")['code']
+            code = solver.normal(file_name, lang="ru", proxy=proxy_2_cap)['code']
         except Exception as e:
             print(f"captcha {e}")
             pass

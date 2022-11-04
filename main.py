@@ -350,6 +350,18 @@ if __name__ == '__main__':
             except Exception as e:
                 pass
             try:
+                Sessions.objects.all().update(is_active=1)
+            except Exception as e:
+                try:
+                    for s in Sessions.objects.filter(is_active__gte=1):
+                        try:
+                            s.is_active = 1
+                            s.save(update_fields=['is_active'])
+                        except Exception:
+                            pass
+                except Exception as e:
+                    pass
+            try:
                 if i == 100:
                     try:
                         Keyword.objects.filter(network_id=network_id, enabled=1, taken=1).update(taken=0)

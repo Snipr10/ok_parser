@@ -28,14 +28,13 @@ def stop_session(session, attempt=0):
     try:
         session.is_parsing = 0
         session.last_parsing = update_time_timezone(timezone.now())
-
         session.save(update_fields=['is_parsing', 'last_parsing'])
     except Exception as e:
         print(e)
         attempt += 1
         if attempt < 6:
             time.sleep(5)
-            stop_source(session, attempt=attempt)
+            stop_session(session, attempt=attempt)
 
 
 def stop_source(sources_item, attempt=0):

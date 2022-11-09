@@ -205,8 +205,9 @@ def start_task():
         res = get_all_posts(session, key_word.keyword)
         django.db.close_old_connections()
         print(f"update_only_time {key_word}")
-        update_only_time(key_word)
         save_result(res)
+        update_only_time(key_word)
+
         if key_word:
             stop_source(key_word, attempt=0)
         if session:

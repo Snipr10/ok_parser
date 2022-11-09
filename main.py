@@ -86,16 +86,20 @@ def start_task_source():
             .order_by('last_modified').first()
 
         # time = select_sources.get(id=sources_item.source_id).sources
-
+        print(1)
         if sources_item is not None:
             time_s = select_sources.get(id=sources_item.source_id).sources
             if time_s is None:
                 time_s = 0
+            print(2)
+
             if sources_item.last_modified is None or (
                     sources_item.last_modified + datetime.timedelta(minutes=time_s) <
                     update_time_timezone(timezone.localtime())):
                 sources_item.taken = 1
                 sources_item.save()
+                print(3)
+
                 if sources_item.type == 22:
                     if "group/" in sources_item.data:
                         sources_item.type = 20

@@ -191,13 +191,16 @@ def start_task():
         print(f"key_source {key_source}")
 
         key_word = Keyword.objects.filter(network_id=10, enabled=1, taken=0,
-                                          id__in=list(key_source.values_list('keyword_id', flat=True))
+                                          id__in=list(key_source.values_list('keyword_id', flat=True)),
+                                          last_modified__gte=datetime.date(1999, 1, 1),
                                           ).order_by('last_modified').first()
         print(f"key_word {key_word}")
 
         if key_word:
             key_word.taken = 1
             key_word.save(update_fields=['taken'])
+            update_only_time(key_word)
+
         else:
             stop_session(session, attempt=0)
             time.sleep(random.randint(100, 150))

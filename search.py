@@ -54,7 +54,7 @@ def get_all_posts(session_data, query):
     result_posts = []
     res = []
 
-    while True:
+    while len(result_posts)<200:
         print("while")
         posts, totalCount, is_next = search_posts(session, query, count, firstIndex, totalCount=totalCount)
         if not is_next:

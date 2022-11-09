@@ -55,17 +55,20 @@ def get_all_posts(session_data, query):
     res = []
 
     while len(result_posts)<200:
-        print("while")
-        posts, totalCount, is_next = search_posts(session, query, count, firstIndex, totalCount=totalCount)
-        if not is_next:
-            break
-        result_posts.extend(posts)
-        if totalCount <= count:
-            break
-        firstIndex += count
-        if totalCount < firstIndex + count:
-            count = totalCount - firstIndex
-        time.sleep(1.5)
+        try:
+            print("while")
+            posts, totalCount, is_next = search_posts(session, query, count, firstIndex, totalCount=totalCount)
+            if not is_next:
+                break
+            result_posts.extend(posts)
+            if totalCount <= count:
+                break
+            firstIndex += count
+            if totalCount < firstIndex + count:
+                count = totalCount - firstIndex
+            time.sleep(1.5)
+        except Exception:
+            pass
     for post in result_posts:
         try:
             res.append(get_text_html(session, post.get("content"), post))

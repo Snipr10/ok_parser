@@ -54,7 +54,7 @@ def get_all_posts(session_data, query):
     result_posts = []
     res = []
 
-    while len(result_posts)<200:
+    while len(result_posts)<100:
         try:
             print("while")
             posts, totalCount, is_next = search_posts(session, query, count, firstIndex, totalCount=totalCount)
@@ -73,6 +73,7 @@ def get_all_posts(session_data, query):
         try:
             res.append(get_text_html(session, post.get("content"), post))
         except Exception as e:
+            print(f"get_all_posts {e}")
             import requests
             session = requests.session()
             session = login(session, session_data.login, session_data.password, session_data)

@@ -14,7 +14,7 @@ def get_all_group_post(session_data, query):
     print("get_all_group_post")
     session = requests.session()
     session = login(session, session_data.login, session_data.password, session_data)
-
+    print("login")
     res = []
     group_screen = None
     try:
@@ -27,6 +27,7 @@ def get_all_group_post(session_data, query):
     result = []
 
     first_resp = session.get(pre_url)
+    print("first_resp")
 
     resp_bs4_first = BeautifulSoup(first_resp.text)
     from search import get_followers
@@ -67,7 +68,8 @@ def get_all_group_post(session_data, query):
             result.append(res_dict)
 
     time.sleep(10)
-    while True:
+    while True and len(result) < 100:
+        print(len(result))
         if not markerB:
             break
         url = f"{pre_url}?cmd=AltGroupMainFeedsNewRB&st.groupId={group_id}"

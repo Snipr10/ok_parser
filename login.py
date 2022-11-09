@@ -93,6 +93,9 @@ def login(session, login_, password_, session_data=None, attempt=0):
 
         except Exception as e:
             print(f"captcha {e}")
+            if "ERROR_ZERO_CAPTCHA_FILESIZE" in str(e):
+                session_data.proxy_id = None
+                session_data.save(update_fields=['proxy_id'])
             pass
         url = "https://ok.ru/dk?cmd=AnonymVerifyCaptchaEnter&st.cmd=anonymVerifyCaptchaEnter"
 

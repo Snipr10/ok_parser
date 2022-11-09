@@ -258,10 +258,7 @@ if __name__ == '__main__':
     from accounts import update_time_timezone
     from django.utils import timezone
     import datetime
-    from core.models import Posts, Sessions, Keyword, Sources, Owner
-
-
-
+    from core.models import Posts, Sessions, Keyword, Sources, Owner, AllProxy
 
     # first_resp = session.get("https://m.ok.ru/group/62235242397949")
     #
@@ -297,11 +294,11 @@ if __name__ == '__main__':
         x = threading.Thread(target=new_process, args=(i,))
         x.start()
 
-    # for i in range(1):
-    #     time.sleep(4)
-    #     print("thread ThreadPoolExecutor thread start " + str(i))
-    #     x = threading.Thread(target=new_process_source, args=(i,))
-    #     x.start()
+    for i in range(1):
+        time.sleep(4)
+        print("thread ThreadPoolExecutor thread start " + str(i))
+        x = threading.Thread(target=new_process_source, args=(i,))
+        x.start()
 
     # from login import login
     #
@@ -333,55 +330,63 @@ if __name__ == '__main__':
     # group_screen = None
 
 
-    #
-    # i = 1
-    # while True:
-    #     i += 1
-    #     time.sleep(180)
-    #     try:
-    #         django.db.close_old_connections()
-    #         try:
-    #             Sessions.objects.filter(is_parsing=1,
-    #                                     last_parsing__lte=update_time_timezone(
-    #                                         timezone.now() - datetime.timedelta(minutes=60)),
-    #                                     ).update(is_parsing=0)
-    #         except Exception as e:
-    #             print(e)
-    #         try:
-    #             # этот костыль, чтобы обновить новые таски  не ловить ошибку с датами
-    #             key_words = Keyword.objects.filter(network_id=10, enabled=1, taken=0,
-    #
-    #                                                last_modified__lt=update_time_timezone(
-    #                                                    datetime.datetime(2000, 1, 1, 0, 0))
-    #                                                ).update(
-    #                 last_modified=update_time_timezone(datetime.datetime(2000, 1, 1, 0, 0)))
-    #
-    #         except Exception as e:
-    #             pass
-    #         try:
-    #             Sessions.objects.all().update(is_active=1)
-    #         except Exception as e:
-    #             try:
-    #                 for s in Sessions.objects.filter(is_active__gte=1):
-    #                     try:
-    #                         s.is_active = 1
-    #                         s.save(update_fields=['is_active'])
-    #                     except Exception:
-    #                         pass
-    #             except Exception as e:
-    #                 pass
-    #         try:
-    #             if i == 100:
-    #                 try:
-    #                     Keyword.objects.filter(network_id=network_id, enabled=1, taken=1).update(taken=0)
-    #                 except Exception as e:
-    #                     print(e)
-    #                 try:
-    #                     Sources.objects.filter(network_id=network_id, taken=1).update(taken=0)
-    #                 except Exception as e:
-    #                     print(e)
-    #                 i = 0
-    #         except Exception as e:
-    #             print(e)
-    #     except Exception as e:
-    #         print(e)
+
+    i = 1
+    while True:
+        i += 1
+        time.sleep(180)
+        try:
+            django.db.close_old_connections()
+            try:
+                Sessions.objects.filter(is_parsing=1,
+                                        last_parsing__lte=update_time_timezone(
+                                            timezone.now() - datetime.timedelta(minutes=60)),
+                                        ).update(is_parsing=0)
+            except Exception as e:
+                print(e)
+            try:
+                for s in Sessions.objects.filter(proxy_id__isnull=True):
+                    try:
+                        s.proxy_id = AllProxy.objects.order_by('?').first()
+                    except Exception:
+                        pass
+            except Exception as e:
+                pass
+            try:
+                # этот костыль, чтобы обновить новые таски  не ловить ошибку с датами
+                key_words = Keyword.objects.filter(network_id=10, enabled=1, taken=0,
+
+                                                   last_modified__lt=update_time_timezone(
+                                                       datetime.datetime(2000, 1, 1, 0, 0))
+                                                   ).update(
+                    last_modified=update_time_timezone(datetime.datetime(2000, 1, 1, 0, 0)))
+
+            except Exception as e:
+                pass
+            try:
+                Sessions.objects.all().update(is_active=1)
+            except Exception as e:
+                try:
+                    for s in Sessions.objects.filter(is_active__gte=1):
+                        try:
+                            s.is_active = 1
+                            s.save(update_fields=['is_active'])
+                        except Exception:
+                            pass
+                except Exception as e:
+                    pass
+            try:
+                if i == 100:
+                    try:
+                        Keyword.objects.filter(network_id=network_id, enabled=1, taken=1).update(taken=0)
+                    except Exception as e:
+                        print(e)
+                    try:
+                        Sources.objects.filter(network_id=network_id, taken=1).update(taken=0)
+                    except Exception as e:
+                        print(e)
+                    i = 0
+            except Exception as e:
+                print(e)
+        except Exception as e:
+            print(e)

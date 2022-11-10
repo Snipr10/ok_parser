@@ -16,17 +16,16 @@ from bs4 import BeautifulSoup
 def new_process(i):
     for i in range(5):
         time.sleep(random.randint(1, 5))
-
         print(f"multiprocessing key {i}")
-        x = multiprocessing.Process(target=start_task_while, args=(i,))
+        x = threading.Thread(target=start_task_while, args=(i,))
         x.start()
 
 
 def new_process_source(i):
-    for i in range(3):
+    for i in range(2):
         time.sleep(random.randint(1, 5))
         print(f"multiprocessing source {i}")
-        x = multiprocessing.Process(target=start_task_while_source, args=(i,))
+        x = threading.Thread(target=start_task_while_source, args=(i,))
         x.start()
 
 
@@ -272,7 +271,7 @@ if __name__ == '__main__':
 
 
     network_id = 10
-    # res = get_all_posts(None, "Борис Пиотровский")
+    res = get_all_posts(None, "колпинский район")
     # session = login(session, "%2B9062570633", "Elena%401996%25", session_data)
     # s = get_all_group_post("session_data", "kppiter")
 
@@ -288,16 +287,17 @@ if __name__ == '__main__':
     # z = get_all_group_post(None, "fontanka")
     # z = get_all_profile_post(None, "zotov.artem")
     # z = get_all_posts(None, "Рубрика «Оружие Победы» Пулемёт ДП-27")
-    for i in range(3):
+    for i in range(5):
         time.sleep(4)
         print("thread ThreadPoolExecutor thread start " + str(i))
-        x = threading.Thread(target=new_process, args=(i,))
+        x = multiprocessing.Process(target=new_process, args=(i,))
         x.start()
 
-    for i in range(1):
+
+    for i in range(2):
         time.sleep(4)
         print("thread ThreadPoolExecutor thread start " + str(i))
-        x = threading.Thread(target=new_process_source, args=(i,))
+        x = multiprocessing.Process(target=new_process_source, args=(i,))
         x.start()
 
     # from login import login

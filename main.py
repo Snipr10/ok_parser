@@ -348,6 +348,7 @@ if __name__ == '__main__':
                 for s in Sessions.objects.filter(proxy_id__isnull=True):
                     try:
                         s.proxy_id = AllProxy.objects.order_by('?').first().id
+                        s.save()
                     except Exception:
                         pass
             except Exception as e:

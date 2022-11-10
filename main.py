@@ -271,7 +271,7 @@ if __name__ == '__main__':
 
 
     network_id = 10
-    res = get_all_posts(None, "колпинский район")
+    # res = get_all_posts(None, "колпинский район")
     # session = login(session, "%2B9062570633", "Elena%401996%25", session_data)
     # s = get_all_group_post("session_data", "kppiter")
 

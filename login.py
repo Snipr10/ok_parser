@@ -63,8 +63,17 @@ def login(session, login_, password_, session_data=None, attempt=0):
               f'&st.email={login_}' \
               f'&st.password={password_}' \
               '&st.iscode=false'
+    try:
+        res = session.post(url, headers=login_headers, data=payload)
+    except Exception as e:
+        if "ERROR_ZERO_CAPTCHA_FILESIZE" in str(e) or "HTTPSConnectionPool" in str(e):
+            try:
+                session_data.proxy_id = AllProxy.objects.order_by('?').first().id
+            except Exception:
+                session_data.proxy_id = None
+            session_data.save(update_fields=['proxy_id'])
+        return login(session, login_, password_, session_data, attempt)
 
-    res = session.post(url, headers=login_headers, data=payload)
     if "topPanelLeftCorner" not in res.text or "TD_Logout" not in res.text:
         if "st.cmd=anonymUnblockConfirmPhone" in res.text:
             print("anonymUnblockConfirmPhone")
@@ -93,7 +102,7 @@ def login(session, login_, password_, session_data=None, attempt=0):
 
         except Exception as e:
             print(f"captcha {e}")
-            if "ERROR_ZERO_CAPTCHA_FILESIZE" in str(e):
+            if "ERROR_ZERO_CAPTCHA_FILESIZE" in str(e) or "HTTPSConnectionPool" in str(e):
                 try:
                     session_data.proxy_id = AllProxy.objects.order_by('?').first().id
                 except Exception:

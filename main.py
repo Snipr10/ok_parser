@@ -386,6 +386,10 @@ if __name__ == '__main__':
                         Sources.objects.filter(network_id=network_id, taken=1).update(taken=0)
                     except Exception as e:
                         print(e)
+                    try:
+                        Sessions.objects.filter(proxy_id__isnull=False).update(proxy_id=None)
+                    except Exception as e:
+                        print(e)
                     i = 0
             except Exception as e:
                 print(e)

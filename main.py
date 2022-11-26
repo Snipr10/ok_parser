@@ -377,7 +377,7 @@ if __name__ == '__main__':
             #     except Exception as e:
             #         pass
             try:
-                if i == 500:
+                if i == 100:
                     try:
                         Keyword.objects.filter(network_id=network_id, enabled=1, taken=1).update(taken=0)
                     except Exception as e:

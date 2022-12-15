@@ -259,6 +259,13 @@ if __name__ == '__main__':
     import datetime
     from core.models import Posts, Sessions, Keyword, Sources, Owner, AllProxy
 
+    for o in Owner.objects.all():
+        screen_prefix = "group"
+        if len(str(o.id)) < 14:
+            screen_prefix = "user"
+        o.screen_prefix = screen_prefix
+        o.save()
+
     # first_resp = session.get("https://m.ok.ru/group/62235242397949")
     #
     # resp_bs4_first = BeautifulSoup(first_resp.text)
@@ -387,7 +394,7 @@ if __name__ == '__main__':
                     except Exception as e:
                         print(e)
                     try:
-                        Sessions.objects.filter(proxy_id__isnull=False).update(proxy_id=None)
+                        Sessions.objects.filter(proxy_id__isnull=False).update(proxy_id=None, is_active=0)
                     except Exception as e:
                         print(e)
                     i = 0

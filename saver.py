@@ -38,6 +38,9 @@ def save_result(res):
             if group_id:
                 sphinx_id = get_sphinx_id(group_id)
                 owner_id = group_id
+                screen_prefix = "group"
+                if len(str(group_id)) < 14:
+                    screen_prefix = "user"
                 owner = Owner(
                         id=group_id,
                         screen_name=group_screen,
@@ -46,7 +49,8 @@ def save_result(res):
                         avatar=group_img,
                         sphinx_id=sphinx_id,
                         last_modified=datetime.datetime.now(),
-                        followers=followers
+                        followers=followers,
+                        screen_prefix=screen_prefix
                 )
                 owners.append(owner)
                 print("group_screen: " + str(group_screen) + " " + "group_id: " + str(group_id) + " " +  "followers: " + {followers})
@@ -62,6 +66,9 @@ def save_result(res):
             if screen_name:
                 sphinx_id = get_sphinx_id(screen_name)
                 from_id = screen_name
+                screen_prefix = "group"
+                if len(str(screen_name)) < 14:
+                    screen_prefix = "user"
                 owner = Owner(
                         id=screen_name,
                         screen_name=from_screen,
@@ -70,8 +77,8 @@ def save_result(res):
                         avatar=from_img,
                         sphinx_id=sphinx_id,
                         last_modified=datetime.datetime.now(),
-                        followers=followers
-
+                        followers=followers,
+                        screen_prefix = screen_prefix
                 )
                 owners.append(owner)
 

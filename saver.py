@@ -97,6 +97,8 @@ def save_result(res):
                     url = "https://ok.ru" + url
             sphinx_id = get_sphinx_id(url)
             sphinx_ids.append(sphinx_id)
+            if from_id is None:
+                from_id = owner_id
             posts.append(Posts(
                 id=r['themeId'],
                 owner_id=owner_id,

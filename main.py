@@ -65,6 +65,7 @@ def start_task_source():
     session = None
     sources_item = None
     try:
+        django.db.close_old_connections()
         session = get_new_session()
         print(f"session {session}")
         if session:
@@ -86,6 +87,7 @@ def start_task_source():
         print(sources_item.id)
         # time = select_sources.get(id=sources_item.source_id).sources
         print(1)
+        result = []
         if sources_item is not None:
             time_s = select_sources.get(id=sources_item.source_id).sources
             if time_s is None:
@@ -120,7 +122,8 @@ def start_task_source():
                 django.db.close_old_connections()
                 save_result(result)
         if sources_item:
-            sources_item.last_modified = update_time_timezone(timezone.localtime())
+            if len(result) > 0:
+                sources_item.last_modified = update_time_timezone(timezone.localtime())
             sources_item.taken = 0
             sources_item.save(update_fields=['taken', 'last_modified'])
         if session:

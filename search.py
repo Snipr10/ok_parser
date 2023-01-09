@@ -98,7 +98,10 @@ def get_followers(resp_bs4):
         pass
     try:
         if followers == 0:
-            followers = int(re.sub(r'[^0-9.]+', r'', resp_bs4.find("a", {"data-l": "outlandermenu,friendFriend"}).text))
+            try:
+                followers = int(re.sub(r'[^0-9.]+', r'', resp_bs4.find("a", {"data-l": "outlandermenu,friendFriend"}).text))
+            except Exception:
+                followers =  int(re.sub(r'[^0-9.]+', r'', resp_bs4.find("span", {"class": "portlet_h_count"}).text))
     except Exception:
         pass
     print(f"followers: {followers}")

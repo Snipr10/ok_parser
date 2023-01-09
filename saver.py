@@ -2,6 +2,7 @@ import hashlib
 import json
 import datetime
 
+import django.db
 import pika
 
 from core.models import PostContent, Posts, Owner
@@ -78,7 +79,7 @@ def save_result(res):
                         sphinx_id=sphinx_id,
                         last_modified=datetime.datetime.now(),
                         followers=followers,
-                        screen_prefix = screen_prefix
+                        screen_prefix=screen_prefix
                 )
                 owners.append(owner)
 
@@ -118,6 +119,7 @@ def save_result(res):
                                             ))
         except Exception as e:
             print(e)
+    django.db.close_old_connections()
 
     try:
         Owner.objects.bulk_update(owner_update_username, ['screen_name', 'last_modified', 'followers'], batch_size=batch_size)

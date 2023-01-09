@@ -14,7 +14,7 @@ from bs4 import BeautifulSoup
 
 
 def new_process(i):
-    for i in range(5):
+    for i in range(3):
         time.sleep(random.randint(1, 5))
         print(f"multiprocessing key {i}")
         x = threading.Thread(target=start_task_while, args=(i,))
@@ -66,8 +66,8 @@ def start_task_source():
     sources_item = None
     try:
         django.db.close_old_connections()
-        session = get_new_session()
         print(f"session {session}")
+        session = get_new_session()
         if session:
             now = update_time_timezone(timezone.localtime())
             session.is_parsing = True

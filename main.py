@@ -121,13 +121,12 @@ def start_task_source():
                     raise Exception("sources_item.type")
                 django.db.close_old_connections()
                 save_result(result)
+                if len(result) > 0:
+                    sources_item.last_modified = update_time_timezone(timezone.localtime())
+                sources_item.taken = 0
+                sources_item.save(update_fields=['taken', 'last_modified'])
         else:
             time.sleep(10*60)
-        if sources_item:
-            if len(result) > 0:
-                sources_item.last_modified = update_time_timezone(timezone.localtime())
-            sources_item.taken = 0
-            sources_item.save(update_fields=['taken', 'last_modified'])
         if session:
             stop_session(session, attempt=0)
 

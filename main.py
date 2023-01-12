@@ -268,6 +268,7 @@ if __name__ == '__main__':
 
     i = 1
     while True:
+        print(i)
         i += 1
         time.sleep(180)
         try:
@@ -312,7 +313,7 @@ if __name__ == '__main__':
             #     except Exception as e:
             #         pass
             try:
-                if i == 100:
+                if i == 15:
                     try:
                         Keyword.objects.filter(network_id=network_id, enabled=1, taken=1).update(taken=0)
                     except Exception as e:

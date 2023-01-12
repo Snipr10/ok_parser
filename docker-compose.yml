@@ -4,3 +4,7 @@ services:
   main:
     build: ./
     command: python3 main.py
+  main_tasks:
+    build: ./
+    command: python3 main_tasks.py
+

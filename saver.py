@@ -104,7 +104,7 @@ def save_result(res):
                 id=r['themeId'],
                 owner_id=owner_id,
                 from_id=from_id,
-                created_date=r['date'],
+                created_date=r['date'] if r['date'] else datetime.datetime.now(),
                 likes=r['likes'],
                 comments=r['comments'],
                 reposts=r['share'],

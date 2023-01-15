@@ -261,7 +261,7 @@ if __name__ == '__main__':
     from accounts import update_time_timezone
     from django.utils import timezone
     import datetime
-    from core.models import Posts, Sessions, Keyword, Sources, Owner, AllProxy
+    from core.models import Posts, Sessions, Keyword, Sources, Owner, AllProxy, SourcesItems
 
 
     network_id = 10
@@ -320,6 +320,10 @@ if __name__ == '__main__':
                         print(e)
                     try:
                         Sources.objects.filter(network_id=network_id, taken=1).update(taken=0)
+                    except Exception as e:
+                        print(e)
+                    try:
+                        SourcesItems.objects.filter(network_id=network_id, taken=1).update(taken=0)
                     except Exception as e:
                         print(e)
                     try:

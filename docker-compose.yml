@@ -4,7 +4,10 @@ services:
   main:
     build: ./
     command: python3 main.py
+    restart: on-failure
+
   main_tasks:
     build: ./
     command: python3 main_tasks.py
+    restart: on-failure
 

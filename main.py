@@ -267,7 +267,7 @@ if __name__ == '__main__':
 
     network_id = 10
 
-    i = 1
+    i = 14
     while True:
         print(i)
         i += 1

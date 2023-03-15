@@ -320,10 +320,6 @@ if __name__ == '__main__':
                     except Exception as e:
                         print(e)
                     try:
-                        Sources.objects.filter(network_id=network_id, taken=1).update(taken=0)
-                    except Exception as e:
-                        print(e)
-                    try:
                         SourcesItems.objects.filter(network_id=network_id, taken=1).update(taken=0)
                     except Exception as e:
                         print(e)

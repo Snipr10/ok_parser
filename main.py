@@ -11,6 +11,7 @@ import multiprocessing
 
 import requests
 from bs4 import BeautifulSoup
+from django.db.models import Q
 
 
 def new_process(i):
@@ -330,8 +331,34 @@ if __name__ == '__main__':
                         Sessions.objects.filter(proxy_id__isnull=False).update(proxy_id=None, is_active=0)
                     except Exception as e:
                         print(e)
+                    try:
+                        select_sources = Sources.objects.filter(
+                            Q(retro_max__isnull=True) | Q(retro_max__gte=timezone.now()), published=1,
+                            status=1)
+                        sources_items = SourcesItems.objects.filter(network_id=network_id,
+                                                                    disabled=0,
+                                                                    ).exclude(
+                            source_id__in=list(select_sources.values_list('id', flat=True)))
+
+                        sources_items.update(disabled=1)
+
+                    except Exception:
+                        select_sources = Sources.objects.filter(
+                            Q(retro_max__isnull=True) | Q(retro_max__gte=timezone.now()), published=1,
+                            status=1)
+                        select_source_ids = select_sources.values_list('id', flat=True)
+                        sources_items = SourcesItems.objects.filter(
+                            network_id=network_id,
+                            disabled=0,
+                        )
+                        for s in sources_items:
+                            if s.source_id not in select_source_ids:
+                                s.disabled = 1
+                                s.save()
+
                     i = 0
             except Exception as e:
+                i = 0
                 print(e)
         except Exception as e:
             print(e)

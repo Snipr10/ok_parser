@@ -316,6 +316,14 @@ if __name__ == '__main__':
             try:
                 if i == 15:
                     try:
+                        SourcesItems.objects.filter(network_id=5, disabled=0, last_modified__isnull=True).update(
+                            last_modified=datetime.datetime(2000, 1, 1))
+                        SourcesItems.objects.filter(network_id=5, disabled=0,
+                                                    last_modified__lte=datetime.datetime(1999, 1, 1)).update(
+                            last_modified=datetime.datetime(2000, 1, 1))
+                    except Exception as e:
+                        print(e)
+                    try:
                         Keyword.objects.filter(network_id=network_id, enabled=1, taken=1).update(taken=0)
                     except Exception as e:
                         print(e)

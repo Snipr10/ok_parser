@@ -127,7 +127,7 @@ def start_task_source():
                 sources_item.taken = 0
                 sources_item.save(update_fields=['taken', 'last_modified'])
         else:
-            time.sleep(10*60)
+            time.sleep(60)
         if session:
             stop_session(session, attempt=0)
 

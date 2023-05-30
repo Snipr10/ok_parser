@@ -6,8 +6,12 @@ services:
     command: python3 main.py
     restart: always
 
-  main_tasks:
+  main_tasks_keys:
     build: ./
-    command: python3 main_tasks.py
+    command: python3 main_tasks_keys.py
     restart: always
 
+  main_tasks_source:
+    build: ./
+    command: python3 main_tasks_source.py
+    restart: always

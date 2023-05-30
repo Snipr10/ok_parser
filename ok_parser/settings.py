@@ -93,7 +93,9 @@ DATABASES = {
         #       'OPTIONS': {
         #         "init_command": "SET GLOBAL max_connections = 100000", #<-- The fix
         #      }
-
+        'OPTIONS': {
+            'connect_timeout': 50,
+        }
     }
 }
 # Password validation

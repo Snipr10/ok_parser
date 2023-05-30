@@ -21,16 +21,23 @@ def new_process_source(i):
 
 
 def start_task_while_source(i):
+    null_result = 0
     while True:
         try:
             django.db.close_old_connections()
-            start_task_source()
+            result_count = start_task_source()
+            if result_count == 0:
+                null_result += 1
         except Exception as e:
+            null_result += 1
             time.sleep(random.randint(5, 10))
             print(e)
+        if null_result >= 100:
+            raise Exception("null count > 100")
 
 
 def start_task_source():
+    result_count = 0
     from django.db.models import Q
 
     from core.models import Sources
@@ -100,6 +107,7 @@ def start_task_source():
                     result = get_all_profile_post(session, sources_item.data.split("/")[-1])
                 else:
                     raise Exception("sources_item.type")
+                result_count = len(result)
                 django.db.close_old_connections()
                 save_result(result)
                 if len(result) >= 0:
@@ -123,7 +131,7 @@ def start_task_source():
             time.sleep(60)
         except Exception as e:
             print("stop " + str(e))
-
+    return result_count
 
 def check_user_group(sources_item, session_data):
     session = requests.session()

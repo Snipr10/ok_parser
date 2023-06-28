@@ -331,10 +331,12 @@ if __name__ == '__main__':
                         SourcesItems.objects.filter(network_id=network_id, taken=1).update(taken=0)
                     except Exception as e:
                         print(e)
-                    try:
-                        Sessions.objects.filter(proxy_id__isnull=False).update(proxy_id=None, is_active=0)
-                    except Exception as e:
-                        print(e)
+                    # try:
+                    #     # Sessions.objects.filter(proxy_id__isnull=False).update(proxy_id=None)
+                    #     # Sessions.objects.filter(proxy_id__isnull=False).update(proxy_id=None, is_active=0)
+                    #
+                    # except Exception as e:
+                    #     print(e)
                     try:
                         select_sources = Sources.objects.filter(
                             Q(retro_max__isnull=True) | Q(retro_max__gte=timezone.now()), published=1,

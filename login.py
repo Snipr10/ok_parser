@@ -82,7 +82,7 @@ def login(session, login_, password_, session_data=None, attempt=0):
     if "Доступ к профилю ограничен" in res.text:
         session_data.is_active = 15
         session_data.save(update_fields=['is_active'])
-        raise Exception(f"Can not login block {session.id}")
+        raise Exception(f"Can not login block {session_data.id}")
     elif "topPanelLeftCorner" not in res.text or "TD_Logout" not in res.text:
         print(f"topPanelLeftCorner 1")
 
@@ -99,7 +99,7 @@ def login(session, login_, password_, session_data=None, attempt=0):
             if attempt > 5:
                 session_data.is_active += 1
                 session_data.save(update_fields=['is_active'])
-                raise Exception(f"Can not login attemps {session.id}")
+                raise Exception(f"Can not login attemps {session_data.id}")
             attempt += 1
             res_cap = session.get("https://ok.ru/captcha?st.cmd=captcha")
             text = res_cap.content

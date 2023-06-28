@@ -21,12 +21,12 @@ def login(session, login_, password_, session_data=None, attempt=0):
         #
         # ]
         # host = random.choice(hosts)
-        proxies = {
-            'http': f'http://{session_proxy.login}:{session_proxy.proxy_password}@{session_proxy.ip}:{session_proxy.port}',
-            'https': f'http://{session_proxy.login}:{session_proxy.proxy_password}@{session_proxy.ip}:{session_proxy.port}'
-        }
-        session.proxies.update(proxies)
-        print(proxies)
+        # proxies = {
+        #     'http': f'http://{session_proxy.login}:{session_proxy.proxy_password}@{session_proxy.ip}:{session_proxy.port}',
+        #     'https': f'http://{session_proxy.login}:{session_proxy.proxy_password}@{session_proxy.ip}:{session_proxy.port}'
+        # }
+        # session.proxies.update(proxies)
+        # print(proxies)
         proxy_2_cap = {'type': 'HTTP',
                        'uri': f'{session_proxy.login}:{session_proxy.proxy_password}@{session_proxy.ip}:{session_proxy.port}'}
     except Exception as e:

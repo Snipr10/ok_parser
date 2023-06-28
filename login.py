@@ -74,7 +74,11 @@ def login(session, login_, password_, session_data=None, attempt=0):
             session_data.save(update_fields=['proxy_id'])
         return login(session, login_, password_, session_data, attempt)
 
-    if "topPanelLeftCorner" not in res.text or "TD_Logout" not in res.text:
+    if "Доступ к профилю ограничен" in res.text:
+        session_data.is_active = 15
+        session_data.save(update_fields=['is_active'])
+        raise Exception("Can not login")
+    elif "topPanelLeftCorner" not in res.text or "TD_Logout" not in res.text:
         res = session.get("https://ok.ru/")
         if "topPanelLeftCorner" not in res.text or "TD_Logout" not in res.text:
 

@@ -9,6 +9,7 @@ solver = TwoCaptcha(two_captcha)
 
 
 def login(session, login_, password_, session_data=None, attempt=0):
+    print("start login")
     try:
         session_proxy = AllProxy.objects.get(id=session_data.proxy_id)
         # hosts = [
@@ -66,6 +67,7 @@ def login(session, login_, password_, session_data=None, attempt=0):
     try:
         res = session.post(url, headers=login_headers, data=payload)
     except Exception as e:
+        print(f"Exp 1 {e}")
         if "ERROR_ZERO_CAPTCHA_FILESIZE" in str(e) or "HTTPSConnectionPool" in str(e):
             try:
                 session_data.proxy_id = AllProxy.objects.order_by('?').first().id
@@ -79,6 +81,8 @@ def login(session, login_, password_, session_data=None, attempt=0):
         session_data.save(update_fields=['is_active'])
         raise Exception(f"Can not login block {session.id}")
     elif "topPanelLeftCorner" not in res.text or "TD_Logout" not in res.text:
+        print(f"topPanelLeftCorner 1")
+
         res = session.get("https://ok.ru/")
         if "topPanelLeftCorner" not in res.text or "TD_Logout" not in res.text:
 
@@ -102,6 +106,8 @@ def login(session, login_, password_, session_data=None, attempt=0):
             fp.close()
             code = ""
             try:
+                print(f"proxy_2_cap 1")
+
                 if proxy_2_cap:
                     code = solver.normal(file_name, lang="ru", proxy=proxy_2_cap)['code']
                 else:

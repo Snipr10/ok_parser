@@ -139,4 +139,4 @@ STATIC_URL = '/static/'
 rmq_settings = "amqp://post_index:R2ghtt9hebLv@192.168.5.46:5672/post_index"
 
 
-two_captcha = "d6de23bc1252007922d89d6ecd9dcd29"
+two_captcha = "36dd296a2d1b84396822f9b1b904339d"

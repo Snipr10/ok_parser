@@ -9,6 +9,9 @@ solver = TwoCaptcha(two_captcha)
 
 
 def login(session, login_, password_, session_data=None, attempt=0):
+    if attempt > 5:
+        raise Exception(f"attempt login {session_data.id}")
+
     print("start login")
     try:
         session_proxy = AllProxy.objects.get(id=session_data.proxy_id)
@@ -140,5 +143,6 @@ def login(session, login_, password_, session_data=None, attempt=0):
             payload = {'st.ccode': code,
                        'st.r.validateCaptcha': 'Готово!'}
             session.post(url, data=payload)
+            attempt += 1
             return login(session, login_, password_, session_data, attempt)
     return session

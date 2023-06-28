@@ -21,14 +21,14 @@ def login(session, login_, password_, session_data=None, attempt=0):
         #
         # ]
         # host = random.choice(hosts)
-        proxies = {
-            'http': f'http://{session_proxy.login}:{session_proxy.proxy_password}@{session_proxy.ip}:{session_proxy.port}',
-            'https': f'http://{session_proxy.login}:{session_proxy.proxy_password}@{session_proxy.ip}:{session_proxy.port}'
-        }
-        session.proxies.update(proxies)
-        print(proxies)
-        proxy_2_cap = {'type': 'HTTP',
-                       'uri': f'{session_proxy.login}:{session_proxy.proxy_password}@{session_proxy.ip}:{session_proxy.port}'}
+        # proxies = {
+        #     'http': f'http://{session_proxy.login}:{session_proxy.proxy_password}@{session_proxy.ip}:{session_proxy.port}',
+        #     'https': f'http://{session_proxy.login}:{session_proxy.proxy_password}@{session_proxy.ip}:{session_proxy.port}'
+        # }
+        # # session.proxies.update(proxies)
+        # print(proxies)
+        # proxy_2_cap = {'type': 'HTTP',
+        #                'uri': f'{session_proxy.login}:{session_proxy.proxy_password}@{session_proxy.ip}:{session_proxy.port}'}
     except Exception as e:
         proxy_2_cap = None
         print(f"Proxy error : {e}")
@@ -68,6 +68,7 @@ def login(session, login_, password_, session_data=None, attempt=0):
         res = session.post(url, headers=login_headers, data=payload)
         print(res.status_code)
     except Exception as e:
+
         print(f"Exp 1 {e}")
         if "ERROR_ZERO_CAPTCHA_FILESIZE" in str(e) or "HTTPSConnectionPool" in str(e):
             try:

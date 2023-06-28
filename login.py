@@ -66,6 +66,7 @@ def login(session, login_, password_, session_data=None, attempt=0):
               '&st.iscode=false'
     try:
         res = session.post(url, headers=login_headers, data=payload)
+        print(res.status_code)
     except Exception as e:
         print(f"Exp 1 {e}")
         if "ERROR_ZERO_CAPTCHA_FILESIZE" in str(e) or "HTTPSConnectionPool" in str(e):
@@ -76,6 +77,7 @@ def login(session, login_, password_, session_data=None, attempt=0):
             session_data.save(update_fields=['proxy_id'])
         return login(session, login_, password_, session_data, attempt)
     print(res.text)
+    "Проверьте ваше соединение с интернетом и повторите попытку."
 
     if "Доступ к профилю ограничен" in res.text:
         session_data.is_active = 15

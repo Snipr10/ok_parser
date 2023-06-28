@@ -76,13 +76,20 @@ def login(session, login_, password_, session_data=None, attempt=0):
                 session_data.proxy_id = None
             session_data.save(update_fields=['proxy_id'])
         return login(session, login_, password_, session_data, attempt)
-    print(res.text)
-    "Проверьте ваше соединение с интернетом и повторите попытку."
 
     if "Доступ к профилю ограничен" in res.text:
         session_data.is_active = 15
         session_data.save(update_fields=['is_active'])
         raise Exception(f"Can not login block {session_data.id}")
+    elif "Проверьте ваше соединение с интернетом и повторите попытку." in res.text:
+        print("плохая прокси")
+        try:
+            session_data.proxy_id = AllProxy.objects.order_by('?').first().id
+        except Exception:
+            session_data.proxy_id = None
+        session_data.save(update_fields=['proxy_id'])
+        return login(session, login_, password_, session_data, attempt)
+
     elif "topPanelLeftCorner" not in res.text or "TD_Logout" not in res.text:
         print(f"topPanelLeftCorner 1")
 

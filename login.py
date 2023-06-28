@@ -12,6 +12,8 @@ def login(session, login_, password_, session_data=None, attempt=0):
     print("start login")
     try:
         session_proxy = AllProxy.objects.get(id=session_data.proxy_id)
+        proxy_2_cap = None
+
         # hosts = [
         #     "45.140.75.180",
         #     "45.140.73.86",

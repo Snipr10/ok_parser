@@ -10,6 +10,9 @@ solver = TwoCaptcha(two_captcha)
 
 
 def login(session, login_, password_, session_data=None, attempt=0):
+    if session_data is None:
+        raise Exception(f"session_data Null")
+
     if attempt > 5:
         session_data.is_parsing = 0
         session_data.is_active += 1

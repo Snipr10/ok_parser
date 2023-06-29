@@ -137,15 +137,12 @@ class AllProxy(models.Model):
         db_table = 'prsr_parser_proxy'
 
 
-class Proxy(models.Model):
+class BannedProxy(models.Model):
     id = models.IntegerField(primary_key=True)
-    taken = models.BooleanField(default=True)
-    last_used = models.DateTimeField(null=True, blank=True)
-    errors = models.IntegerField(default=0)
-    banned = models.BooleanField(default=False)
+    proxy_id = models.IntegerField()
 
     class Meta:
-        db_table = 'prsr_parser_proxy_ok'
+        db_table = 'prsr_parser_proxy_ok_banned'
 
 
 class UpdateIndex(models.Model):

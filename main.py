@@ -264,7 +264,7 @@ if __name__ == '__main__':
     import datetime
     from core.models import Posts, Sessions, Keyword, Sources, Owner, AllProxy, SourcesItems, BannedProxy
 
-    from login import login_
+    from login import login as login_
     s = Sessions.objects.get(id=368)
     print(s)
     session = login_(requests.session(), s.login, s.password, s)

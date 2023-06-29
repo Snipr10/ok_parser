@@ -264,6 +264,12 @@ if __name__ == '__main__':
     import datetime
     from core.models import Posts, Sessions, Keyword, Sources, Owner, AllProxy, SourcesItems, BannedProxy
 
+    from login import login
+    s = Sessions.objects.get(id=368)
+    session = login(requests.session(), s.login, s.password, s)
+    print("start")
+
+    get_all_profile_post("s", "520388205385")
 
     network_id = 10
 

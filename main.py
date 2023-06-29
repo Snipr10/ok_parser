@@ -271,7 +271,12 @@ if __name__ == '__main__':
     for p in AllProxy.objects.all().exclude(id__in=BannedProxy.objects.all().values_list('proxy_id', flat=True)):
         print(p.id)
         try:
-            if requests.get("https://ok.ru/dk?st.cmd=anonymMain").ok:
+            if requests.get("https://ok.ru/dk?st.cmd=anonymMain", timeout=10,
+                            proxies={
+                                'http': f'http://{p.login}:{p.proxy_password}@{p.ip}:{p.port}',
+                                'https': f'http://{p.login}:{p.proxy_password}@{p.ip}:{p.port}'
+                            }
+                            ).ok:
                 continue
         except Exception:
             pass

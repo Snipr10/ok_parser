@@ -159,7 +159,7 @@ if __name__ == '__main__':
     #     o.save()
 
     network_id = 10
-    for i in range(3):
+    for i in range(2):
         time.sleep(4)
         print("thread ThreadPoolExecutor thread start " + str(i))
         x = multiprocessing.Process(target=new_process, args=(i,))

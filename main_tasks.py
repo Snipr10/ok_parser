@@ -189,16 +189,16 @@ def start_task():
         select_sources = Sources.objects.filter(
             Q(retro_max__isnull=True) | Q(retro_max__gte=timezone.now()), published=1,
             status=1)
-        print(f"select_sources {select_sources}")
+        # print(f"select_sources {select_sources}")
 
         key_source = KeywordSource.objects.filter(source_id__in=list(select_sources.values_list('id', flat=True)))
-        print(f"key_source {key_source}")
+        # print(f"key_source {key_source}")
 
         key_word = Keyword.objects.filter(network_id=10, enabled=1, taken=0,
                                           id__in=list(key_source.values_list('keyword_id', flat=True)),
                                           last_modified__gte=datetime.date(1999, 1, 1),
                                           ).order_by('last_modified').first()
-        print(f"key_word {key_word}")
+        # print(f"key_word {key_word}")
 
         if key_word:
             key_word.taken = 1

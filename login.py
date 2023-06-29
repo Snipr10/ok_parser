@@ -15,7 +15,7 @@ def login(session, login_, password_, session_data=None, attempt=0):
         session_data.save(update_fields=['proxy_id', 'is_active'])
         raise Exception(f"attempt login attempt {session_data.id}")
 
-    print("start login")
+    print(f"start login {session_data}")
     try:
         session_proxy = AllProxy.objects.get(id=session_data.proxy_id)
         proxy_2_cap = None
@@ -34,7 +34,7 @@ def login(session, login_, password_, session_data=None, attempt=0):
             'https': f'http://{session_proxy.login}:{session_proxy.proxy_password}@{session_proxy.ip}:{session_proxy.port}'
         }
         session.proxies.update(proxies)
-        print(proxies)
+        print(proxies, session_data)
         proxy_2_cap = {'type': 'HTTP',
                        'uri': f'{session_proxy.login}:{session_proxy.proxy_password}@{session_proxy.ip}:{session_proxy.port}'}
     except Exception as e:
@@ -78,7 +78,7 @@ def login(session, login_, password_, session_data=None, attempt=0):
               '&st.iscode=false'
     try:
         res = session.post(url, headers=login_headers, data=payload)
-        print(res.status_code)
+        print(res.status_code, session_data)
     except Exception as e:
         try:
             BannedProxy.objects.create(proxy_id=session_data.proxy_id)
@@ -118,11 +118,11 @@ def login(session, login_, password_, session_data=None, attempt=0):
         if "topPanelLeftCorner" not in res.text or "TD_Logout" not in res.text:
 
             if "st.cmd=anonymUnblockConfirmPhone" in res.text:
-                print("anonymUnblockConfirmPhone")
+                print("anonymUnblockConfirmPhone", session_data)
                 session_data.is_active += 10
                 session_data.is_parsing = 0
                 session_data.save(update_fields=['is_active', 'is_parsing'])
-                raise Exception("Blocked")
+                raise Exception(f"Blocked {session_data}")
 
             attempt += 1
             if attempt > 5:
@@ -146,7 +146,7 @@ def login(session, login_, password_, session_data=None, attempt=0):
                     code = solver.normal(file_name, lang="ru")['code']
 
             except Exception as e:
-                print(f"captcha {e}")
+                print(f"captcha {e} {session_data}")
                 if "ERROR_ZERO_CAPTCHA_FILESIZE" in str(e) or "HTTPSConnectionPool" in str(e):
                     try:
                         BannedProxy.objects.create(proxy_id=session_data.proxy_id)

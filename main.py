@@ -268,6 +268,9 @@ if __name__ == '__main__':
     network_id = 10
 
     print("start")
+    print(AllProxy.objects.all().exclude(id__in=BannedProxy.objects.all().values_list('proxy_id', flat=True)))
+    print("start")
+    print(AllProxy.objects.all())
     for p in AllProxy.objects.all().exclude(id__in=BannedProxy.objects.all().values_list('proxy_id', flat=True)):
         print(p.id)
         try:

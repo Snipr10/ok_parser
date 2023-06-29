@@ -267,8 +267,8 @@ if __name__ == '__main__':
 
     network_id = 10
 
-
-    for p in AllProxy.objects.exclude(id__in=BannedProxy.objects.all().values_list('proxy_id', flat=True)):
+    print("start")
+    for p in AllProxy.objects.all().exclude(id__in=BannedProxy.objects.all().values_list('proxy_id', flat=True)):
         print(p.id)
         try:
             if requests.get("https://ok.ru/dk?st.cmd=anonymMain").ok:

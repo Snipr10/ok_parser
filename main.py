@@ -189,16 +189,16 @@ def start_task():
         select_sources = Sources.objects.filter(
             Q(retro_max__isnull=True) | Q(retro_max__gte=timezone.now()), published=1,
             status=1)
-        print(f"select_sources {select_sources}")
+        # print(f"select_sources {select_sources}")
 
         key_source = KeywordSource.objects.filter(source_id__in=list(select_sources.values_list('id', flat=True)))
-        print(f"key_source {key_source}")
+        # print(f"key_source {key_source}")
 
         key_word = Keyword.objects.filter(network_id=10, enabled=1, taken=0,
                                           id__in=list(key_source.values_list('keyword_id', flat=True)),
                                           last_modified__gte=datetime.date(1999, 1, 1),
                                           ).order_by('last_modified').first()
-        print(f"key_word {key_word}")
+        # print(f"key_word {key_word}")
 
         if key_word:
             key_word.taken = 1
@@ -264,33 +264,34 @@ if __name__ == '__main__':
     import datetime
     from core.models import Posts, Sessions, Keyword, Sources, Owner, AllProxy, SourcesItems, BannedProxy
 
-    from login import login as login_
-    s = Sessions.objects.get(id=368)
-    print(s)
-    session = login_(requests.session(), s.login, s.password, s)
-    print("start")
-
-    get_all_profile_post("s", "520388205385")
-
     network_id = 10
-
-    print("start")
-    print(AllProxy.objects.all().exclude(id__in=BannedProxy.objects.all().values_list('proxy_id', flat=True)))
-    print("start")
-    print(AllProxy.objects.all())
-    for p in AllProxy.objects.all().exclude(id__in=BannedProxy.objects.all().values_list('proxy_id', flat=True)):
-        print(p.id)
-        try:
-            if requests.get("https://ok.ru/dk?st.cmd=anonymMain", timeout=10,
-                            proxies={
-                                'http': f'http://{p.login}:{p.proxy_password}@{p.ip}:{p.port}',
-                                'https': f'http://{p.login}:{p.proxy_password}@{p.ip}:{p.port}'
-                            }
-                            ).ok:
-                continue
-        except Exception:
-            pass
-        BannedProxy.objects.create(proxy_id=p.id)
+    # from login import login as login_
+    # s = Sessions.objects.get(id=368)
+    # print(s)
+    # session = login_(requests.session(), s.login, s.password, s)
+    # print("start")
+    #
+    # get_all_profile_post("s", "520388205385")
+    #
+    #
+    #
+    # print("start")
+    # print(AllProxy.objects.all().exclude(id__in=BannedProxy.objects.all().values_list('proxy_id', flat=True)))
+    # print("start")
+    # print(AllProxy.objects.all())
+    # for p in AllProxy.objects.all().exclude(id__in=BannedProxy.objects.all().values_list('proxy_id', flat=True)):
+    #     print(p.id)
+    #     try:
+    #         if requests.get("https://ok.ru/dk?st.cmd=anonymMain", timeout=10,
+    #                         proxies={
+    #                             'http': f'http://{p.login}:{p.proxy_password}@{p.ip}:{p.port}',
+    #                             'https': f'http://{p.login}:{p.proxy_password}@{p.ip}:{p.port}'
+    #                         }
+    #                         ).ok:
+    #             continue
+    #     except Exception:
+    #         pass
+    #     BannedProxy.objects.create(proxy_id=p.id)
 
 
     i = 14

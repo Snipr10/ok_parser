@@ -14,7 +14,7 @@ from bs4 import BeautifulSoup
 
 
 def new_process(i):
-    for i in range(7):
+    for i in range(3):
         time.sleep(random.randint(1, 5))
         print(f"multiprocessing key {i}")
         x = threading.Thread(target=start_task_while, args=(i,))
@@ -159,7 +159,7 @@ if __name__ == '__main__':
     #     o.save()
 
     network_id = 10
-    for i in range(8):
+    for i in range(3):
         time.sleep(4)
         print("thread ThreadPoolExecutor thread start " + str(i))
         x = multiprocessing.Process(target=new_process, args=(i,))

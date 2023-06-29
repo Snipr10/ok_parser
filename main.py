@@ -264,9 +264,10 @@ if __name__ == '__main__':
     import datetime
     from core.models import Posts, Sessions, Keyword, Sources, Owner, AllProxy, SourcesItems, BannedProxy
 
-    from login import login
+    from login import login_
     s = Sessions.objects.get(id=368)
-    session = login(requests.session(), s.login, s.password, s)
+    print(s)
+    session = login_(requests.session(), s.login, s.password, s)
     print("start")
 
     get_all_profile_post("s", "520388205385")

@@ -97,7 +97,7 @@ def login(session, login_, password_, session_data=None, attempt=0):
         return login(session, login_, password_, session_data, attempt)
 
     if "Доступ к профилю ограничен" in res.text or "Неправильно указан логин" in res.text:
-        session_data.is_active = 15
+        session_data.is_active += 15
         session_data.is_parsing = 0
 
         session_data.save(update_fields=['is_active', 'is_parsing'])
@@ -119,7 +119,7 @@ def login(session, login_, password_, session_data=None, attempt=0):
 
             if "st.cmd=anonymUnblockConfirmPhone" in res.text:
                 print("anonymUnblockConfirmPhone")
-                session_data.is_active = 11
+                session_data.is_active += 10
                 session_data.is_parsing = 0
                 session_data.save(update_fields=['is_active', 'is_parsing'])
                 raise Exception("Blocked")

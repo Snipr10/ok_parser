@@ -169,4 +169,5 @@ def login(session, login_, password_, session_data=None, attempt=0):
             session.post(url, data=payload)
             attempt += 1
             return login(session, login_, password_, session_data, attempt)
+    print(f"login success {session_data}")
     return session

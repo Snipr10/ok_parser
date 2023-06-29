@@ -1,5 +1,6 @@
 import random
 
+import requests
 from twocaptcha import TwoCaptcha
 
 from core.models import AllProxy, BannedProxy
@@ -94,7 +95,7 @@ def login(session, login_, password_, session_data=None, attempt=0):
                 session_data.proxy_id = None
             session_data.is_active += 1
             session_data.save(update_fields=['proxy_id', 'is_active'])
-        return login(session, login_, password_, session_data, attempt)
+        return login(requests.session(), login_, password_, session_data, attempt)
 
     if "Доступ к профилю ограничен" in res.text or "Неправильно указан логин" in res.text:
         session_data.is_active += 15
@@ -168,6 +169,6 @@ def login(session, login_, password_, session_data=None, attempt=0):
                        'st.r.validateCaptcha': 'Готово!'}
             session.post(url, data=payload)
             attempt += 1
-            return login(session, login_, password_, session_data, attempt)
+            return login(requests.session(), login_, password_, session_data, attempt)
     print(f"login success {session_data}")
     return session

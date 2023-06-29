@@ -2,7 +2,7 @@ import random
 
 from twocaptcha import TwoCaptcha
 
-from core.models import AllProxy
+from core.models import AllProxy, BannedProxy
 from ok_parser.settings import two_captcha
 
 solver = TwoCaptcha(two_captcha)
@@ -10,6 +10,9 @@ solver = TwoCaptcha(two_captcha)
 
 def login(session, login_, password_, session_data=None, attempt=0):
     if attempt > 5:
+        session_data.is_parsing = 0
+        session_data.is_active += 1
+        session_data.save(update_fields=['proxy_id', 'is_active'])
         raise Exception(f"attempt login attempt {session_data.id}")
 
     print("start login")
@@ -35,6 +38,10 @@ def login(session, login_, password_, session_data=None, attempt=0):
         proxy_2_cap = {'type': 'HTTP',
                        'uri': f'{session_proxy.login}:{session_proxy.proxy_password}@{session_proxy.ip}:{session_proxy.port}'}
     except Exception as e:
+        try:
+            BannedProxy.objects.create(proxy_id=session_data.proxy_id)
+        except Exception:
+            pass
         proxy_2_cap = None
         print(f"Proxy error : {e}")
     ""
@@ -73,19 +80,27 @@ def login(session, login_, password_, session_data=None, attempt=0):
         res = session.post(url, headers=login_headers, data=payload)
         print(res.status_code)
     except Exception as e:
-
+        try:
+            BannedProxy.objects.create(proxy_id=session_data.proxy_id)
+        except Exception:
+            pass
         print(f"Exp 1 {e}")
         if "ERROR_ZERO_CAPTCHA_FILESIZE" in str(e) or "HTTPSConnectionPool" in str(e):
             try:
-                session_data.proxy_id = AllProxy.objects.order_by('?').first().id
+                session_data.proxy_id = AllProxy.objects.exclude(
+                    id__in=BannedProxy.objects.all().values_list('proxy_id', flat=True)
+                ).order_by('?').first().id
             except Exception:
                 session_data.proxy_id = None
-            session_data.save(update_fields=['proxy_id'])
+            session_data.is_active += 1
+            session_data.save(update_fields=['proxy_id', 'is_active'])
         return login(session, login_, password_, session_data, attempt)
 
     if "Доступ к профилю ограничен" in res.text or "Неправильно указан логин" in res.text:
         session_data.is_active = 15
-        session_data.save(update_fields=['is_active'])
+        session_data.is_parsing = 0
+
+        session_data.save(update_fields=['is_active', 'is_parsing'])
         raise Exception(f"Can not login block {session_data.id}")
     # elif "Проверьте ваше соединение с интернетом и повторите попытку." in res.text:
     #     print("плохая прокси")
@@ -105,13 +120,15 @@ def login(session, login_, password_, session_data=None, attempt=0):
             if "st.cmd=anonymUnblockConfirmPhone" in res.text:
                 print("anonymUnblockConfirmPhone")
                 session_data.is_active = 11
-                session_data.save(update_fields=['is_active'])
+                session_data.is_parsing = 0
+                session_data.save(update_fields=['is_active', 'is_parsing'])
                 raise Exception("Blocked")
 
             attempt += 1
             if attempt > 5:
                 session_data.is_active += 1
-                session_data.save(update_fields=['is_active'])
+                session_data.is_parsing = 0
+                session_data.save(update_fields=['is_active', 'is_parsing'])
                 raise Exception(f"Can not login attemps {session_data.id}")
             res_cap = session.get("https://ok.ru/captcha?st.cmd=captcha")
             text = res_cap.content
@@ -132,10 +149,18 @@ def login(session, login_, password_, session_data=None, attempt=0):
                 print(f"captcha {e}")
                 if "ERROR_ZERO_CAPTCHA_FILESIZE" in str(e) or "HTTPSConnectionPool" in str(e):
                     try:
-                        session_data.proxy_id = AllProxy.objects.order_by('?').first().id
+                        BannedProxy.objects.create(proxy_id=session_data.proxy_id)
+                    except Exception:
+                        pass
+                    try:
+                        session_data.proxy_id = AllProxy.objects.exclude(
+                            id__in=BannedProxy.objects.all().values_list('proxy_id', flat=True)
+                        ).order_by('?').first().id
                     except Exception:
                         session_data.proxy_id = None
-                    session_data.save(update_fields=['proxy_id'])
+                    session_data.is_active = 0
+
+                    session_data.save(update_fields=['proxy_id', 'is_active'])
                 pass
             url = "https://ok.ru/dk?cmd=AnonymVerifyCaptchaEnter&st.cmd=anonymVerifyCaptchaEnter"
 

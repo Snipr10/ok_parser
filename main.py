@@ -263,6 +263,7 @@ if __name__ == '__main__':
     from django.utils import timezone
     import datetime
     from core.models import Posts, Sessions, Keyword, Sources, Owner, AllProxy, SourcesItems, BannedProxy
+    from login import get_new_proxy
 
     network_id = 10
     # from login import login as login_
@@ -311,7 +312,7 @@ if __name__ == '__main__':
             try:
                 for s in Sessions.objects.filter(proxy_id__isnull=True):
                     try:
-                        s.proxy_id = AllProxy.objects.order_by('?').first().id
+                        s.proxy_id = get_new_proxy().id
                         s.save()
                     except Exception:
                         pass

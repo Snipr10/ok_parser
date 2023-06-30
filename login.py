@@ -9,6 +9,20 @@ from ok_parser.settings import two_captcha
 solver = TwoCaptcha(two_captcha)
 
 
+def get_new_proxy():
+    for p in AllProxy.objects.filter(port__in=[30016]).order_by('?'):
+        proxies = {
+            'http': f'http://{p.login}:{p.proxy_password}@{p.ip}:{p.port}',
+            'https': f'http://{p.login}:{p.proxy_password}@{p.ip}:{p.port}'
+        }
+        if requests.get("https://ok.ru/dk?st.cmd=anonymMain", timeout=10, proxies=proxies).ok:
+            return p
+    return AllProxy.objects.exclude(
+        id__in=BannedProxy.objects.all().values_list('proxy_id', flat=True)
+    ).order_by('?').first()
+
+
+
 def login(session, login_, password_, session_data=None, attempt=0):
     if session_data is None:
         raise Exception(f"session_data Null")
@@ -91,9 +105,7 @@ def login(session, login_, password_, session_data=None, attempt=0):
         print(f"Exp 1 {e}")
         if "ERROR_ZERO_CAPTCHA_FILESIZE" in str(e) or "HTTPSConnectionPool" in str(e):
             try:
-                session_data.proxy_id = AllProxy.objects.exclude(
-                    id__in=BannedProxy.objects.all().values_list('proxy_id', flat=True)
-                ).order_by('?').first().id
+                session_data.proxy_id = get_new_proxy().id
             except Exception:
                 session_data.proxy_id = None
             session_data.is_active += 1
@@ -157,9 +169,7 @@ def login(session, login_, password_, session_data=None, attempt=0):
                     except Exception:
                         pass
                     try:
-                        session_data.proxy_id = AllProxy.objects.exclude(
-                            id__in=BannedProxy.objects.all().values_list('proxy_id', flat=True)
-                        ).order_by('?').first().id
+                        session_data.proxy_id = get_new_proxy().id
                     except Exception:
                         session_data.proxy_id = None
                     session_data.is_active = 0

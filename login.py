@@ -15,8 +15,11 @@ def get_new_proxy():
             'http': f'http://{p.login}:{p.proxy_password}@{p.ip}:{p.port}',
             'https': f'http://{p.login}:{p.proxy_password}@{p.ip}:{p.port}'
         }
-        if requests.get("https://ok.ru/dk?st.cmd=anonymMain", timeout=10, proxies=proxies).ok:
-            return p
+        try:
+            if requests.get("https://ok.ru/dk?st.cmd=anonymMain", timeout=10, proxies=proxies).ok:
+                return p
+        except Exception:
+            pass
     return AllProxy.objects.exclude(
         id__in=BannedProxy.objects.all().values_list('proxy_id', flat=True)
     ).order_by('?').first()

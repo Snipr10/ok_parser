@@ -308,7 +308,16 @@ if __name__ == '__main__':
                                             timezone.now() - datetime.timedelta(minutes=60)),
                                         ).update(is_parsing=0)
             except Exception as e:
-                print(e)
+                try:
+                    for s in Sessions.objects.filter(is_parsing=1):
+
+                        try:
+                            s.is_parsing = 0
+                            s.save(update_fields=['is_parsing'])
+                        except Exception as e:
+                            pass
+                except Exception:
+                    pass
             try:
                 for s in Sessions.objects.filter(proxy_id__isnull=True):
                     try:

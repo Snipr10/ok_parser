@@ -36,7 +36,7 @@ def login(session, login_, password_, session_data=None, attempt=0):
         session_data.save(update_fields=['proxy_id', 'is_active'])
         raise Exception(f"attempt login attempt {session_data.id}")
 
-    print(f"start login {session_data}")
+    print(f"start login {session_data} {session_data.proxy_id}")
     try:
         session_proxy = AllProxy.objects.get(id=session_data.proxy_id)
         proxy_2_cap = None

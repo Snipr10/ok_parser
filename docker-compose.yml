@@ -1,10 +1,10 @@
 version: '3.4'
 
 services:
-  main:
-    build: ./
-    command: python3 main.py
-    restart: always
+#  main:
+#    build: ./
+#    command: python3 main.py
+#    restart: always
 
   main_tasks_keys:
     build: ./

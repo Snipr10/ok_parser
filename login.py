@@ -33,7 +33,8 @@ def login(session, login_, password_, session_data=None, attempt=0):
     if attempt > 5:
         session_data.is_parsing = 0
         session_data.is_active += 1
-        session_data.save(update_fields=['proxy_id', 'is_active'])
+        session_data.proxy_id = None
+        session_data.save(update_fields=['proxy_id', 'is_active', 'proxy_id'])
         raise Exception(f"attempt login attempt {session_data.id}")
 
     print(f"start login {session_data} {session_data.proxy_id}")
@@ -147,7 +148,9 @@ def login(session, login_, password_, session_data=None, attempt=0):
             if attempt > 5:
                 session_data.is_active += 1
                 session_data.is_parsing = 0
-                session_data.save(update_fields=['is_active', 'is_parsing'])
+                session_data.proxy_id = None
+
+                session_data.save(update_fields=['is_active', 'is_parsing', 'proxy_id'])
                 raise Exception(f"Can not login attemps {session_data.id}")
             res_cap = session.get("https://ok.ru/captcha?st.cmd=captcha")
             text = res_cap.content

@@ -35,11 +35,7 @@ requests==2.22.0
 sacremoses==0.0.46
 six==1.16.0
 smmap==5.0.0
-soupsieve==2.2.1
-sqlparse==0.4.1
-tokenizers==0.10.3
 tqdm==4.62.3
-transformers==4.7.0
 typing-extensions==3.10.0.2
 urllib3==1.25.11
 vine==5.0.0

@@ -10,7 +10,7 @@ solver = TwoCaptcha(two_captcha)
 
 
 def get_new_proxy():
-    for p in AllProxy.objects.filter(port__in=[30016]).order_by('?'):
+    for p in AllProxy.objects.filter(port__in=[30016, 30001, 8000]).order_by('?'):
         proxies = {
             'http': f'http://{p.login}:{p.proxy_password}@{p.ip}:{p.port}',
             'https': f'http://{p.login}:{p.proxy_password}@{p.ip}:{p.port}'
@@ -116,7 +116,9 @@ def login(session, login_, password_, session_data=None, attempt=0):
             session_data.save(update_fields=['proxy_id', 'is_active'])
         return login(requests.session(), login_, password_, session_data, attempt)
 
-    if "Доступ к профилю ограничен" in res.text or "Неправильно указан логин" in res.text:
+    if "Доступ к профилю ограничен" in res.text \
+            or "Неправильно указан логин" in res.text\
+            or "Ваш профиль заблокирован за нарушение правил пользования сайтом" in res.text:
         session_data.is_active += 15_000
         session_data.is_parsing = 0
 

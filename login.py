@@ -10,7 +10,7 @@ solver = TwoCaptcha(two_captcha)
 
 
 def get_new_proxy():
-    for p in AllProxy.objects.filter(port__in=[30016, 30001, 8000]).order_by('?'):
+    for p in AllProxy.objects.filter(port__in=[30016, 30001, 30011, 8000]).order_by('?'):
         proxies = {
             'http': f'http://{p.login}:{p.proxy_password}@{p.ip}:{p.port}',
             'https': f'http://{p.login}:{p.proxy_password}@{p.ip}:{p.port}'

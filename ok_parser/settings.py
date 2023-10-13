@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
-
+from datetime import datetime
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -140,3 +140,5 @@ rmq_settings = "amqp://post_index:R2ghtt9hebLv@192.168.5.46:5672/post_index"
 
 
 two_captcha = "36dd296a2d1b84396822f9b1b904339d"
+
+FIRST_DATE = datetime(2022, 4, 2, 0, 0)

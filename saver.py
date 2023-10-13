@@ -6,6 +6,7 @@ import django.db
 import pika
 
 from core.models import PostContent, Posts, Owner
+from ok_parser.settings import FIRST_DATE
 
 batch_size = 200
 
@@ -25,6 +26,36 @@ def save_result(res):
     for r in res:
         group_id = None
         from_id = None
+
+        try:
+            created_date = r['date'] if r['date'] else datetime.datetime.now()
+            print("FIRST_DATE")
+            if created_date < FIRST_DATE:
+                continue
+            print("created_date < FIRST_DATE")
+
+            url = r["url"]
+            if url:
+                if "ok.ru" not in url:
+                    url = "https://ok.ru" + url
+            sphinx_id = get_sphinx_id(url)
+            sphinx_ids.append(sphinx_id)
+            if from_id is None:
+                from_id = owner_id
+            posts.append(Posts(
+                id=r['themeId'],
+                owner_id=owner_id,
+                from_id=from_id,
+                created_date=created_date,
+                likes=r['likes'],
+                comments=r['comments'],
+                reposts=r['share'],
+                url=url,
+                sphinx_id=sphinx_id,
+                content_hash=get_md5_text(r['text'])))
+        except Exception as e:
+            print(e)
+
         try:
             group_id = r.get("group_id")
             group_screen = r.get("group_screen")
@@ -91,28 +122,7 @@ def save_result(res):
                 from_id = owner_id
         except Exception as e:
             print(e)
-        try:
-            url = r["url"]
-            if url:
-                if "ok.ru" not in url:
-                    url = "https://ok.ru" + url
-            sphinx_id = get_sphinx_id(url)
-            sphinx_ids.append(sphinx_id)
-            if from_id is None:
-                from_id = owner_id
-            posts.append(Posts(
-                id=r['themeId'],
-                owner_id=owner_id,
-                from_id=from_id,
-                created_date=r['date'] if r['date'] else datetime.datetime.now(),
-                likes=r['likes'],
-                comments=r['comments'],
-                reposts=r['share'],
-                url=url,
-                sphinx_id=sphinx_id,
-                content_hash=get_md5_text(r['text'])))
-        except Exception as e:
-            print(e)
+
 
         try:
             post_content.append(PostContent(id=r['themeId'], content=r['text'], url=r["url"]

@@ -127,14 +127,14 @@ def get_markerB(resp_bs4):
 def get_result(res):
     from parse_post import get_likes_comments_share, get_img
     try:
-        date = dateparser.parse(res.find("div", {"class": "feed_date"}).text)
+        date = dateparser.parse(res.find("div", {"class": "feed-info-date feed-info-subtitle_i"}).find('time').text)
         likes, comments, share = get_likes_comments_share(res)
         try:
             from_name = res.select_one("img[alt*='']").attrs.get("alt")
         except Exception:
             from_name = None
         try:
-            from_id = res.find("a", {"class":"dblock"}).get("href").split("/")[-1].split("?")[0]
+            from_id = res.find("a", {"class":"feed-avatar-link"}).get("href").split("/")[-1].split("?")[0]
         except Exception:
             from_id = None
         theme_id = re.search(r'gId":"\d+"', str(res)).group(0).replace('gId":"',"").replace('"',"")

@@ -124,7 +124,7 @@ def get_result(res):
     from parse_post import get_likes_comments_share, get_img
 
     try:
-        date = dateparser.parse(res.find("div", {"class": "feed_date"}).text)
+        date = dateparser.parse(res.find("div", {"class": "feed-info-date feed-info-subtitle_i"}).find('time').text)
         likes, comments, share = get_likes_comments_share(res)
         try:
             from_name = res.select_one("img[alt*='']").attrs.get("alt")
@@ -132,12 +132,12 @@ def get_result(res):
             from_name = None
         from_username = None
         try:
-            from_id = res.find("a", {"class":"dblock"}).get("href").split("/")[-1].split("?")[0]
+            from_id = res.find("a", {"class":"feed-avatar-link"}).get("href").split("/")[-1].split("?")[0]
             try:
                 int(from_id)
             except Exception as e:
                 from_username = from_id
-                for s in res.find("a", {"class": "dblock"}).get("href").split("&"):
+                for s in res.find("a", {"class": "feed-avatar-link"}).get("href").split("&"):
                     if "groupId" in s:
                         from_id = s.split("=")[-1]
                         break

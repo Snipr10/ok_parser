@@ -17,7 +17,7 @@ types_posts_user = {
 
 def get_text_html(session, posts, r):
     post_bs4 = BeautifulSoup(posts['renderedContent'])
-    href = post_bs4.find("a", {"class": "dblock"}).get("href")
+    href = post_bs4.find("a", {"class": "feed-avatar-link"}).get("href")
     group_id = None
     for q in href.split("&"):
         if "st.groupId=" in q:
@@ -32,7 +32,7 @@ def get_text_html(session, posts, r):
         type_post = types_posts_user.get(r['type'])
         url = f"https://m.ok.ru/dk?st.cmd={type_post.get('cmd')}&st.{type_post.get('st')}={posts['id']}"
         try:
-            group_id = post_bs4.select_one("a", {"class": "dblock"}).attrs.get("href").split("?")[0].split("/")[-1]
+            group_id = post_bs4.select_one("a", {"class": "feed-avatar-link"}).attrs.get("href").split("?")[0].split("/")[-1]
         except Exception as e:
             print(e)
     resp = session.get(url, )
@@ -58,7 +58,7 @@ def get_text_html(session, posts, r):
                 except Exception as e:
                     print(e)
     try:
-        date = dateparser.parse(post_bs4.find("div", {"class": "feed_date"}).text)
+        date = dateparser.parse(post_bs4.find("div", {"class": "feed-info-date feed-info-subtitle_i"}).find('time').text)
     except Exception:
         date = None
     try:

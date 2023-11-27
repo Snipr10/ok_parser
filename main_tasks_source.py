@@ -102,19 +102,24 @@ def start_task_source():
                         else:
                             raise Exception("bad type")
                 if sources_item.type == 18 or sources_item.type == 20:
-                    result = get_all_group_post(session, sources_item.data.split("/")[-1])
+                    result, banned = get_all_group_post(session, sources_item.data.split("/")[-1])
                 elif sources_item.type == 19 or sources_item.type == 21:
-                    result = get_all_profile_post(session, sources_item.data.split("/")[-1])
+                    result, banned = get_all_profile_post(session, sources_item.data.split("/")[-1])
                 else:
                     raise Exception("sources_item.type")
-                result_count = len(result)
-                django.db.close_old_connections()
-                save_result(result)
-                if len(result) >= 0:
-                    sources_item.last_modified = update_time_timezone(timezone.localtime())
-                django.db.close_old_connections()
-                sources_item.taken = 0
-                sources_item.save(update_fields=['taken', 'last_modified'])
+                if banned:
+                    sources_item.taken = 0
+                    sources_item.disabled = 1
+                    sources_item.save(update_fields=['taken', 'last_modified', 'disabled'])
+                else:
+                    result_count = len(result)
+                    django.db.close_old_connections()
+                    save_result(result)
+                    if len(result) >= 0:
+                        sources_item.last_modified = update_time_timezone(timezone.localtime())
+                    django.db.close_old_connections()
+                    sources_item.taken = 0
+                    sources_item.save(update_fields=['taken', 'last_modified'])
         else:
             time.sleep(60)
         if session:

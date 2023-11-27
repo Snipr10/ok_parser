@@ -27,7 +27,7 @@ def get_all_group_post(session_data, query):
     result = []
 
     first_resp = session.get(pre_url)
-    if first_resp.status_code and "Этой страницы нет в OK" in first_resp.text:
+    if first_resp.status_code == 404 and "Этой страницы нет в OK" in first_resp.text:
         return [], True
     print("first_resp")
 

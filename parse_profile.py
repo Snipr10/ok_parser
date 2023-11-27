@@ -27,6 +27,8 @@ def get_all_profile_post(session_data, query):
     result = []
 
     first_resp = session.get(pre_url)
+    if first_resp.status_code == 404 and "Этой страницы нет в OK" in first_resp.text:
+        return [], True
     resp_bs4_first = BeautifulSoup(first_resp.text)
     from search import get_followers
     followers = get_followers(resp_bs4_first)
@@ -110,7 +112,7 @@ def get_all_profile_post(session_data, query):
                 res_dict["followers"] = followers
 
                 result.append(res_dict)
-    return result
+    return result, False
 
 
 def get_markerB(resp_bs4):

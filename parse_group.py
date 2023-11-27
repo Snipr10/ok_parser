@@ -27,6 +27,8 @@ def get_all_group_post(session_data, query):
     result = []
 
     first_resp = session.get(pre_url)
+    if first_resp.status_code and "Этой страницы нет в OK" in first_resp.text:
+        return [], True
     print("first_resp")
 
     resp_bs4_first = BeautifulSoup(first_resp.text)
@@ -106,7 +108,7 @@ def get_all_group_post(session_data, query):
                 res_dict["group_img"] = group_img
                 res_dict["followers"] = followers
                 result.append(res_dict)
-    return result
+    return result, False
 
 
 def get_markerB(resp_bs4):

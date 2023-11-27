@@ -130,7 +130,10 @@ def get_likes_comments_share(resp_bs4):
             try:
                 likes = get_digit(resp_bs4.find_all("a", {"data-type": "LIKE"})[-1].text)
             except Exception:
-                likes = 0
+                try:
+                    likes = get_digit(resp_bs4.find_all("a", {"class": "feed_info_sm __reactions"})[-1].text)
+                except Exception:
+                    likes = 0
     try:
         comments = int(wigest_list[0].find("span", {"class": "widget_count js-count"}).text)
     except Exception:
@@ -141,7 +144,10 @@ def get_likes_comments_share(resp_bs4):
             try:
                 comments = get_digit(resp_bs4.find_all("a", {"href": "#cmntfrm"})[-1].text)
             except Exception:
-                comments = 0
+                try:
+                    comments = get_digit(resp_bs4.find_all("span", {"class": "widget_count js-count"})[0].text)
+                except Exception:
+                    comments = 0
     try:
         share = int(wigest_list[1].find("span", {"class": "widget_count js-count"}).text)
     except Exception:
@@ -152,7 +158,10 @@ def get_likes_comments_share(resp_bs4):
             try:
                 share = get_digit(resp_bs4.find_all("a", {"data-type": "RESHARE"})[-1].text)
             except Exception:
-                share = 0
+                try:
+                    share = get_digit(resp_bs4.find_all("span", {"class": "widget_count js-count"})[1].text)
+                except Exception:
+                    share = 0
 
     return likes, comments, share
 
@@ -165,7 +174,10 @@ def get_img(res):
         try:
             img = "https:" + res.find("a", {"class":"group-avatar-link"}).find("img").get("src")
         except Exception as e:
-            img = None
+            try:
+                img = res.find("img", {"class":"feed-avatar-img"}).get("src")
+            except Exception:
+                img = None
     if img:
         if "i.mycdn.me" in img:
             return img

@@ -169,15 +169,17 @@ def get_likes_comments_share(resp_bs4):
 def get_img(res):
     img = None
     try:
-        img = "https:" + res.find("img", {"class": "feed_ava_img"}).get("src")
+        img = res.find("img", {"class": "feed_ava_img"}).get("src")
     except Exception as e:
         try:
-            img = "https:" + res.find("a", {"class":"group-avatar-link"}).find("img").get("src")
+            img = res.find("a", {"class":"group-avatar-link"}).find("img").get("src")
         except Exception as e:
             try:
                 img = res.find("img", {"class":"feed-avatar-img"}).get("src")
             except Exception:
                 img = None
+    if img and "https:" not in img:
+        img = "https:" + img
     if img:
         if "i.mycdn.me" in img:
             return img

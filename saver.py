@@ -26,6 +26,10 @@ def save_result(res):
     for r in res:
         group_id = None
         from_id = None
+        try:
+            post_id = post_sphinx_id = get_sphinx_id(url)
+        except Exception:
+            continue
 
         try:
             created_date = r['date'] if r['date'] else datetime.datetime.now()
@@ -43,7 +47,7 @@ def save_result(res):
             if from_id is None:
                 from_id = owner_id
             posts.append(Posts(
-                id=r['themeId'],
+                id=post_id,
                 owner_id=owner_id,
                 from_id=from_id,
                 created_date=created_date,
@@ -125,7 +129,7 @@ def save_result(res):
 
 
         try:
-            post_content.append(PostContent(id=r['themeId'], content=r['text'], url=r["url"]
+            post_content.append(PostContent(id=post_id, content=r['text'], url=r["url"]
                                             ))
         except Exception as e:
             print(e)

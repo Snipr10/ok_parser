@@ -27,8 +27,14 @@ def save_result(res):
         group_id = None
         from_id = None
         try:
+            url = r["url"]
+            if url:
+                if "ok.ru" not in url:
+                    url = "https://ok.ru" + url
             post_id = post_sphinx_id = get_sphinx_id(url)
-        except Exception:
+        except Exception as e:
+            print(f"post_id {e}")
+
             continue
 
         try:
@@ -38,10 +44,7 @@ def save_result(res):
                 continue
             print("created_date < FIRST_DATE")
 
-            url = r["url"]
-            if url:
-                if "ok.ru" not in url:
-                    url = "https://ok.ru" + url
+
             sphinx_id = get_sphinx_id(url)
             sphinx_ids.append(sphinx_id)
             if from_id is None:

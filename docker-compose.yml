@@ -14,18 +14,18 @@ services:
       options:
         max-size: "100m"
 
-#  main_tasks_keys:
-#    build: ./
-#    command: python3 main_tasks_keys.py
-#    restart: always
-#    deploy:
-#      resources:
-#        limits:
-#          memory: 1GB
-#    logging:
-#      driver: "json-file"
-#      options:
-#        max-size: "100m"
+  main_tasks_keys:
+    build: ./
+    command: python3 main_tasks_keys.py
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 1GB
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
 
   main_tasks_source:
     build: ./

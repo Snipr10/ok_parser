@@ -57,9 +57,11 @@ def save_result(res):
                     pass
             else:
                 owner_id_new =owner_id
-
+            if owner_id_new is None:
+                owner_id_new = r['group_id']
             if from_id is None:
                 from_id = owner_id_new
+
             posts.append(Posts(
                 id=post_id,
                 owner_id=owner_id_new,

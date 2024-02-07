@@ -1,6 +1,7 @@
 import hashlib
 import json
 import datetime
+import re
 
 import django.db
 import pika
@@ -44,14 +45,24 @@ def save_result(res):
                 continue
             print("created_date < FIRST_DATE")
 
-
             sphinx_id = get_sphinx_id(url)
             sphinx_ids.append(sphinx_id)
+
+            owner_id_new = None
+            if owner_id is None:
+                try:
+                    owner_id_new = re.search(r"st.groupId=\S\S\w+", url).group(0)
+                    owner_id_new = owner_id_new.replace("st.groupId=", "")
+                except Exception:
+                    pass
+            else:
+                owner_id_new =owner_id
+
             if from_id is None:
-                from_id = owner_id
+                from_id = owner_id_new
             posts.append(Posts(
                 id=post_id,
-                owner_id=owner_id,
+                owner_id=owner_id_new,
                 from_id=from_id,
                 created_date=created_date,
                 likes=r['likes'],
@@ -76,7 +87,7 @@ def save_result(res):
 
             if group_id:
                 sphinx_id = get_sphinx_id(group_id)
-                owner_id = group_id
+                owner_id_new = group_id
                 screen_prefix = "group"
                 if len(str(group_id)) < 14:
                     screen_prefix = "user"
@@ -126,7 +137,7 @@ def save_result(res):
                 if from_img:
                     owner_update_avatar.append(owner)
             else:
-                from_id = owner_id
+                from_id = owner_id_new
         except Exception as e:
             print(e)
 

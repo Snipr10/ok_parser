@@ -44,7 +44,7 @@ if __name__ == '__main__':
     from search import get_all_posts
     i =0
     print("start")
-    for p in Posts.objects.filter(url__contains="ok.ruvideo"):
+    for p in Posts.objects.filter(url__contains="ok.rulive"):
         try:
             i += 1
             print(i)
@@ -52,7 +52,7 @@ if __name__ == '__main__':
               p.url = "https://ok.ru" + p.url.replace("%2F", "/")
               p.save()
             elif "ok.ruvideo" in p.url:
-                p.url = p.url.replace("ok.ruvideo", "ok.ru/video")
+                p.url = p.url.replace("ok.rulive", "ok.ru/live")
                 p.save()
             else:
                 p.url = "https://ok.ru" + p.url

@@ -42,16 +42,10 @@ if __name__ == '__main__':
     from core.models import Posts, Sessions, Keyword, Sources, Owner, AllProxy, SourcesItems, BannedProxy
     from login import get_new_proxy
     i =0
-    for p in Posts.objects.filter(owner_id__isnull=True):
-            try:
-                i += 1
-                print(i)
-                url = p.url
-
-                owner_id = re.search(r"st.groupId=\S\S\w+", url).group(0)
-                owner_id = owner_id.replace("st.groupId=", "")
-                p.owner_id=owner_id
-                p.from_id=owner_id
-                p.save()
-            except Exception:
-                pass
+    for p in Posts.objects.filter():
+        if "https://" not in p.url:
+          p.url = "https://ok.ru" + p.url.replace("%2F", "/")
+          p.save()
+        elif "ok.ruvideo" in p.url:
+            p.url = p.url.replace("ok.ruvideo", "ok.ru/video")
+            p.save()

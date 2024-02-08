@@ -39,3 +39,16 @@ services:
       driver: "json-file"
       options:
         max-size: "100m"
+
+  main_script:
+    build: ./
+    command: python3 m_t.py
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 200Mb
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"

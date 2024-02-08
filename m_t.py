@@ -36,13 +36,11 @@ if __name__ == '__main__':
     from parse_group import get_all_group_post
     from parse_profile import get_all_profile_post
     from search import get_all_posts
-    from accounts import update_time_timezone
-    from django.utils import timezone
-    import datetime
-    from core.models import Posts, Sessions, Keyword, Sources, Owner, AllProxy, SourcesItems, BannedProxy
-    from login import get_new_proxy
     i =0
+
     for p in Posts.objects.filter():
+        i += 1
+        print(i)
         if "https://" not in p.url:
           p.url = "https://ok.ru" + p.url.replace("%2F", "/")
           p.save()

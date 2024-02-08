@@ -44,19 +44,25 @@ if __name__ == '__main__':
     from search import get_all_posts
     i =0
     print("start")
-    for p in Posts.objects.filter(url__contains="ok.rulive"):
+    for p in Posts.objects.filter(url__contains="https://ok.ruhttps"):
         try:
             i += 1
             print(i)
-            if "https://" not in p.url:
-              p.url = "https://ok.ru" + p.url.replace("%2F", "/")
-              p.save()
-            elif "ok.ruvideo" in p.url:
+            p.url = p.url.replace("https://ok.ru" , "")
+            p.url = "https://ok.ru/" + p.url
+            if "ok.rulive" in p.url:
                 p.url = p.url.replace("ok.rulive", "ok.ru/live")
-                p.save()
-            else:
-                p.url = "https://ok.ru" + p.url
-                p.save()
+
+            p.save()
+            # if "https://" not in p.url:
+            #   p.url = "https://ok.ru" + p.url.replace("%2F", "/")
+            #   p.save()
+            # elif "ok.rulive" in p.url:
+            #     p.url = p.url.replace("ok.rulive", "ok.ru/live")
+            #     p.save()
+            # else:
+            #     p.url = "https://ok.ru" + p.url
+            #     p.save()
 
         except Exception:
             pass

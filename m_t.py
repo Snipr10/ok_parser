@@ -43,7 +43,7 @@ if __name__ == '__main__':
     from parse_profile import get_all_profile_post
     from search import get_all_posts
     i =0
-
+    print("start")
     for p in Posts.objects.filter():
         try:
             i += 1

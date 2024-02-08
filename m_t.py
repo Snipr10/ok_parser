@@ -44,7 +44,7 @@ if __name__ == '__main__':
     from search import get_all_posts
     i =0
     print("start")
-    for p in Posts.objects.filter(url__startswith="/"):
+    for p in Posts.objects.filter(url__contains="ok.ruvideo"):
         try:
             i += 1
             print(i)

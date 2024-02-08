@@ -44,7 +44,7 @@ if __name__ == '__main__':
     from search import get_all_posts
     i =0
     print("start")
-    for p in Posts.objects.filter(url__startswith="%2F"):
+    for p in Posts.objects.filter(url__startswith="/"):
         try:
             i += 1
             print(i)
@@ -54,5 +54,9 @@ if __name__ == '__main__':
             elif "ok.ruvideo" in p.url:
                 p.url = p.url.replace("ok.ruvideo", "ok.ru/video")
                 p.save()
+            else:
+                p.url = "https://ok.ru" + p.url
+                p.save()
+
         except Exception:
             pass

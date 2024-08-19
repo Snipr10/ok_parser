@@ -15,6 +15,7 @@ def get_new_session():
         timezone.localtime()) - timedelta(minutes=5)), is_parsing=False, is_active__lte=100, proxy_id__isnull=False
                                    ).order_by('last_parsing').first()
     if not s:
+        time.sleep(10)
         return None
     s.is_parsing=True
     s.save(update_fields=["is_parsing"])

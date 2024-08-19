@@ -13,7 +13,7 @@ import requests
 
 
 def new_process_source(i):
-    for i in range(3):
+    for i in range(1):
         time.sleep(random.randint(1, 5))
         print(f"multiprocessing source {i}")
         x = threading.Thread(target=start_task_while_source, args=(i,))

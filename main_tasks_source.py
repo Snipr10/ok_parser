@@ -121,6 +121,8 @@ def start_task_source():
                     django.db.close_old_connections()
                     sources_item.taken = 0
                     sources_item.save(update_fields=['taken', 'last_modified'])
+            else:
+                time.sleep(60*10)
         else:
             time.sleep(60)
         if session:

@@ -17,6 +17,7 @@ def get_new_session():
     if not s:
         time.sleep(10)
         return None
+    print(s.id)
     s.is_parsing=True
     s.save(update_fields=["is_parsing"])
     return s

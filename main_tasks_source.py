@@ -55,7 +55,7 @@ def start_task_source():
     try:
         django.db.close_old_connections()
         session = get_new_session()
-        print(f"session {session}")
+        print(f"session is  {session}")
 
         if session:
             now = update_time_timezone(timezone.localtime())

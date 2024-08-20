@@ -73,6 +73,8 @@ def get_all_posts(session_data, query):
         for post in result_posts:
             try:
                 res.append(get_text_html(session, post.get("content"), post))
+            except ValueError:
+                continue
             except Exception as e:
                 print(f"get_all_posts {e}")
                 try:

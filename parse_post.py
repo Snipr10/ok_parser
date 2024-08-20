@@ -24,17 +24,21 @@ def get_text_html(session, posts, r):
             group_id = q.replace("st.groupId=", "")
             break
 
-    if group_id:
-        type_post = types_posts_group.get(r['type'])
+    try:
+        if group_id:
+            type_post = types_posts_group.get(r['type'])
 
-        url = f"https://m.ok.ru/dk?st.cmd={type_post.get('cmd')}&st.groupId={group_id}&st.{type_post.get('st')}={posts['id']}"
-    else:
-        type_post = types_posts_user.get(r['type'])
-        url = f"https://m.ok.ru/dk?st.cmd={type_post.get('cmd')}&st.{type_post.get('st')}={posts['id']}"
-        try:
-            group_id = post_bs4.select_one("a", {"class": "feed-avatar-link"}).attrs.get("href").split("?")[0].split("/")[-1]
-        except Exception as e:
-            print(e)
+            url = f"https://m.ok.ru/dk?st.cmd={type_post.get('cmd')}&st.groupId={group_id}&st.{type_post.get('st')}={posts['id']}"
+        else:
+            type_post = types_posts_user.get(r['type'])
+            url = f"https://m.ok.ru/dk?st.cmd={type_post.get('cmd')}&st.{type_post.get('st')}={posts['id']}"
+            try:
+                group_id = post_bs4.select_one("a", {"class": "feed-avatar-link"}).attrs.get("href").split("?")[0].split("/")[-1]
+            except Exception as e:
+                print(e)
+
+    except Exception as e:
+        raise ValueError(str(e))
     resp = session.get(url, )
 
     resp_bs4 = BeautifulSoup(resp.text)

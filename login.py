@@ -109,11 +109,12 @@ def login(session, login_, password_, session_data=None, attempt=0):
             pass
         print(f"Exp 1 {e}")
         if "ERROR_ZERO_CAPTCHA_FILESIZE" in str(e) or "HTTPSConnectionPool" in str(e):
-            try:
-                session_data.proxy_id = get_new_proxy().id
-            except Exception:
-                session_data.proxy_id = None
-            session_data.is_active += 1
+            if session_data.is_active > 20:
+                try:
+                    session_data.proxy_id = get_new_proxy().id
+                except Exception:
+                    session_data.proxy_id = None
+                session_data.is_active += 1
             session_data.save(update_fields=['proxy_id', 'is_active'])
         return login(requests.session(), login_, password_, session_data, attempt)
 
@@ -173,14 +174,15 @@ def login(session, login_, password_, session_data=None, attempt=0):
             except Exception as e:
                 print(f"captcha {e} {session_data}")
                 if "ERROR_ZERO_CAPTCHA_FILESIZE" in str(e) or "HTTPSConnectionPool" in str(e):
-                    try:
-                        BannedProxy.objects.create(proxy_id=session_data.proxy_id)
-                    except Exception:
-                        pass
-                    try:
-                        session_data.proxy_id = get_new_proxy().id
-                    except Exception:
-                        session_data.proxy_id = None
+                    if session_data.is_active > 20:
+                        try:
+                            BannedProxy.objects.create(proxy_id=session_data.proxy_id)
+                        except Exception:
+                            pass
+                        try:
+                            session_data.proxy_id = get_new_proxy().id
+                        except Exception:
+                            session_data.proxy_id = None
                     session_data.is_active = 0
 
                     session_data.save(update_fields=['proxy_id', 'is_active'])

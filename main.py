@@ -299,114 +299,121 @@ if __name__ == '__main__':
     #         pass
     #     BannedProxy.objects.create(proxy_id=p.id)
 
-
-    i = 14
     while True:
-        print(i)
-        i += 1
-        time.sleep(180)
         try:
-            django.db.close_old_connections()
-            try:
-                Sessions.objects.filter(is_parsing=1,
-                                        last_parsing__lte=update_time_timezone(
-                                            timezone.now() - datetime.timedelta(minutes=60)),
-                                        ).update(is_parsing=0)
-            except Exception as e:
-                try:
-                    for s in Sessions.objects.filter(is_parsing=1):
-
-                        try:
-                            s.is_parsing = 0
-                            s.save(update_fields=['is_parsing'])
-                        except Exception as e:
-                            pass
-                except Exception:
-                    pass
-            try:
-                for s in Sessions.objects.filter(proxy_id__isnull=True):
-                    try:
-                        s.proxy_id = get_new_proxy().id
-                        s.save()
-                    except Exception:
-                        pass
-            except Exception as e:
-                pass
-            try:
-                # этот костыль, чтобы обновить новые таски  не ловить ошибку с датами
-                key_words = Keyword.objects.filter(network_id=10, enabled=1, taken=0,
-
-                                                   last_modified__lt=update_time_timezone(
-                                                       datetime.datetime(2000, 1, 1, 0, 0))
-                                                   ).update(
-                    last_modified=update_time_timezone(datetime.datetime(2000, 1, 1, 0, 0)))
-
-            except Exception as e:
-                pass
-            try:
-                Sessions.objects.filter(is_active__lte=1_000).update(is_active=1)
-            except Exception as e:
-                try:
-                    for s in Sessions.objects.filter(is_active__lte=1_000):
-                        try:
-                            s.is_active = 1
-                            s.save(update_fields=['is_active'])
-                        except Exception:
-                            pass
-                except Exception as e:
-                    pass
-            try:
-                if i == 15:
-                    try:
-                        SourcesItems.objects.filter(network_id=10, disabled=0, last_modified__isnull=True).update(
-                            last_modified=datetime.datetime(2000, 1, 1))
-                        SourcesItems.objects.filter(network_id=10, disabled=0,
-                                                    last_modified__lte=datetime.datetime(1999, 1, 1)).update(
-                            last_modified=datetime.datetime(2000, 1, 1))
-                    except Exception as e:
-                        print(e)
-                    try:
-                        Keyword.objects.filter(network_id=network_id, enabled=1, taken=1).update(taken=0)
-                    except Exception as e:
-                        print(e)
-                    try:
-                        SourcesItems.objects.filter(network_id=network_id, taken=1).update(taken=0)
-                    except Exception as e:
-                        print(e)
-                    # try:
-                    #     # Sessions.objects.filter(proxy_id__isnull=False).update(proxy_id=None)
-                    #     # Sessions.objects.filter(proxy_id__isnull=False).update(proxy_id=None, is_active=0)
-                    #
-                    # except Exception as e:
-                    #     print(e)
-                    try:
-                        select_sources = Sources.objects.filter(
-                            Q(retro_max__isnull=True) | Q(retro_max__gte=timezone.now()), published=1,
-                            status=1)
-                        sources_items = SourcesItems.objects.filter(network_id=network_id,
-                                                                    disabled=0,
-                                                                    ).exclude(
-                            source_id__in=list(select_sources.values_list('id', flat=True)))
-
-                        sources_items.update(disabled=1)
-
-                    except Exception:
-                        select_sources = Sources.objects.filter(
-                            Q(retro_max__isnull=True) | Q(retro_max__gte=timezone.now()), published=1,
-                            status=1)
-                        select_source_ids = select_sources.values_list('id', flat=True)
-                        sources_items = SourcesItems.objects.filter(
-                            network_id=network_id,
-                            disabled=0,
-                        )
-                        for s in sources_items:
-                            if s.source_id not in select_source_ids:
-                                s.disabled = 1
-                                s.save()
-
-                    i = 0
-            except Exception as e:
-                i = 0
-                print(e)
-        except Exception as e:
-            print(e)
+            for s in Sessions.objects.filter(is_active__lt=20, proxy_id__isnull=True):
+                s.proxy_id = random.choice([943716, 939414])
+                s.save()
+        except Exception:
+            pass
+        time.sleep(10*60)
+    # # i = 14
+    # # while True:
+    # #     print(i)
+    # #     i += 1
+    # #     time.sleep(180)
+    # #     try:
+    # #         django.db.close_old_connections()
+    # #         try:
+    # #             Sessions.objects.filter(is_parsing=1,
+    # #                                     last_parsing__lte=update_time_timezone(
+    # #                                         timezone.now() - datetime.timedelta(minutes=60)),
+    # #                                     ).update(is_parsing=0)
+    # #         except Exception as e:
+    # #             try:
+    # #                 for s in Sessions.objects.filter(is_parsing=1):
+    # #
+    # #                     try:
+    # #                         s.is_parsing = 0
+    # #                         s.save(update_fields=['is_parsing'])
+    # #                     except Exception as e:
+    # #                         pass
+    # #             except Exception:
+    # #                 pass
+    # #         try:
+    # #             for s in Sessions.objects.filter(proxy_id__isnull=True):
+    # #                 try:
+    # #                     s.proxy_id = get_new_proxy().id
+    # #                     s.save()
+    # #                 except Exception:
+    # #                     pass
+    # #         except Exception as e:
+    # #             pass
+    # #         try:
+    # #             # этот костыль, чтобы обновить новые таски  не ловить ошибку с датами
+    # #             key_words = Keyword.objects.filter(network_id=10, enabled=1, taken=0,
+    # #
+    # #                                                last_modified__lt=update_time_timezone(
+    # #                                                    datetime.datetime(2000, 1, 1, 0, 0))
+    # #                                                ).update(
+    # #                 last_modified=update_time_timezone(datetime.datetime(2000, 1, 1, 0, 0)))
+    # #
+    # #         except Exception as e:
+    # #             pass
+    # #         try:
+    # #             Sessions.objects.filter(is_active__lte=1_000).update(is_active=1)
+    # #         except Exception as e:
+    # #             try:
+    # #                 for s in Sessions.objects.filter(is_active__lte=1_000):
+    # #                     try:
+    # #                         s.is_active = 1
+    # #                         s.save(update_fields=['is_active'])
+    # #                     except Exception:
+    # #                         pass
+    # #             except Exception as e:
+    # #                 pass
+    # #         try:
+    # #             if i == 15:
+    # #                 try:
+    # #                     SourcesItems.objects.filter(network_id=10, disabled=0, last_modified__isnull=True).update(
+    # #                         last_modified=datetime.datetime(2000, 1, 1))
+    # #                     SourcesItems.objects.filter(network_id=10, disabled=0,
+    # #                                                 last_modified__lte=datetime.datetime(1999, 1, 1)).update(
+    # #                         last_modified=datetime.datetime(2000, 1, 1))
+    # #                 except Exception as e:
+    # #                     print(e)
+    # #                 try:
+    # #                     Keyword.objects.filter(network_id=network_id, enabled=1, taken=1).update(taken=0)
+    # #                 except Exception as e:
+    # #                     print(e)
+    # #                 try:
+    # #                     SourcesItems.objects.filter(network_id=network_id, taken=1).update(taken=0)
+    # #                 except Exception as e:
+    # #                     print(e)
+    # #                 # try:
+    #                 #     # Sessions.objects.filter(proxy_id__isnull=False).update(proxy_id=None)
+    #                 #     # Sessions.objects.filter(proxy_id__isnull=False).update(proxy_id=None, is_active=0)
+    #                 #
+    #                 # except Exception as e:
+    #                 #     print(e)
+    #                 try:
+    #                     select_sources = Sources.objects.filter(
+    #                         Q(retro_max__isnull=True) | Q(retro_max__gte=timezone.now()), published=1,
+    #                         status=1)
+    #                     sources_items = SourcesItems.objects.filter(network_id=network_id,
+    #                                                                 disabled=0,
+    #                                                                 ).exclude(
+    #                         source_id__in=list(select_sources.values_list('id', flat=True)))
+    #
+    #                     sources_items.update(disabled=1)
+    #
+    #                 except Exception:
+    #                     select_sources = Sources.objects.filter(
+    #                         Q(retro_max__isnull=True) | Q(retro_max__gte=timezone.now()), published=1,
+    #                         status=1)
+    #                     select_source_ids = select_sources.values_list('id', flat=True)
+    #                     sources_items = SourcesItems.objects.filter(
+    #                         network_id=network_id,
+    #                         disabled=0,
+    #                     )
+    #                     for s in sources_items:
+    #                         if s.source_id not in select_source_ids:
+    #                             s.disabled = 1
+    #                             s.save()
+    #
+    #                 i = 0
+    #         except Exception as e:
+    #             i = 0
+    #             print(e)
+    #     except Exception as e:
+    #         print(e)

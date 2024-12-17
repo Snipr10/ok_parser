@@ -303,6 +303,7 @@ if __name__ == '__main__':
         try:
             for s in Sessions.objects.filter(is_active__lt=20, proxy_id__isnull=True):
                 s.proxy_id = random.choice([943716, 939414])
+                s.is_active = 1
                 s.save()
         except Exception:
             pass

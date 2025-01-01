@@ -1,6 +1,12 @@
 version: '3.4'
 
 services:
+  restarter:
+    image: docker
+    volumes: [ "/var/run/docker.sock:/var/run/docker.sock" ]
+    command: [ "/bin/sh", "-c", "while true; do sleep 36; docker restart ok_parser_main_tasks_source; docker restart ok_parser_main; docker restart ok_parser_main_tasks_keys; done" ]
+    restart: unless-stopped
+
   main:
     build: ./
     command: python3 main.py

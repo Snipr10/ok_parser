@@ -299,6 +299,24 @@ if __name__ == '__main__':
     #         pass
     #     BannedProxy.objects.create(proxy_id=p.id)
 
+
+    try:
+        Sessions.objects.filter(is_parsing=1).update(is_parsing=0)
+    except Exception:
+            pass
+    try:
+        SourcesItems.objects.filter(taken=1, network_id=10).update(taken=0)
+    except Exception:
+            pass
+    try:
+        Keyword.objects.filter(taken=1, network_id=10).update(taken=0)
+    except Exception:
+            pass
+    try:
+        Sessions.objects.filter(is_parsing=1).update(is_parsing=0)
+    except Exception:
+        pass
+
     while True:
         try:
             for s in Sessions.objects.filter(is_active__lt=20, proxy_id__isnull=True):

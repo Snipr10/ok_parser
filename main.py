@@ -328,6 +328,11 @@ if __name__ == '__main__':
                                             967947,
                                             967948,
                                             967949,
+                                            968053,
+                                            968054,
+                                            968055,
+                                            967635,
+                                            967636,
                                             ])
                 s.is_active = 1
                 s.last_parsing = update_time_timezone(timezone.localtime())

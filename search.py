@@ -6,7 +6,6 @@ from parse_post import get_text_html
 
 
 def search_posts(session, query, count, firstIndex, totalCount=None):
-    query= "кубок содружества"
     url = "https://ok.ru/web-api/v2/search/portal"
     payload = json.dumps({
         "id": 1,
@@ -49,13 +48,13 @@ def get_all_posts(session_data, query):
     session = requests.session()
     session = login(session, session_data.login, session_data.password, session_data)
 
-    count = 500
+    count = 50
     firstIndex = 0
     totalCount = None
     result_posts = []
     res = []
 
-    while len(result_posts) < 5000:
+    while len(result_posts) < 500:
         try:
             print("while")
             posts, totalCount, is_next = search_posts(session, query, count, firstIndex, totalCount=totalCount)

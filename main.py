@@ -320,13 +320,12 @@ if __name__ == '__main__':
     while True:
         try:
             for s in Sessions.objects.filter(is_active__lt=20, proxy_id__isnull=True):
-                s.proxy_id = random.choice([969274,
-969273,
-969272,
-968071,
-968070,
-968056,
-
+                s.proxy_id = random.choice([969280,
+969279,
+969278,
+969277,
+969276,
+969275,
                                             ])
                 s.is_active = 1
                 s.last_parsing = update_time_timezone(timezone.localtime())

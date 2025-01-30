@@ -320,12 +320,11 @@ if __name__ == '__main__':
     while True:
         try:
             for s in Sessions.objects.filter(is_active__lt=20, proxy_id__isnull=True):
-                s.proxy_id = random.choice([968053,
-968054,
-968055,
-968070,
+                s.proxy_id = random.choice([969274,
+969273,
+969272,
 968071,
-943716,
+968070,
 968056,
 
                                             ])

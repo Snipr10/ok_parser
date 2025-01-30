@@ -1,11 +1,11 @@
 version: '3.4'
 
 services:
-  restarter:
-    image: docker
-    volumes: [ "/var/run/docker.sock:/var/run/docker.sock" ]
-    command: [ "/bin/sh", "-c", "while true; do sleep 7200; docker restart ok_parser_main_tasks_source_1; docker restart ok_parser_main_tasks_keys_1; docker restart ok_parser_main_1; done" ]
-    restart: unless-stopped
+#  restarter:
+#    image: docker
+#    volumes: [ "/var/run/docker.sock:/var/run/docker.sock" ]
+#    command: [ "/bin/sh", "-c", "while true; do sleep 7200; docker restart ok_parser_main_tasks_source_1; docker restart ok_parser_main_tasks_keys_1; docker restart ok_parser_main_1; done" ]
+#    restart: unless-stopped
 
   main:
     build: ./
@@ -19,19 +19,19 @@ services:
       driver: "json-file"
       options:
         max-size: "100m"
-#
-  main_tasks_keys:
-    build: ./
-    command: python3 main_tasks_keys.py
-    restart: always
-    deploy:
-      resources:
-        limits:
-          memory: 1GB
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "100m"
+##
+#  main_tasks_keys:
+#    build: ./
+#    command: python3 main_tasks_keys.py
+#    restart: always
+#    deploy:
+#      resources:
+#        limits:
+#          memory: 1GB
+#    logging:
+#      driver: "json-file"
+#      options:
+#        max-size: "100m"
 
   main_tasks_source:
     build: ./

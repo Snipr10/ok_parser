@@ -169,7 +169,13 @@ def get_result(res):
         try:
             text = res.find("div", {"class": "media-text_cnt"}).text
         except Exception as e:
-            text = None
+            text = ''
+        try:
+            if not text and not text.strip():
+                text = res.text
+        except Exception:
+            pass
+
         owner_img = get_img(res)
         return {
             "themeId": theme_id,

@@ -62,6 +62,11 @@ def get_text_html(session, posts, r):
                 except Exception as e:
                     print(e)
     try:
+        if not text.strip():
+            text = resp_bs4.text
+    except Exception:
+        pass
+    try:
         date = dateparser.parse(post_bs4.find("div", {"class": "feed-info-date feed-info-subtitle_i"}).find('time').text)
     except Exception:
         date = None

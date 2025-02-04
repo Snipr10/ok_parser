@@ -143,7 +143,12 @@ def get_result(res):
         try:
             text = res.find("div", {"class": "media-text_cnt"}).text
         except Exception:
-            text = None
+            text = ''
+        try:
+            if not text and not text.strip():
+                text = res.text
+        except Exception:
+            pass
         try:
             url = res.find("a", {"class": "media-text_a"}).get("href").split("?")[0]
         except Exception:

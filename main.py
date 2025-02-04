@@ -352,7 +352,24 @@ if __name__ == '__main__':
                 cursor.execute(query)
         except Exception as e:
             print(e)
-
+        try:
+            from django.db import connection
+            with connection.cursor() as cursor:
+                query = """
+                UPDATE `prsr_parser_keywords` set `last_modified` = '2000-01-01 00:00:00' WHERE `network_id` = 11 AND `last_modified` = '0000-00-00 00:00:00';
+                """
+                cursor.execute(query)
+        except Exception as e:
+            print(e)
+        try:
+            from django.db import connection
+            with connection.cursor() as cursor:
+                query = """
+                UPDATE `prsr_parser_source_items` set `last_modified` = '2000-01-01 00:00:00' WHERE `network_id` = 11  AND `last_modified` = '0000-00-00 00:00:00';
+                """
+                cursor.execute(query)
+        except Exception as e:
+            print(e)
         time.sleep(10*60)
     # # i = 14
     # # while True:

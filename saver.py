@@ -188,7 +188,7 @@ def save_result(res):
         channel = connection.channel()
         for sphinx_id in sphinx_ids:
             rmq_json_data = {
-                "id": sphinx_id,
+                "id": str(sphinx_id),
                 "network_id": 10
             }
             channel.basic_publish(exchange='',

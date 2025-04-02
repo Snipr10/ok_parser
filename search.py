@@ -72,7 +72,10 @@ def get_all_posts(session_data, query):
     try:
         for post in result_posts:
             try:
-                res.append(get_text_html(session, post.get("content"), post))
+                json_res = get_text_html(session, post.get("content"), post)
+                if "Вы пока не можете зайти на Одноклассники" in json_res.get("text"):
+                    raise Exception("unable to login key search")
+                res.append(json_res)
             except ValueError:
                 continue
             except Exception as e:

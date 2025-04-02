@@ -159,6 +159,8 @@ def get_result(res):
                     url = re.search(r'st.layer.curl=\S+', str(res)).group(0).replace('st.layer.curl=',"").split("&")[0]
                 except Exception:
                     url = None
+        if "Вы пока не можете зайти на Одноклассники" in text:
+            raise Exception("unable to login parse profile")
         return {
             "themeId": theme_id,
             "text": text,

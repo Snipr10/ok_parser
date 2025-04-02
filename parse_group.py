@@ -177,6 +177,8 @@ def get_result(res):
             pass
 
         owner_img = get_img(res)
+        if "Вы пока не можете зайти на Одноклассники" in text:
+            raise Exception("unable to login parse group")
         return {
             "themeId": theme_id,
             "text": text,
